@@ -1,0 +1,17 @@
+C:\Users\dimit\source\repos\aa\appc\bin\Debug\net6.0\appc.exe
+C:\Users\dimit\source\repos\aa\appc\bin\Debug\net6.0\appc.deps.json
+C:\Users\dimit\source\repos\aa\appc\bin\Debug\net6.0\appc.runtimeconfig.json
+C:\Users\dimit\source\repos\aa\appc\bin\Debug\net6.0\appc.dll
+C:\Users\dimit\source\repos\aa\appc\bin\Debug\net6.0\appc.pdb
+C:\Users\dimit\source\repos\aa\appc\bin\Debug\net6.0\IdentityModel.dll
+C:\Users\dimit\source\repos\aa\appc\obj\Debug\net6.0\appc.csproj.AssemblyReference.cache
+C:\Users\dimit\source\repos\aa\appc\obj\Debug\net6.0\appc.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dimit\source\repos\aa\appc\obj\Debug\net6.0\appc.AssemblyInfoInputs.cache
+C:\Users\dimit\source\repos\aa\appc\obj\Debug\net6.0\appc.AssemblyInfo.cs
+C:\Users\dimit\source\repos\aa\appc\obj\Debug\net6.0\appc.csproj.CoreCompileInputs.cache
+C:\Users\dimit\source\repos\aa\appc\obj\Debug\net6.0\appc.csproj.CopyComplete
+C:\Users\dimit\source\repos\aa\appc\obj\Debug\net6.0\appc.dll
+C:\Users\dimit\source\repos\aa\appc\obj\Debug\net6.0\refint\appc.dll
+C:\Users\dimit\source\repos\aa\appc\obj\Debug\net6.0\appc.pdb
+C:\Users\dimit\source\repos\aa\appc\obj\Debug\net6.0\appc.genruntimeconfig.cache
+C:\Users\dimit\source\repos\aa\appc\obj\Debug\net6.0\ref\appc.dll
