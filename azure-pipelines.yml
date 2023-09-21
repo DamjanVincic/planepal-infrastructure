@@ -25,13 +25,13 @@ stages:
     - task: VSBuild@1
       inputs:
         solution: '$(solution)'
-        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(System.DefaultWorkingDirectory)/**/WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
         
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        PathtoPublish: '"$(System.DefaultWorkingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'  
 
@@ -50,10 +50,10 @@ stages:
         buildType: 'current'
         downloadType: 'single'
         artifactName: 'drop'
-        downloadPath: '$(Build.ArtifactStagingDirectory)'
+        downloadPath: '"$(System.DefaultWorkingDirectory)'
     - task: AzureWebApp@1
       inputs:
         azureSubscription: 'Levi9Internship2023SP-Automation'
         appType: 'webApp'
         appName: 'CleanPaySystem'
-        package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+        package: '"$(System.DefaultWorkingDirectory)/**/*.zip'
