@@ -51,10 +51,9 @@ stages:
         downloadType: 'single'
         artifactName: 'drop'
         downloadPath: '$(Build.ArtifactStagingDirectory)'
-    - task: AzureRmWebAppDeployment@4
+    - task: AzureWebApp@1
       inputs:
-        ConnectionType: 'AzureRM'
-        azureSubscription: $(AZURESUBSCRIPTION)
+        azureSubscription: 'Levi9Internship2023(8b647a0d-1416-458d-9321-8f3214f43068)'
         appType: 'webApp'
-        WebAppName: 'WebApp'
-        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+        appName: 'CleanPaySystem'
+        package: '$(System.DefaultWorkingDirectory)/**/*.zip'
