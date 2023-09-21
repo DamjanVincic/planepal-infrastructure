@@ -56,4 +56,4 @@ stages:
         azureSubscription: 'Levi9Internship2023SP-Automation'
         appType: 'webApp'
         appName: 'CleanPaySystem'
-        package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+        package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
