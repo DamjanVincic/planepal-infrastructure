@@ -38,4 +38,4 @@ steps:
     azureSubscription: 'Levi9Internship2023SP-Automation'
     appName: 'CleanPaySystem'
     appType: 'webApp'
-    package: $(System.DefaultWorkingDirectory)/**/*.zip
+    package: $(build.artifactStagingDirectory)\WebApp.zip
