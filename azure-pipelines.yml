@@ -24,6 +24,12 @@ steps:
   inputs:
     command: 'build'
 
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'Levi9Internship2023SP-Automation'
@@ -32,11 +38,6 @@ steps:
     deployToSlotOrASE: true
     resourceGroupName: 'DevOps'
     slotName: 'production'
-    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
     deploymentMethod: 'auto'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
