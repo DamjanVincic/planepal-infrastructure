@@ -20,4 +20,23 @@ steps:
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
 
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'Levi9Internship2023SP-Automation'
+    appType: 'webApp'
+    appName: 'CleanPaySystem'
+    deployToSlotOrASE: true
+    resourceGroupName: 'DevOps'
+    slotName: 'production'
+    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    deploymentMethod: 'auto'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
