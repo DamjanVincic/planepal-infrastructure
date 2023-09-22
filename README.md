@@ -21,3 +21,4 @@ Alternatively write new project files directly into an empty repository, using t
 Run the dtos package.json script to update your server dtos:
 
     $ x scripts dtos
+Update
