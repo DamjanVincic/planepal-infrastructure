@@ -26,7 +26,7 @@ steps:
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: '$(Build.ArtifactWorkingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
 
@@ -38,6 +38,6 @@ steps:
     deployToSlotOrASE: true
     resourceGroupName: 'DevOps'
     slotName: 'production'
-    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+    package: $(System.DefaultWorkingDirectory)/**/*.zip
     deploymentMethod: 'auto'
 
