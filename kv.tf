@@ -14,8 +14,8 @@ resource "azurerm_key_vault" "kv_for_app" {
 
 
   access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
+    tenant_id = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.identity[0].tenant_id
+    object_id = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.identity[0].principal_id
 
 
     secret_permissions = [
