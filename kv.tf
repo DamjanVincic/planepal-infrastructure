@@ -2,8 +2,7 @@
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "kv_for_app" {
-  name                        = "kv-${var.app_name}-${var.environment}-${var.location}-01"
-  #"kv-planepal-dev-neu-01"
+  name                        = "kv-app-${var.app_name}-${var.environment}-${var.location}-01"
   location                    = var.location
   resource_group_name         = var.resource_group
   tenant_id                   = data.azurerm_client_config.current.tenant_id
