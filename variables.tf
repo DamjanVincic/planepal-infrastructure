@@ -42,3 +42,8 @@ variable "sqldb_sku_max_gb_size" {
       type = number
       default = 1
 }
+
+variable "log_sku" {
+  type = string
+  default = "PerGB2018"
+}
