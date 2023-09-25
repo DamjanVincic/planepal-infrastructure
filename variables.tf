@@ -9,3 +9,9 @@ variable "resource_group" {
     description = "resource_group name"
     default = "DevOps"
 }
+
+variable "kv_app_sku_name" {
+    type = string
+    description = "sku name for app key vault"
+    default = "standard"
+}
