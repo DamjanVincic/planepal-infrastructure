@@ -62,3 +62,12 @@ variable "kv_app_sku_name" {
     description = "sku name for app key vault"
     default = "standard"
 }
+variable "account_tier" {
+    type = string
+    default = "Standard"
+}
+
+variable "replication_type" {
+    type = string
+    default = "LRS"
+}
