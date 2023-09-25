@@ -18,16 +18,6 @@ variable "environment" {
     description = "Name of Environment"
     default = "dev"
 }
-variable "dot_net_version" {
-    type = string
-    description = "Dot Net Version"
-    default = "v6.0"
-}
-variable "app_sku" {
-    type = string
-    description = "Plan for application"
-    default = "F1"
-}
 variable "location_abbreviation" {
       type = string
       default = "neu"
@@ -48,7 +38,6 @@ variable "sqldb_sku_name" {
       type = string
       default= "basic"
 }
-
 variable "sqldb_sku_max_gb_size" {
       type = number
       default = 1
