@@ -8,3 +8,13 @@ variable "resource_group" {
     description = "resource_group name"
     default = "DevOps"
 }
+variable "app_name" {
+    type = string
+    description = "Name of Application"
+    default = "PlanePal"
+}
+variable "environment" {
+    type = string
+    description = "Name of Environment"
+    default = "dev"
+}

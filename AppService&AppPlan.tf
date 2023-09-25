@@ -1,13 +1,13 @@
 resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
-  name                = "service-plan-planepal-dev-neu-00"
+  name                = "asp-${var.app_name}-${var.environment}-${var.location}-00"
   resource_group_name = var.resource_group
   location            = var.location
   sku_name            = "F1"
   os_type             = "Windows"
 }
 
-resource "azurerm_windows_web_app" "web-app-planepal-dev-neu-00" {
-  name                = "PlanePal"
+resource "azurerm_windows_web_app" "app-PlanePal-dev-northeurope-00" {
+  name                = "app-${var.app_name}-${var.environment}-${var.location}-00"
   resource_group_name = var.resource_group
   location            = var.location
   service_plan_id     = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
@@ -17,6 +17,7 @@ resource "azurerm_windows_web_app" "web-app-planepal-dev-neu-00" {
   }
   app_settings = {
     "dotnet_framework_version" = "v6.0"
+ //  "ApplicationInsights:InstrumentationKey" = azurerm_application_insights.app_insights.instrumentation_key
   }
 }
 
