@@ -13,3 +13,9 @@ variable "enviornment" {
 variable "location_abbreviation" {
       type = string
 }
+variable "sql_login" {
+      type = string
+}
+variable "sql_password" {
+      type = string
+}
