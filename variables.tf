@@ -28,6 +28,30 @@ variable "app_sku" {
     description = "Plan for application"
     default = "F1"
 }
+variable "location_abbreviation" {
+      type = string
+      default = "neu"
+}
+variable "sql_login" {
+      type = string
+      default = "admin"
+}
+variable "sql_password" {
+      type = string
+      default = "admin"
+}
+variable "sql_version" {
+      type = string
+      default = "12.0"
+}
+variable "sqldb_sku_name" {
+      type = string
+      default= "basic"
+}
+variable "sqldb_sku_max_gb_size" {
+      type = number
+      default = 1
+}
 
 variable "log_sku" {
   type = string
