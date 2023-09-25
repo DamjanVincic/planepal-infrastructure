@@ -28,3 +28,4 @@ variable "app_sku" {
     description = "Plan for application"
     default = "F1"
 }
+//
