@@ -28,8 +28,8 @@ variable "app_sku" {
     description = "Plan for application"
     default = "F1"
 }
-variable "kv_app_sku_name" {
-    type = string
-    description = "sku name for app key vault"
-    default = "standard"
+
+variable "log_sku" {
+  type = string
+  default = "PerGB2018"
 }
