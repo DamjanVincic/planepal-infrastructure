@@ -1,2 +1,2 @@
-location = "North Europe"
+location = "northeurope"
 resource_group = "DevOps"
