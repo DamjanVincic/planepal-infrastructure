@@ -3,3 +3,4 @@ variable "location" {
     description = "location where zour resource needs provision in azure"
     default = "North Europe"
 }
+variable "resource_group" {}
