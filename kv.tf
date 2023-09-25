@@ -18,10 +18,10 @@ resource "azurerm_key_vault" "kv-for-app" {
 
 
     secret_permissions = [
-      Get
+      "Get",
     ]
 
-  }
+    }
   }
 
 
