@@ -1,3 +1,34 @@
+variable "resource_group" {
+  description = "Resource group name"
+  type = string
+}
+
+variable "app_name" {
+  description = "Application name"
+  type = string
+}
+
+variable "account_tier" {
+  description = "Account tier"
+  type = string
+}
+
+variable "replication_type" {
+  description = "Replication type"
+  type = string
+}
+
+variable "location" {
+  description = "Location"
+  type = string
+}
+
+variable "environment" {
+  description = "Environment"
+  type = string
+}
+
+
 data "azurerm_resource_group" "devops_rg" {
   name = var.resource_group
 }
