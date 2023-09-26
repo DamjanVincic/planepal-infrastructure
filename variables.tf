@@ -84,3 +84,8 @@ variable "replication_type" {
   type    = string
   default = "LRS"
 }
+
+variable "tenant_id" {
+  type = string
+  default = "40758481-7365-442c-ae94-563ed1606218"
+}
