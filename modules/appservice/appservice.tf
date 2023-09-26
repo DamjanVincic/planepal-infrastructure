@@ -14,9 +14,11 @@ variable "app_name" {
 variable "instrumentation_key" {
   type = string
 }
-locals {
-  dot_net_version = "v6.0"
-  app_sku        = "F1"
+variable "dot_net_version" {
+  type = string
+}
+variable "app_sku" {
+  type = string
 }
 resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
   name                = "asp-${var.app_name}-${var.environment}-${var.location}-00"
