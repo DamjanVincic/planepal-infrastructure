@@ -1,73 +1,86 @@
 variable "location" {
-    type = string
-    description = "location where zour resource needs provision in azure"
-    default = "northeurope"
+  type        = string
+  description = "location where zour resource needs provision in azure"
+  default     = "northeurope"
 }
+
 variable "resource_group" {
-    type = string
-    description = "resource_group name"
-    default = "DevOps"
+  type        = string
+  description = "resource_group name"
+  default     = "DevOps"
 }
+
 variable "app_name" {
-    type = string
-    description = "Name of Application"
-    default = "PlanePal"
+  type        = string
+  description = "Name of Application"
+  default     = "PlanePal"
 }
+
 variable "environment" {
-    type = string
-    description = "Name of Environment"
-    default = "dev"
+  type        = string
+  description = "Name of Environment"
+  default     = "dev"
 }
+
 variable "dot_net_version" {
-    type = string
-    description = "Dot Net Version"
-    default = "v6.0"
+  type        = string
+  description = "Dot Net Version"
+  default     = "v6.0"
 }
+
 variable "app_sku" {
-    type = string
-    description = "Plan for application"
-    default = "F1"
+  type        = string
+  description = "Plan for application"
+  default     = "F1"
 }
+
 variable "location_abbreviation" {
-      type = string
-      default = "neu"
+  type    = string
+  default = "neu"
 }
+
 variable "sql_login" {
-      type = string
-      default = "JakoTajnoIme"
+  type    = string
+  default = "JakoTajnoIme"
 }
+
 variable "sql_password" {
-      type = string
-      default = "JakoTajnaSifra123!"
+  type    = string
+  default = "JakoTajnaSifra123!"
 }
+
 variable "sql_version" {
-      type = string
-      default = "12.0"
+  type    = string
+  default = "12.0"
 }
+
 variable "sqldb_sku_name" {
-      type = string
-      default= "basic"
+  type    = string
+  default = "basic"
 }
+
 variable "sqldb_sku_max_gb_size" {
-      type = number
-      default = 1
+  type    = number
+  default = 1
 }
 
 variable "log_sku" {
-  type = string
+  type    = string
   default = "PerGB2018"
 }
+
 variable "kv_app_sku_name" {
-    type = string
-    description = "sku name for app key vault"
-    default = "standard"
+  type        = string
+  description = "sku name for app key vault"
+  default     = "standard"
 }
+
 variable "account_tier" {
-    type = string
-    default = "Standard"
+  type    = string
+  default = "Standard"
 }
 
 variable "replication_type" {
-    type = string
-    default = "LRS"
+  type    = string
+  default = "LRS"
 }
