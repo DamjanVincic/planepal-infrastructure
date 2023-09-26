@@ -2,7 +2,7 @@
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "kv_for_app" {
-  name                        = "kvapp${var.app_name_small_letters}${var.environment}01"
+  name                        = "kvapp${lower(var.app_name)}${var.environment}01"
   location                    = var.location
   resource_group_name         = var.resource_group
   tenant_id                   = data.azurerm_client_config.current.tenant_id

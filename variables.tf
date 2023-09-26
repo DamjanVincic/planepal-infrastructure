@@ -13,11 +13,6 @@ variable "app_name" {
     description = "Name of Application"
     default = "PlanePal"
 }
-variable "app_name_small_letters" {
-    type = string
-    description = "Name of Application"
-    default = "planepal"
-}
 variable "environment" {
     type = string
     description = "Name of Environment"
