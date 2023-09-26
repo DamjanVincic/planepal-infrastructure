@@ -1,3 +1,24 @@
+variable "location" {
+  type        = string
+  description = "location where zour resource needs provision in azure"
+}
+
+variable "resource_group" {
+  type        = string
+  description = "resource_group name"
+}
+
+variable "app_name" {
+  type        = string
+  description = "Name of Application"
+}
+
+variable "environment" {
+  type        = string
+  description = "Name of Environment"
+}
+
+
 
 data "azurerm_client_config" "current" {}
 
