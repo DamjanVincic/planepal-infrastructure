@@ -69,7 +69,7 @@ criteria {
     metric_name       = "dtu_consumption_percent"
     aggregation       = "Maximum"
     operator          = "GreaterThan"
-    threshold         = 60
+    threshold         = 90
   }
 
   action {
