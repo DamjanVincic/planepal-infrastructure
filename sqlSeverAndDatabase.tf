@@ -1,5 +1,5 @@
 resource "azurerm_mssql_server" "sql-planepal-dev-neu-01" {
-  name                         = "sql-${var.app_name}-${var.environment}-${var.location_abbreviation}-00"
+  name                         = "sql-${lower(var.app_name)}-${var.environment}-${var.location_abbreviation}-00"
   resource_group_name          = var.resource_group
   location = var.location
   version                      = var.sql_version

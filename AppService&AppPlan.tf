@@ -14,6 +14,9 @@ resource "azurerm_windows_web_app" "app-PlanePal-dev-northeurope-00" {
 
   site_config { 
    always_on = "false"
+   identity {
+    type = "SystemAssigned"
+   }
   }
   app_settings = {
     "dotnet_framework_version" = "${var.dot_net_version}"
