@@ -1,46 +1,46 @@
 
 variable "resource_group_name" {
-  type = string
+  type        = string
   description = "DevOps"
 }
 
 variable "location" {
-  type = string
+  type        = string
   description = "northeurope"
 }
 
 variable "app_name" {
-  type = string
+  type        = string
   description = "PlanePal"
 }
 
 variable "environment" {
-  type = string
+  type        = string
   description = "Abbravation for environment, used for defining name of resources"
 }
 
 variable "location_abbravation" {
-  type = string
+  type        = string
   description = "Abbravation for resource group location, used for defining name of resources"
 }
 
 variable "app_service_id" {
-  type = string
+  type        = string
   description = "App service id, used for creating service app alert"
 }
 
 variable "database_id" {
-  type = string
+  type        = string
   description = "Database id, used for creating database alert"
 }
 
 variable "storage_account_id" {
-  type = string
+  type        = string
   description = "Storage account id, used for creating storage account alert"
 }
 
 variable "resource_group_id" {
-  type = string
+  type        = string
   description = "Resource group id, used for creating resource group alert"
 }
 
@@ -56,15 +56,15 @@ resource "azurerm_monitor_action_group" "action_group" {
   name                = "ag-${var.app_name}-${var.environment}-${var.location}-01"
   resource_group_name = var.resource_group_name
   short_name          = "devops_ag"
-  enabled = true
+  enabled             = true
 
   email_receiver {
-    name = "Stefan"
+    name          = "Stefan"
     email_address = "stefanzivkov78@gmail.com"
   }
 
   email_receiver {
-    name = "Branislav"
+    name          = "Branislav"
     email_address = "branislav.zuber@levi9.com"
   }
 }
@@ -76,12 +76,12 @@ resource "azurerm_monitor_metric_alert" "alert_app_service" {
   description         = "Action will be triggered when CpuPercentage is greater than 60."
 
   criteria {
-    metric_namespace  = "Microsoft.Web/sites"
-    metric_name       = "CpuPercentage"
-    aggregation       = "Average"
-    operator          = "GreaterThan"
-    threshold         = 60
-    time_aggregation  = "Average"
+    metric_namespace = "Microsoft.Web/sites"
+    metric_name      = "CpuPercentage"
+    aggregation      = "Average"
+    operator         = "GreaterThan"
+    threshold        = 60
+    time_aggregation = "Average"
   }
 
   action {
@@ -114,12 +114,12 @@ resource "azurerm_monitor_metric_alert" "alert_database" {
   scopes              = [var.database_id]
   description         = "Action will be triggered when DTU is greater than 60."
 
-criteria {
-    metric_namespace  = "Microsoft.Sql/servers/databases"
-    metric_name       = "dtu_consumption_percent"
-    aggregation       = "Maximum"
-    operator          = "GreaterThan"
-    threshold         = 90
+  criteria {
+    metric_namespace = "Microsoft.Sql/servers/databases"
+    metric_name      = "dtu_consumption_percent"
+    aggregation      = "Maximum"
+    operator         = "GreaterThan"
+    threshold        = 90
   }
 
   action {
