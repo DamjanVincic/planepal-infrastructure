@@ -130,7 +130,7 @@ criteria {
 resource "azurerm_monitor_activity_log_alert" "alert_serviceHealth" {
   name                = "ala-${var.app_name}-${var.environment}-${var.location}-01"
   resource_group_name = data.azurerm_resource_group.devops_rg.name
-  scopes              = [var.var.resource_group_id]
+  scopes              = [var.resource_group_id]
 
   criteria {
     category = "ServiceHealth"
