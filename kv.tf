@@ -24,4 +24,15 @@ resource "azurerm_key_vault" "kv_for_app" {
     }
   }
 
+   resource "azurerm_key_vault_access_policy" "kv_access_policy" {
+    key_vault_id = azurerm_key_vault.kv_for_app.id
+    tenant_id    = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.identity[0].tenant_id
+    object_id    = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.identity[0].principal_id
+
+    secret_permissions = [
+      "Get",
+    ]
+  }
+
+
 
