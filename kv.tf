@@ -2,7 +2,7 @@
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "kv_for_app" {
-  name                        = "kv-app-${var.app_name}-${var.environment}-${var.location}-01"
+  name                        = "kvapp${lower(var.app_name)}${var.environment}02"
   location                    = var.location
   resource_group_name         = var.resource_group
   tenant_id                   = data.azurerm_client_config.current.tenant_id
@@ -16,12 +16,12 @@ resource "azurerm_key_vault" "kv_for_app" {
     tenant_id = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.identity[0].tenant_id
     object_id = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.identity[0].principal_id
 
-
     secret_permissions = [
       "Get",
     ]
 
     }
+
   }
 
 
