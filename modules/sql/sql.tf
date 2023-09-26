@@ -1,3 +1,28 @@
+variable "app_name" {
+  type = string
+}
+variable "environment" {
+  type = string
+}
+variable "location_abbreviation" {
+  type = string
+}
+variable "sql_version" {
+  type = string
+}
+variable "sql_login" {
+  type = string
+}
+variable "sql_password" {
+  type = string
+}
+variable "sqldb_sku_name" {
+  type = string
+}
+variable "sqldb_sku_max_gb_size" {
+  type = number
+}
+
 resource "azurerm_mssql_server" "sql-planepal-dev-neu-01" {
   name                         = "sql${lower(var.app_name)}${var.environment}${var.location_abbreviation}00"
   resource_group_name          = var.resource_group
