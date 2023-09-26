@@ -1,31 +1,31 @@
 variable "resource_group" {
   description = "Resource group name"
-  type = string
+  type        = string
 }
 
 variable "app_name" {
   description = "Application name"
-  type = string
+  type        = string
 }
 
 variable "account_tier" {
   description = "Account tier"
-  type = string
+  type        = string
 }
 
 variable "replication_type" {
   description = "Replication type"
-  type = string
+  type        = string
 }
 
 variable "location" {
   description = "Location"
-  type = string
+  type        = string
 }
 
 variable "environment" {
   description = "Environment"
-  type = string
+  type        = string
 }
 
 

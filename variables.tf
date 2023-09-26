@@ -86,6 +86,6 @@ variable "replication_type" {
 }
 
 variable "tenant_id" {
-  type = string
+  type    = string
   default = "40758481-7365-442c-ae94-563ed1606218"
 }
