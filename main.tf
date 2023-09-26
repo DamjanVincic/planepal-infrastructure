@@ -24,3 +24,14 @@ module "app-service" {
   app_sku = var.app_sku
 
 }
+
+module "storage" {
+  source = "./modules/storage"
+
+  resource_group = var.resource_group
+  app_name = var.app_name
+  account_tier = var.account_tier
+  replication_type = var.replication_type
+  location = var.location
+  environment = var.environment
+}
