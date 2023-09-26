@@ -7,15 +7,17 @@ resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
 }
 
 resource "azurerm_windows_web_app" "app-PlanePal-dev-northeurope-00" {
+  
+   identity {
+    type = "SystemAssigned"
+  }
+  
   name                = "app-${var.app_name}-${var.environment}-${var.location}-00"
   resource_group_name = var.resource_group
   location            = var.location
   service_plan_id     = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
 
- identity {
-    type = "SystemAssigned"
-  }
-  
+
   site_config { 
    always_on = "false"
   }

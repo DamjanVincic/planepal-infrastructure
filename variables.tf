@@ -34,11 +34,11 @@ variable "location_abbreviation" {
 }
 variable "sql_login" {
       type = string
-      default = "admin"
+      default = "JakoTajnoIme"
 }
 variable "sql_password" {
       type = string
-      default = "admin"
+      default = "JakoTajnaSifra123!"
 }
 variable "sql_version" {
       type = string
