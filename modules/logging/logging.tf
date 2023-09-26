@@ -1,5 +1,47 @@
-data "azurerm_resource_group" "devops_rg" {
-  name = var.resource_group
+
+variable "resource_group_name" {
+  type = string
+  description = "DevOps"
+}
+
+variable "location" {
+  type = string
+  description = "northeurope"
+}
+
+variable "app_name" {
+  type = string
+  description = "PlanePal"
+}
+
+variable "environment" {
+  type = string
+  description = "Abbravation for environment, used for defining name of resources"
+}
+
+variable "location_abbravation" {
+  type = string
+  description = "Abbravation for resource group location, used for defining name of resources"
+}
+
+variable "app_service_id" {
+  type = string
+  description = "App service id, used for creating service app alert"
+}
+
+variable "database_id" {
+  type = string
+  description = "Database id, used for creating database alert"
+}
+
+variable "storage_account_id" {
+  type = string
+  description = "Storage account id, used for creating storage account alert"
+}
+
+variable "resource_group_id" {
+  type = string
+  description = "Resource group id, used for creating resource group alert"
 }
 
 resource "azurerm_log_analytics_workspace" "log-a-w" {
@@ -12,7 +54,7 @@ resource "azurerm_log_analytics_workspace" "log-a-w" {
 
 resource "azurerm_monitor_action_group" "action_group" {
   name                = "ag-${var.app_name}-${var.environment}-${var.location}-01"
-  resource_group_name = data.azurerm_resource_group.devops_rg.name
+  resource_group_name = var.resource_group_name
   short_name          = "devops_ag"
   enabled = true
 
@@ -29,8 +71,8 @@ resource "azurerm_monitor_action_group" "action_group" {
 
 resource "azurerm_monitor_metric_alert" "alert_app_service" {
   name                = "ma-${var.app_name}-${var.environment}-${var.location}-01"
-  resource_group_name = data.azurerm_resource_group.devops_rg.name
-  scopes              = [azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.id]
+  resource_group_name = var.resource_group_name
+  scopes              = [var.app_service_id]
   description         = "Action will be triggered when CpuPercentage is greater than 60."
 
   criteria {
@@ -43,14 +85,14 @@ resource "azurerm_monitor_metric_alert" "alert_app_service" {
   }
 
   action {
-    action_group_id = azurerm_monitor_action_group.main.id
+    action_group_id = azurerm_monitor_action_group.action_group.id
   }
 }
 
 resource "azurerm_monitor_metric_alert" "alert_storage_account" {
   name                = "ma-${var.app_name}-${var.environment}-${var.location}-02"
   resource_group_name = data.azurerm_resource_group.devops_rg.name
-  scopes              = [azurerm_storage_account.storage_account.id]
+  scopes              = [var.storage_account_id]
   description         = "Action will be triggered when Transactions count is greater than 50."
 
   criteria {
@@ -62,14 +104,14 @@ resource "azurerm_monitor_metric_alert" "alert_storage_account" {
   }
 
   action {
-    action_group_id = azurerm_monitor_action_group.main.id
+    action_group_id = azurerm_monitor_action_group.action_group.id
   }
 }
 
 resource "azurerm_monitor_metric_alert" "alert_database" {
   name                = "ma-${var.app_name}-${var.environment}-${var.location}-03"
   resource_group_name = data.azurerm_resource_group.devops_rg.name
-  scopes              = [azurerm_mssql_database.sqldb-planepal-dev-neu-01.id]
+  scopes              = [var.database_id]
   description         = "Action will be triggered when DTU is greater than 60."
 
 criteria {
@@ -81,20 +123,27 @@ criteria {
   }
 
   action {
-    action_group_id = azurerm_monitor_action_group.main.id
+    action_group_id = azurerm_monitor_action_group.action_group.id
   }
 }
 
 resource "azurerm_monitor_activity_log_alert" "alert_serviceHealth" {
   name                = "ala-${var.app_name}-${var.environment}-${var.location}-01"
   resource_group_name = data.azurerm_resource_group.devops_rg.name
-  scopes              = [data.azurerm_resource_group.devops_rg.id]
+  scopes              = [var.var.resource_group_id]
 
   criteria {
     category = "ServiceHealth"
   }
 
   action {
-    action_group_id = azurerm_monitor_action_group.example.id
+    action_group_id = azurerm_monitor_action_group.action_group.id
   }
+}
+
+resource "azurerm_application_insights" "app_insights" {
+  name                = "appi-${var.app_name}-${var.environment}-${var.location}-01"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  application_type    = "web"
 }
