@@ -1,0 +1,25 @@
+trigger:
+- '*'
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: TerraformInstaller@1
+  inputs:
+    terraformVersion: 'latest'
+- task: TerraformTaskV4@4
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    backendServiceArm: $(subscription)
+    backendAzureRmResourceGroupName: $(resource-group)
+    backendAzureRmStorageAccountName: $(storage-account)
+    backendAzureRmContainerName: $(container-name)
+    backendAzureRmKey: $(tfstate-key)
+- task: TerraformTaskV4@4
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    commandOptions: '-out=plan'
+    environmentServiceNameAzureRM: $(subscription)
