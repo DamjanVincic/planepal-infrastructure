@@ -11,7 +11,6 @@ parameters:
 
 variables:
 - template: vars/vars-global.yaml
-- template: vars/vars-dev.yaml
 
 pool:
   vmImage: ubuntu-latest
