@@ -2,7 +2,8 @@ trigger:
 - none
 
 variables:
-- group: infrastructure-group
+- template: vars/vars-global.yaml
+- template: vars/vars-dev.yaml
 
 pool:
   vmImage: ubuntu-latest
@@ -16,11 +17,11 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
-    backendServiceArm: $(subscription)
-    backendAzureRmResourceGroupName: $(resource-group)
-    backendAzureRmStorageAccountName: $(storage-account)
-    backendAzureRmContainerName: $(container-name)
-    backendAzureRmKey: '$(tfstate-key)-$(environment).tfstate'
+    backendServiceArm: ${{ variables.subscription }}
+    backendAzureRmResourceGroupName: ${{ variables. resource-group  }}
+    backendAzureRmStorageAccountName: ${{ variables.storage-account }}
+    backendAzureRmContainerName: ${{ variables.container-name }}
+    backendAzureRmKey: '${{ variables.tfstate-key }}-${{ variables.environment}}.tfstate'
 
 - task: TerraformTaskV4@4
   inputs:

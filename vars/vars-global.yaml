@@ -1,0 +1,6 @@
+variables:
+  container-name: "tfstate"
+  resource-group: "DevOps"
+  storage-account: "stdevopsneu01"
+  subscription: "Levi9Internship2023SP-Automation"
+  tfstate-key: "terraform"
