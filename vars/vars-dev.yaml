@@ -1,2 +1,3 @@
 variables:
-  environment: "dev"
+- name: environment
+  value: dev

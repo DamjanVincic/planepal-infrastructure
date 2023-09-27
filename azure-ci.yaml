@@ -18,7 +18,7 @@ steps:
     provider: 'azurerm'
     command: 'init'
     backendServiceArm: ${{ variables.subscription }}
-    backendAzureRmResourceGroupName: ${{ variables. resource-group  }}
+    backendAzureRmResourceGroupName: ${{ variables.resource-group  }}
     backendAzureRmStorageAccountName: ${{ variables.storage-account }}
     backendAzureRmContainerName: ${{ variables.container-name }}
     backendAzureRmKey: '${{ variables.tfstate-key }}-${{ variables.environment}}.tfstate'

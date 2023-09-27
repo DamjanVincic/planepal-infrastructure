@@ -1,6 +1,11 @@
 variables:
-  container-name: "tfstate"
-  resource-group: "DevOps"
-  storage-account: "stdevopsneu01"
-  subscription: "Levi9Internship2023SP-Automation"
-  tfstate-key: "terraform"
+- name: container-name
+  value: tfstate
+- name: resource-group
+  value: DevOps
+- name: storage-account
+  value: stdevopsneu01
+- name: subscription
+  value: Levi9Internship2023SP-Automation
+- name: tfstate-key
+  value: terraform
