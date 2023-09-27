@@ -1,30 +1,30 @@
 variable "location" {
   type        = string
-  description = "location where zour resource needs provision in azure"
+  description = "Location for resources"
   default     = "northeurope"
 }
 
 variable "resource_group" {
   type        = string
-  description = "resource_group name"
+  description = "Resource group name"
   default     = "DevOps"
 }
 
 variable "app_name" {
   type        = string
-  description = "Name of Application"
+  description = "Application name"
   default     = "PlanePal"
 }
 
 variable "environment" {
   type        = string
-  description = "Name of Environment"
+  description = "Environment name"
   default     = "dev"
 }
 
 variable "dot_net_version" {
   type        = string
-  description = "Dot Net Version"
+  description = "Dotnet Version"
   default     = "v6.0"
 }
 
@@ -37,16 +37,6 @@ variable "app_sku" {
 variable "location_abbreviation" {
   type    = string
   default = "neu"
-}
-
-variable "sql_login" {
-  type    = string
-  default = "JakoTajnoIme"
-}
-
-variable "sql_password" {
-  type    = string
-  default = "JakoTajnaSifra123!"
 }
 
 variable "sql_version" {
@@ -85,7 +75,20 @@ variable "replication_type" {
   default = "LRS"
 }
 
-variable "tenant_id" {
-  type = string
-  default = "40758481-7365-442c-ae94-563ed1606218"
+variable "devops_kv_name" {
+  type        = string
+  description = "Name of DevOps Key Vault for infrastructure"
+  default     = "kv-devops-dev-neu-00"
+}
+
+variable "key_sql_username" {
+  type        = string
+  description = "Key for SQL username in DevOps database"
+  default     = "sqllogin"
+}
+
+variable "key_sql_password" {
+  type        = string
+  description = "Key for SQL password in DevOps database"
+  default     = "sqlpassword"
 }
