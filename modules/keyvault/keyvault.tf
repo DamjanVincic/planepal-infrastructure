@@ -81,7 +81,7 @@ resource "azurerm_key_vault_access_policy" "kv_access_policy" {
   object_id    = var.principal_id
 
   secret_permissions = [
-    "Get",
+    "Get", "List"
   ]
 }
 
