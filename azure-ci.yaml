@@ -1,6 +1,9 @@
 trigger:
 - none
 
+variables:
+- group: infrastructure-group
+
 pool:
   vmImage: ubuntu-latest
 
