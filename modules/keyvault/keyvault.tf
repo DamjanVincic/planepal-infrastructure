@@ -127,15 +127,11 @@ resource "azurerm_key_vault_secret" "kv_base_URL" {
   key_vault_id = azurerm_key_vault.kv_for_app.id
 }
 
-resource "azurerm_key_vault_secret" "kv_email" {
-  name         = kv_email
-  value        = var.kv_email
-  key_vault_id = azurerm_key_vault.kv_for_app.id
-}
 
 resource "azurerm_key_vault_secret" "kv_email_pass" {
   name         = kv_email_pass
   value        = var.kv_email_pass
+  content_type = var.kv_email
   key_vault_id = azurerm_key_vault.kv_for_app.id
 }
 
