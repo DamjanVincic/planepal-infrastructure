@@ -6,10 +6,7 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name  = "Devops"
-    storage_account_name = "stdevopsneu01"
-    container_name       = "tfstate"
-    key                  = "terraform.tfstate"
+    
   }
 }
 

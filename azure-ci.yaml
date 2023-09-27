@@ -16,6 +16,11 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
+    commandOptions: -backend-config="resource_group_name=$(resource-group)" \
+                    -backend-config="storage_account_name=$(storage-account)" \
+                    -backend-config="container_name=$(container-name)" \
+                    -backend-config="key=$(tfstate-key)"
+
     backendServiceArm: $(subscription)
     backendAzureRmResourceGroupName: $(resource-group)
     backendAzureRmStorageAccountName: $(storage-account)
