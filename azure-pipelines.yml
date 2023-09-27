@@ -1,8 +1,8 @@
 resources:
   repositories:
     - repository: InternshipApp
-      type: azureRepo
-      name: YourAzureProject/YourRepoName
+      type: git
+      name: InternshipApp/InternshipApp
       ref: refs/heads/develop
 jobs:
 - job: Build
@@ -12,7 +12,6 @@ jobs:
   steps:
   - checkout: self
   - checkout: InternshipApp
-    path: 'PlanePal'  # Specify the target folder where you want to clone the repository
   - task: UseDotNet@2
     inputs:
       packageType: 'sdk'
