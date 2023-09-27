@@ -1,46 +1,24 @@
-trigger:
-- none
-
-pool:
-  vmImage: 'windows-latest'
-
-variables:
-  solution: 'PlanePal/**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-
 resources:
   repositories:
-    - repository: InternshipApp  # Unique name for the external repository
-      type: git  # Replace with the appropriate repository type (GitHub, Azure DevOps, etc.)
-      name: YourGitHubUsername/InternshipApp  # Replace with the actual repository URL or name
-      ref: refs/heads/develop  # Specify the branch you want to use
-
-
+    - repository: InternshipApp
+      type: azureRepo
+      name: YourAzureProject/YourRepoName
+      ref: refs/heads/develop
 jobs:
 - job: Build
+  displayName: 'Build .NET 6 App'
   pool:
     vmImage: 'windows-latest'
   steps:
   - checkout: self
-  - checkout: InternshipApp  # Checkout the external repository
+  - checkout: InternshipApp
+    path: 'PlanePal'  # Specify the target folder where you want to clone the repository
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '6.x'  # Replace with the desired .NET 6 version
+      installationPath: $(Agent.ToolsDirectory)/dotnet
   - script: |
-      # Your build steps here
-    displayName: 'Build InternshipApp'
-  - task: NuGetToolInstaller@1
-
-  - task: NuGetCommand@2
-    inputs:
-      restoreSolution: '$(solution)'
-
-  - task: VSTest@2
-
-  - script: dotnet build --configuration $(buildConfiguration)
-    displayName: 'dotnet build $(buildConfiguration)'
-
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'publish'
-      arguments: '--configuration $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/Output'
-      publishWebProjects: true
-
+      cd PlanePal
+      dotnet build
+    displayName: 'Build .NET 6 App in PlanePal'
