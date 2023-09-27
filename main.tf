@@ -34,10 +34,12 @@ module "storage" {
   replication_type = var.replication_type
   location         = var.location
   environment      = var.environment
+  outbound_ip_address_list = module.app_service.outbound_ip_address_list
 }
 
 module "key_vault" {
   source = "./modules/keyvault"
+
 
   location         = var.location
   resource_group   = var.resource_group
@@ -49,6 +51,7 @@ module "key_vault" {
   devops_kv_name   = var.devops_kv_name
   key_sql_username = var.key_sql_username
   key_sql_password = var.key_sql_password
+  outbound_ip_address_list = module.app_service.outbound_ip_address_list
 }
 
 module "logging" {
