@@ -40,6 +40,14 @@ resource "azurerm_mssql_server" "sql-planepal-dev-neu-01" {
   version                      = var.sql_version
   administrator_login          = var.sql_login.value
   administrator_login_password = var.sql_password.value
+
+}
+
+resource "azurerm_mssql_firewall_rule" "FirewallRule" {
+  name                = "FirewallRule1"
+  server_id        = azurerm_mssql_server.sql-planepal-dev-neu-01.id
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
 }
 
 resource "azurerm_mssql_database" "sqldb-planepal-dev-neu-01" {

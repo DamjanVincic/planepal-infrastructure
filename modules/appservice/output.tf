@@ -9,3 +9,6 @@ output "object_id" {
 output "web_app_id" {
   value = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.id
 }
+output "outbound_ip_address_list" {
+  value = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.outbound_ip_address_list
+}
