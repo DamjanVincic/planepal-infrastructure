@@ -12,6 +12,9 @@ variable "app_name" {
   type        = string
   description = "Name of Application"
 }
+variable "outbound_ip_address_list" {
+  description = "List of ips used by app service"
+}
 
 variable "environment" {
   type        = string
@@ -88,6 +91,18 @@ resource "azurerm_key_vault" "kv_for_app" {
 
   sku_name = var.kv_app_sku_name
 
+  network_acls {
+    # The Default Action to use when no rules match from ip_rules / 
+    # virtual_network_subnet_ids. Possible values are Allow and Deny
+  default_action = "Deny"
+
+    # Allows all azure services to access your keyvault. Can be set to 'None'
+  bypass         = "AzureServices"
+
+    # The list of allowed ip addresses.
+  ip_rules       = var.outbound_ip_address_list
+
+  }  
 }
 
 resource "azurerm_key_vault_access_policy" "kv_access_policy" {

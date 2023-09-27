@@ -28,6 +28,9 @@ variable "environment" {
   type        = string
 }
 
+variable "outbound_ip_address_list" {
+  description = "List of ips used by app service"
+}
 
 resource "azurerm_storage_account" "storage_account" {
   name                     = "st${lower(var.app_name)}${var.environment}01"
@@ -35,6 +38,12 @@ resource "azurerm_storage_account" "storage_account" {
   location                 = var.location
   account_tier             = var.account_tier
   account_replication_type = var.replication_type
+
+  network_rules {
+    default_action             = "Deny"
+    ip_rules                   = var.outbound_ip_address_list
+  }
+
 }
 
 resource "azurerm_storage_container" "storage_container" {

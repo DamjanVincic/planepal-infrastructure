@@ -5,6 +5,9 @@ terraform {
       version = "= 3.74"
     }
   }
+  backend "azurerm" {
+    
+  }
 }
 
 provider "azurerm" {
@@ -22,7 +25,6 @@ module "app_service" {
   environment         = var.environment
   dot_net_version     = var.dot_net_version
   app_sku             = var.app_sku
-
 }
 
 module "storage" {
@@ -34,10 +36,12 @@ module "storage" {
   replication_type = var.replication_type
   location         = var.location
   environment      = var.environment
+  outbound_ip_address_list = module.app_service.outbound_ip_address_list
 }
 
 module "key_vault" {
   source = "./modules/keyvault"
+
 
   location         = var.location
   resource_group   = var.resource_group
@@ -52,6 +56,8 @@ module "key_vault" {
   kv_API_key       = var.kv_API_key
   kv_email         = var.kv_email
   kv_email_pass    = var.kv_email_pass
+
+  outbound_ip_address_list = module.app_service.outbound_ip_address_list
 }
 
 module "logging" {

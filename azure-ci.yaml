@@ -1,6 +1,10 @@
 trigger:
 - none
 
+variables:
+- template: vars/vars-global.yaml
+- template: vars/vars-dev.yaml
+
 pool:
   vmImage: ubuntu-latest
 
@@ -17,7 +21,7 @@ steps:
     backendAzureRmResourceGroupName: $(resource-group)
     backendAzureRmStorageAccountName: $(storage-account)
     backendAzureRmContainerName: $(container-name)
-    backendAzureRmKey: $(tfstate-key)
+    backendAzureRmKey: '$(tfstate-key)-$(environment).tfstate'
 
 - task: TerraformTaskV4@4
   inputs:
