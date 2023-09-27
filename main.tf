@@ -22,7 +22,6 @@ module "app_service" {
   environment         = var.environment
   dot_net_version     = var.dot_net_version
   app_sku             = var.app_sku
-
 }
 
 module "storage" {
