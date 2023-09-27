@@ -17,11 +17,11 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
-    backendServiceArm: $(variables.subscription)
-    backendAzureRmResourceGroupName: $(variables.resource-group)
-    backendAzureRmStorageAccountName: $(variables.storage-account)
-    backendAzureRmContainerName: $(variables.container-name)
-    backendAzureRmKey: '$(variables.tfstate-key)-$(variables.environment).tfstate'
+    backendServiceArm: $(subscription)
+    backendAzureRmResourceGroupName: $(resource-group)
+    backendAzureRmStorageAccountName: $(storage-account)
+    backendAzureRmContainerName: $(container-name)
+    backendAzureRmKey: '$(tfstate-key)-$(environment).tfstate'
 
 - task: TerraformTaskV4@4
   inputs:
@@ -33,4 +33,4 @@ steps:
     provider: 'azurerm'
     command: 'plan'
     # commandOptions: '-out=plan'
-    environmentServiceNameAzureRM: $(variables.subscription)
+    environmentServiceNameAzureRM: $(subscription)
