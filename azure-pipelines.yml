@@ -2,7 +2,7 @@ resources:
   repositories:
     - repository: InternshipApp
       type: git
-      name: InternshipApp/InternshipApp
+      name: InternshipApp
       ref: refs/heads/develop
 jobs:
 - job: Build
