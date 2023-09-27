@@ -18,5 +18,5 @@ steps:
     azureSubscription: 'Levi9Internship2023SP-Automation'
     appType: 'webApp'
     WebAppName: 'app-PlanePal-dev-northeurope-00'
-    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+    package: 'D:\a\1\s\$(Build.ArtifactsDirectory)\drop/WebApp.zip'
     
