@@ -100,3 +100,11 @@ variable "kv_base_URL" {
 variable "kv_API_key" {
   type        = string
 }
+
+variable "kv_email" {
+  type        = string
+}
+
+variable "kv_email_pass" {
+  type        = string
+}

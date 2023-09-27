@@ -50,7 +50,8 @@ module "key_vault" {
   key_sql_username = var.key_sql_username
   key_sql_password = var.key_sql_password
   kv_API_key       = var.kv_API_key
-  
+  kv_email         = var.kv_email
+  kv_email_pass    = var.kv_email_pass
 }
 
 module "logging" {
