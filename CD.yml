@@ -4,7 +4,6 @@ pool:
   vmImage: windows-latest
 
 steps:
-steps:
 - download: current
   artifact: 'drop'
 - task: AzureRmWebAppDeployment@4
