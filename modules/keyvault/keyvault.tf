@@ -31,6 +31,36 @@ variable "principal_id" {
   type = string
 }
 
+variable "devops_kv_name" {
+  type = string
+}
+
+variable "key_sql_username" {
+  type        = string
+  description = "Key for SQL username in DevOps database"
+}
+
+variable "key_sql_password" {
+  type        = string
+  description = "Key for SQL password in DevOps database"
+}
+
+
+data "azurerm_key_vault" "devops_kv" {
+  name                = var.devops_kv_name
+  resource_group_name = var.resource_group
+}
+
+data "azurerm_key_vault_secret" "sql_username" {
+  name         = var.key_sql_username
+  key_vault_id = data.azurerm_key_vault.devops_kv.id
+}
+
+data "azurerm_key_vault_secret" "sql_password" {
+  name         = var.key_sql_password
+  key_vault_id = data.azurerm_key_vault.devops_kv.id
+}
+
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "kv_for_app" {
