@@ -4,13 +4,11 @@ pool:
   vmImage: windows-latest
 
 steps:
-
-
-
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
     azureSubscription: 'Levi9Internship2023SP-Automation'
     appType: 'webApp'
     WebAppName: 'app-PlanePal-dev-northeurope-00'
-    Package:  package:'$(Build.ArtifactStagingDirectory)/drop/**/*.zip'
+    package: '$(Build.ArtifactStagingDirectory)/Output/**/*.zip'
+    
