@@ -9,29 +9,28 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-  resources:
-  repositories:
-  - repository: InternshipApp
-    type: git
-    name: InternshipApp
-    ref: develop
+resources:
+repositories:
+- repository: InternshipApp
+  type: git
+  name: InternshipApp
+  ref: develop
 
-stages:
-- stage: BuildAndTest
-  jobs:
-  - job: DeployToAzure
-    steps:
-    - checkout: InternshipApp 
-  - job: Build
-    steps:
-    - task: NuGetToolInstaller@1
+- checkout: InternshipApp 
+- task: NuGetToolInstaller@1
 
-    - task: NuGetCommand@2
-      inputs:
-        restoreSolution: '$(solution)'
-    - task: VSTest@2
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
 
-    - script: dotnet build --configuration $(buildConfiguration)
-      displayName: 'dotnet build $(buildConfiguration)'
+- task: VSTest@2
 
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    arguments: '--configuration $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/Output'
+    publishWebProjects: true
 
