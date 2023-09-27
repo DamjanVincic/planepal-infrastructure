@@ -92,3 +92,11 @@ variable "key_sql_password" {
   description = "Key for SQL password in DevOps database"
   default     = "sqlpassword"
 }
+
+variable "kv_base_URL" {
+  type        = string
+}
+
+variable "kv_API_key" {
+  type        = string
+}

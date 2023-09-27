@@ -49,6 +49,8 @@ module "key_vault" {
   devops_kv_name   = var.devops_kv_name
   key_sql_username = var.key_sql_username
   key_sql_password = var.key_sql_password
+  kv_API_key       = var.kv_API_key
+  
 }
 
 module "logging" {
