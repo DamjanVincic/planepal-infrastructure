@@ -1,25 +1,32 @@
-
 variable "resource_group_name" {
   type = string
 }
+
 variable "environment" {
   type = string
 }
+
 variable "location" {
   type = string
 }
+
 variable "app_name" {
   type = string
 }
+
 variable "instrumentation_key" {
   type = string
 }
+
 variable "dot_net_version" {
   type = string
 }
+
 variable "app_sku" {
   type = string
 }
+
+
 resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
   name                = "asp-${var.app_name}-${var.environment}-${var.location}-00"
   resource_group_name = var.resource_group_name

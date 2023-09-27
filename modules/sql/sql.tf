@@ -16,14 +16,15 @@ variable "location" {
 variable "location_abbreviation" {
   type = string
 }
+
 variable "sql_version" {
   type = string
 }
 variable "sql_login" {
-  
+
 }
 variable "sql_password" {
-  
+
 }
 variable "sqldb_sku_name" {
   type = string

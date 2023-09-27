@@ -39,14 +39,14 @@ module "storage" {
 module "key_vault" {
   source = "./modules/keyvault"
 
-  location        = var.location
-  resource_group  = var.resource_group
-  app_name        = var.app_name
-  environment     = var.environment
-  kv_app_sku_name = var.kv_app_sku_name
-  tenant_id       = module.app_service.tenant_id
-  principal_id    = module.app_service.object_id
-  devops_kv_name = var.devops_kv_name
+  location         = var.location
+  resource_group   = var.resource_group
+  app_name         = var.app_name
+  environment      = var.environment
+  kv_app_sku_name  = var.kv_app_sku_name
+  tenant_id        = module.app_service.tenant_id
+  principal_id     = module.app_service.object_id
+  devops_kv_name   = var.devops_kv_name
   key_sql_username = var.key_sql_username
   key_sql_password = var.key_sql_password
 }
@@ -55,26 +55,26 @@ module "logging" {
   source = "./modules/logging"
 
   resource_group_name  = var.resource_group
-  location        = var.location
-  app_name        = var.app_name
-  environment     = var.environment
+  location             = var.location
+  app_name             = var.app_name
+  environment          = var.environment
   location_abbravation = var.location_abbreviation
-  app_service_id = module.app_service.web_app_id
-  storage_account_id = module.storage.account_id
-  database_id = module.sql.sqldb_id
+  app_service_id       = module.app_service.web_app_id
+  storage_account_id   = module.storage.account_id
+  database_id          = module.sql.sqldb_id
 }
 
 module "sql" {
-  source = "./modules/sql"
-  resource_group_name = var.resource_group
-  app_name = var.app_name
-  environment = var.environment
-  location = var.location
+  source                = "./modules/sql"
+  resource_group_name   = var.resource_group
+  app_name              = var.app_name
+  environment           = var.environment
+  location              = var.location
   location_abbreviation = var.location_abbreviation
-  sql_version = var.sql_version
-  sqldb_sku_name = var.sqldb_sku_name
+  sql_version           = var.sql_version
+  sqldb_sku_name        = var.sqldb_sku_name
   sqldb_sku_max_gb_size = var.sqldb_sku_max_gb_size
-  sql_login = module.key_vault.sql_username
-  sql_password = module.key_vault.sql_password
+  sql_login             = module.key_vault.sql_username
+  sql_password          = module.key_vault.sql_password
 }
 

@@ -76,19 +76,19 @@ variable "replication_type" {
 }
 
 variable "devops_kv_name" {
-  type = string
+  type        = string
   description = "Name of DevOps Key Vault for infrastructure"
-  default = "kv-devops-dev-neu-00"
+  default     = "kv-devops-dev-neu-00"
 }
 
 variable "key_sql_username" {
-  type = string
+  type        = string
   description = "Key for SQL username in DevOps database"
-  default = "sqllogin"
+  default     = "sqllogin"
 }
 
 variable "key_sql_password" {
-  type = string
+  type        = string
   description = "Key for SQL password in DevOps database"
-  default = "sqlpassword"
+  default     = "sqlpassword"
 }
