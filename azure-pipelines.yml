@@ -38,5 +38,5 @@ jobs:
       configuration: '$(buildConfiguration)'
   - task: PublishBuildArtifacts@1
     inputs:
-      pathToPublish: '$(Build.ArtifactStagingDirectory)'
+      pathToPublish: '$(Build.ArtifactStagingDirectory)/Output'
       artifactName: drop
