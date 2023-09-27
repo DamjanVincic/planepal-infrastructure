@@ -39,15 +39,15 @@ variable "storage_account_id" {
   description = "Storage account id, used for creating storage account alert"
 }
 
-variable "resource_group_id" {
-  type        = string
-  description = "Resource group id, used for creating resource group alert"
+
+data "azurerm_resource_group" "devops_rg" {
+  name = var.resource_group_name
 }
 
 resource "azurerm_log_analytics_workspace" "log-a-w" {
   name                = "log-${var.app_name}-${var.environment}-${var.location}-01"
   location            = var.location
-  resource_group_name = var.resource_group
+  resource_group_name = var.resource_group_name
   sku                 = "PerGB2018"
   retention_in_days   = 30
 }
@@ -81,7 +81,6 @@ resource "azurerm_monitor_metric_alert" "alert_app_service" {
     aggregation      = "Average"
     operator         = "GreaterThan"
     threshold        = 60
-    time_aggregation = "Average"
   }
 
   action {
@@ -130,7 +129,7 @@ resource "azurerm_monitor_metric_alert" "alert_database" {
 resource "azurerm_monitor_activity_log_alert" "alert_serviceHealth" {
   name                = "ala-${var.app_name}-${var.environment}-${var.location}-01"
   resource_group_name = data.azurerm_resource_group.devops_rg.name
-  scopes              = [var.resource_group_id]
+  scopes              = [data.azurerm_resource_group.devops_rg.id]
 
   criteria {
     category = "ServiceHealth"

@@ -1,9 +1,18 @@
+variable "resource_group_name" {
+  type = string
+}
+
 variable "app_name" {
   type = string
 }
 variable "environment" {
   type = string
 }
+
+variable "location" {
+  type = string
+}
+
 variable "location_abbreviation" {
   type = string
 }
@@ -11,10 +20,10 @@ variable "sql_version" {
   type = string
 }
 variable "sql_login" {
-  type = string
+  
 }
 variable "sql_password" {
-  type = string
+  
 }
 variable "sqldb_sku_name" {
   type = string
@@ -25,11 +34,11 @@ variable "sqldb_sku_max_gb_size" {
 
 resource "azurerm_mssql_server" "sql-planepal-dev-neu-01" {
   name                         = "sql${lower(var.app_name)}${var.environment}${var.location_abbreviation}00"
-  resource_group_name          = var.resource_group
+  resource_group_name          = var.resource_group_name
   location                     = var.location
   version                      = var.sql_version
-  administrator_login          = var.sql_login
-  administrator_login_password = var.sql_password
+  administrator_login          = var.sql_login.value
+  administrator_login_password = var.sql_password.value
 }
 
 resource "azurerm_mssql_database" "sqldb-planepal-dev-neu-01" {
