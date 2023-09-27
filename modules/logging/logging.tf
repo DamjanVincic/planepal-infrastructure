@@ -44,6 +44,10 @@ data "azurerm_resource_group" "devops_rg" {
   name = var.resource_group_name
 }
 
+data "azurerm_subscription" "subscription" {
+
+}
+
 resource "azurerm_log_analytics_workspace" "log-a-w" {
   name                = "log-${var.app_name}-${var.environment}-${var.location}-01"
   location            = var.location
@@ -73,14 +77,14 @@ resource "azurerm_monitor_metric_alert" "alert_app_service" {
   name                = "ma-${var.app_name}-${var.environment}-${var.location}-01"
   resource_group_name = var.resource_group_name
   scopes              = [var.app_service_id]
-  description         = "Action will be triggered when CpuPercentage is greater than 60."
+  description         = "Action will be triggered when CpuTime is greater than 80."
 
   criteria {
     metric_namespace = "Microsoft.Web/sites"
-    metric_name      = "CpuPercentage"
+    metric_name      = "CpuTime"
     aggregation      = "Average"
     operator         = "GreaterThan"
-    threshold        = 60
+    threshold        = 80
   }
 
   action {
@@ -129,7 +133,7 @@ resource "azurerm_monitor_metric_alert" "alert_database" {
 resource "azurerm_monitor_activity_log_alert" "alert_serviceHealth" {
   name                = "ala-${var.app_name}-${var.environment}-${var.location}-01"
   resource_group_name = data.azurerm_resource_group.devops_rg.name
-  scopes              = [data.azurerm_resource_group.devops_rg.id]
+  scopes              = [data.azurerm_subscription.subscription.id]
 
   criteria {
     category = "ServiceHealth"
