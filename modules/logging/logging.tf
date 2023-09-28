@@ -100,7 +100,7 @@ resource "azurerm_monitor_metric_alert" "alert_app_service" {
 resource "azurerm_monitor_metric_alert" "alert_app_service-02" {
   name                = "ma-${var.app_name}-${var.environment}-${var.location}-04"
   resource_group_name = var.resource_group_name
-  scopes              = [var.var.app_service_id]
+  scopes              = [var.var.app_service_plan_id]
   description         = "Action will be triggered when average MemoryPercentage is greater than 80."
 
   criteria {
