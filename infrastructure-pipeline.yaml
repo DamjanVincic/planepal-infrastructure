@@ -15,15 +15,17 @@ variables:
 stages:
 - stage: Plan
   jobs:
-  - job: Plan_job
+  - job: Plan
     pool:
       vmImage: ubuntu-latest
     steps:
     - task: TerraformInstaller@1
+      displayName: 'Terraform installation'
       inputs:
         terraformVersion: 'latest'
 
     - task: TerraformTaskV4@4
+      displayName: 'Terraform init'
       inputs:
         provider: 'azurerm'
         command: 'init'
@@ -34,21 +36,22 @@ stages:
         backendAzureRmKey: '$(tfstate-key)-${{ parameters.environment }}.tfstate'
 
     - task: TerraformTaskV4@4
+      displayName: 'Terraform validation'
       inputs:
         provider: 'azurerm'
         command: 'validate'
         
     - task: TerraformTaskV4@4
+      displayName: 'Terraform plan'
       inputs:
         provider: 'azurerm'
         command: 'plan'
         environmentServiceNameAzureRM: $(subscription)
   - job: waitForValidation
-    # dependsOn: Plan_job
     pool: server
     steps:
     - task: ManualValidation@0
-      displayName: Wait for validation
+      displayName: 'Manual validation'
       timeoutInMinutes: 1440
       inputs:
         notifyUsers: 'd.vincic-int@levi9.com'
