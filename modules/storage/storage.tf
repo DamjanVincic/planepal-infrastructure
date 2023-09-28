@@ -38,12 +38,6 @@ resource "azurerm_storage_account" "storage_account" {
   location                 = var.location
   account_tier             = var.account_tier
   account_replication_type = var.replication_type
-
-  network_rules {
-    default_action = "Deny"
-    ip_rules       = var.outbound_ip_address_list
-  }
-
 }
 
 resource "azurerm_storage_container" "storage_container" {
