@@ -1,0 +1,79 @@
+trigger:
+- none
+
+parameters:
+  - name: environment
+    displayName: Environment
+    type: string
+    default: dev
+    values:
+    - dev
+
+variables:
+- template: vars/vars-global.yaml
+
+stages:
+- stage: Plan
+  jobs:
+  - job: Plan
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
+
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: $(subscription)
+        backendAzureRmResourceGroupName: $(resource-group)
+        backendAzureRmStorageAccountName: $(storage-account)
+        backendAzureRmContainerName: $(container-name)
+        backendAzureRmKey: '$(tfstate-key)-${{ parameters.environment }}.tfstate'
+
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+        
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        environmentServiceNameAzureRM: $(subscription)
+    - task: ManualValidation@0
+      timeoutInMinutes: 1440
+      inputs:
+        instructions: 'Please validate the build configuration and resume'
+        onTimeout: 'reject'
+- stage: Apply
+  dependsOn: Plan
+  jobs:
+  - job: Apply
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: TerraformInstaller@1
+      displayName: 'Terraform install'
+      inputs:
+        terraformVersion: "latest"
+
+    - task: TerraformTaskV4@4
+      displayName: 'Terraform init'
+      inputs:
+        provider: "azurerm"
+        command: "init"
+        backendServiceArm: $(subscription)
+        backendAzureRmResourceGroupName: $(resource-group)
+        backendAzureRmStorageAccountName: $(storage-account)
+        backendAzureRmContainerName: $(container-name)
+        backendAzureRmKey: "$(tfstate-key)-${{ parameters.environment }}.tfstate"
+
+    - task: TerraformTaskV4@4
+      displayName: 'Terraform apply'
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        environmentServiceNameAzureRM: "$(subscription)"
