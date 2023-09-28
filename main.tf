@@ -6,7 +6,7 @@ terraform {
     }
   }
   backend "azurerm" {
-    
+
   }
 }
 
@@ -30,12 +30,12 @@ module "app_service" {
 module "storage" {
   source = "./modules/storage"
 
-  resource_group   = var.resource_group
-  app_name         = var.app_name
-  account_tier     = var.account_tier
-  replication_type = var.replication_type
-  location         = var.location
-  environment      = var.environment
+  resource_group           = var.resource_group
+  app_name                 = var.app_name
+  account_tier             = var.account_tier
+  replication_type         = var.replication_type
+  location                 = var.location
+  environment              = var.environment
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
 }
 
@@ -71,6 +71,7 @@ module "logging" {
   app_service_id       = module.app_service.web_app_id
   storage_account_id   = module.storage.account_id
   database_id          = module.sql.sqldb_id
+  app_service_plan_id  = module.app_service.app_service_plan_id
 }
 
 module "sql" {

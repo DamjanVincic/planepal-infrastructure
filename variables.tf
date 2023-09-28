@@ -94,21 +94,21 @@ variable "key_sql_password" {
 }
 
 variable "kv_base_URL" {
-  type        = string
-  default     = "http://api.aviationstack.com/v1/"
+  type    = string
+  default = "http://api.aviationstack.com/v1/"
 }
 
 variable "kv_API_key" {
-  type        = string
-  default     = "80a59692084fa732aa86028061a0d769"
+  type    = string
+  default = "80a59692084fa732aa86028061a0d769"
 }
 
 variable "kv_email" {
-  type        = string
-  default     = "yourplainpal@gmail.com"
+  type    = string
+  default = "yourplainpal@gmail.com"
 }
 
 variable "kv_email_pass" {
-  type        = string
-  default     = "zboi ogmk minq lrya"
+  type    = string
+  default = "zboi ogmk minq lrya"
 }
