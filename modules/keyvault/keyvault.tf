@@ -111,6 +111,7 @@ resource "azurerm_key_vault" "kv_for_app" {
   tenant_id                  = var.tenant_id
   soft_delete_retention_days = 7
   purge_protection_enabled   = false
+  
 
   sku_name = var.kv_app_sku_name
 
@@ -159,23 +160,35 @@ resource "azurerm_key_vault_secret" "kv_API_key" {
   name         = data.azurerm_key_vault_secret.kv_api_key.name
   value        = data.azurerm_key_vault_secret.kv_api_key.value
   key_vault_id = azurerm_key_vault.kv_for_app.id
+  depends_on = [
+    azurerm_key_vault.kv_for_app
+  ]
 }
 
 resource "azurerm_key_vault_secret" "kv_base_URL" {
   name         = var.kv_base_URL_name
   value        = var.kv_base_URL
   key_vault_id = azurerm_key_vault.kv_for_app.id
+  depends_on = [
+    azurerm_key_vault.kv_for_app
+  ]
 }
 
 resource "azurerm_key_vault_secret" "kv_email" {
   name         = data.azurerm_key_vault_secret.kv_email.name
   value        = data.azurerm_key_vault_secret.kv_email.value
   key_vault_id = azurerm_key_vault.kv_for_app.id
+  depends_on = [
+    azurerm_key_vault.kv_for_app
+  ]
 }
 
 resource "azurerm_key_vault_secret" "kv_email_pass" {
   name         = data.azurerm_key_vault_secret.kv_email_password.name
   value        = data.azurerm_key_vault_secret.kv_email_password.value
   key_vault_id = azurerm_key_vault.kv_for_app.id
+   depends_on = [
+    azurerm_key_vault.kv_for_app
+  ]
 }
 

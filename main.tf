@@ -6,7 +6,10 @@ terraform {
     }
   }
   backend "azurerm" {
-
+    resource_group_name  = "DevOps"
+      storage_account_name = "stdevopsneu01"
+      container_name       = "tfstate"
+      key                  = "terraform-dev.tfstate"
   }
 }
 
@@ -14,6 +17,7 @@ provider "azurerm" {
   skip_provider_registration = true
    features {
     key_vault {
+      purge_soft_deleted_secrets_on_destroy = true
       purge_soft_delete_on_destroy    = true
       recover_soft_deleted_key_vaults = false
     }
