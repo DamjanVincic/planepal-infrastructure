@@ -40,8 +40,8 @@ resource "azurerm_storage_account" "storage_account" {
   account_replication_type = var.replication_type
 
   network_rules {
-    default_action             = "Deny"
-    ip_rules                   = var.outbound_ip_address_list
+    default_action = "Deny"
+    ip_rules       = var.outbound_ip_address_list
   }
 
 }

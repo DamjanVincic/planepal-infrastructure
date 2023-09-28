@@ -53,19 +53,19 @@ variable "kv_base_URL_name" {
 }
 
 variable "kv_base_URL" {
-  type        = string
+  type = string
 }
 
 variable "kv_API_key" {
-  type        = string
+  type = string
 }
 
 variable "kv_email_key" {
-  type        = string
+  type = string
 }
 
 variable "kv_email_pass_key" {
-  type        = string
+  type = string
 }
 
 data "azurerm_key_vault" "devops_kv" {
@@ -84,17 +84,17 @@ data "azurerm_key_vault_secret" "sql_password" {
 }
 
 data "azurerm_key_vault_secret" "kv_email" {
-  name = var.kv_email_key
+  name         = var.kv_email_key
   key_vault_id = data.azurerm_key_vault.devops_kv.id
 }
 
 data "azurerm_key_vault_secret" "kv_email_password" {
-  name = var.kv_email_pass_key
+  name         = var.kv_email_pass_key
   key_vault_id = data.azurerm_key_vault.devops_kv.id
 }
 
 data "azurerm_key_vault_secret" "kv_api_key" {
-  name = var.kv_API_key
+  name         = var.kv_API_key
   key_vault_id = data.azurerm_key_vault.devops_kv.id
 }
 
@@ -113,15 +113,15 @@ resource "azurerm_key_vault" "kv_for_app" {
   network_acls {
     # The Default Action to use when no rules match from ip_rules / 
     # virtual_network_subnet_ids. Possible values are Allow and Deny
-  default_action = "Deny"
+    default_action = "Deny"
 
     # Allows all azure services to access your keyvault. Can be set to 'None'
-  bypass         = "AzureServices"
+    bypass = "AzureServices"
 
     # The list of allowed ip addresses.
-  ip_rules       = var.outbound_ip_address_list
+    ip_rules = var.outbound_ip_address_list
 
-  }  
+  }
 }
 
 resource "azurerm_key_vault_access_policy" "kv_access_policy" {
@@ -147,8 +147,8 @@ resource "azurerm_key_vault_secret" "kv_base_URL" {
 }
 
 resource "azurerm_key_vault_secret" "kv_email" {
-  name = data.azurerm_key_vault_secret.kv_email.name
-  value = data.azurerm_key_vault_secret.kv_email.value
+  name         = data.azurerm_key_vault_secret.kv_email.name
+  value        = data.azurerm_key_vault_secret.kv_email.value
   key_vault_id = azurerm_key_vault.kv_for_app.id
 }
 

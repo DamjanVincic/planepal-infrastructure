@@ -6,7 +6,7 @@ terraform {
     }
   }
   backend "azurerm" {
-    
+
   }
 }
 
@@ -30,33 +30,33 @@ module "app_service" {
 module "storage" {
   source = "./modules/storage"
 
-  resource_group   = var.resource_group
-  app_name         = var.app_name
-  account_tier     = var.account_tier
-  replication_type = var.replication_type
-  location         = var.location
-  environment      = var.environment
+  resource_group           = var.resource_group
+  app_name                 = var.app_name
+  account_tier             = var.account_tier
+  replication_type         = var.replication_type
+  location                 = var.location
+  environment              = var.environment
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
 }
 
 module "key_vault" {
   source = "./modules/keyvault"
 
-  location         = var.location
-  resource_group   = var.resource_group
-  app_name         = var.app_name
-  environment      = var.environment
-  kv_app_sku_name  = var.kv_app_sku_name
-  tenant_id        = module.app_service.tenant_id
-  principal_id     = module.app_service.object_id
-  devops_kv_name   = var.devops_kv_name
-  key_sql_username = var.key_sql_username
-  key_sql_password = var.key_sql_password
-  kv_API_key       = var.kv_API_key
-  kv_email_key         = var.kv_email_key
-  kv_email_pass_key    = var.kv_email_pass_key
-  kv_base_URL_name = var.kv_base_URL_name
-  kv_base_URL = var.kv_base_URL
+  location                 = var.location
+  resource_group           = var.resource_group
+  app_name                 = var.app_name
+  environment              = var.environment
+  kv_app_sku_name          = var.kv_app_sku_name
+  tenant_id                = module.app_service.tenant_id
+  principal_id             = module.app_service.object_id
+  devops_kv_name           = var.devops_kv_name
+  key_sql_username         = var.key_sql_username
+  key_sql_password         = var.key_sql_password
+  kv_API_key               = var.kv_API_key
+  kv_email_key             = var.kv_email_key
+  kv_email_pass_key        = var.kv_email_pass_key
+  kv_base_URL_name         = var.kv_base_URL_name
+  kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
 }
 
@@ -74,8 +74,8 @@ module "logging" {
 }
 
 module "sql" {
-  source                = "./modules/sql"
-  
+  source = "./modules/sql"
+
   resource_group_name   = var.resource_group
   app_name              = var.app_name
   environment           = var.environment

@@ -94,26 +94,26 @@ variable "key_sql_password" {
 }
 
 variable "kv_base_URL_name" {
-  type = string
+  type    = string
   default = "kv-base-url"
 }
 
 variable "kv_base_URL" {
-  type        = string
-  default     = "http://api.aviationstack.com/v1/"
+  type    = string
+  default = "http://api.aviationstack.com/v1/"
 }
 
 variable "kv_API_key" {
-  type        = string
-  default     = "api-key"
+  type    = string
+  default = "api-key"
 }
 
 variable "kv_email_key" {
-  type        = string
-  default     = "kv-email"
+  type    = string
+  default = "kv-email"
 }
 
 variable "kv_email_pass_key" {
-  type        = string
-  default     = "kv-email-password"
+  type    = string
+  default = "kv-email-password"
 }

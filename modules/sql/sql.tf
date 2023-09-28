@@ -44,10 +44,10 @@ resource "azurerm_mssql_server" "sql-planepal-dev-neu-01" {
 }
 
 resource "azurerm_mssql_firewall_rule" "FirewallRule" {
-  name                = "FirewallRule1"
+  name             = "FirewallRule1"
   server_id        = azurerm_mssql_server.sql-planepal-dev-neu-01.id
-  start_ip_address    = "0.0.0.0"
-  end_ip_address      = "0.0.0.0"
+  start_ip_address = "0.0.0.0"
+  end_ip_address   = "0.0.0.0"
 }
 
 resource "azurerm_mssql_database" "sqldb-planepal-dev-neu-01" {
