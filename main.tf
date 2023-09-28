@@ -5,7 +5,9 @@ terraform {
       version = "= 3.74"
     }
   }
-  
+  backend "azurerm" {
+    
+  }
 }
 
 provider "azurerm" {
