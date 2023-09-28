@@ -104,7 +104,7 @@ resource "azurerm_monitor_metric_alert" "alert_app_service-02" {
   description         = "Action will be triggered when average MemoryPercentage is greater than 80."
 
   criteria {
-    metric_namespace = "Microsoft.Web/sites"
+    metric_namespace = "Microsoft.Web/serverfarms"
     metric_name      = "MemoryPercentage"
     aggregation      = "Average"
     operator         = "GreaterThan"
