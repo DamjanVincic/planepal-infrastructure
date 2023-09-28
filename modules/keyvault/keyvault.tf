@@ -85,7 +85,8 @@ resource "azurerm_key_vault" "kv_for_app" {
   bypass         = "AzureServices"
 
     # The list of allowed ip addresses.
-  ip_rules       = var.outbound_ip_address_list
+ 
+  ip_rules  = "${concat(var.outbound_ip_address_list, [ "13.107.6.0/24", "13.107.9.0/24","13.107.42.0/24","13.107.43.0/24"])}"
 
   }  
 }
