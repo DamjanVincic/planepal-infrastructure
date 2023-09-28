@@ -15,7 +15,7 @@ variables:
 stages:
 - stage: Plan
   jobs:
-  - job: Plan
+  - job: Plan-job
     pool:
       vmImage: ubuntu-latest
     steps:
@@ -44,7 +44,7 @@ stages:
         command: 'plan'
         environmentServiceNameAzureRM: $(subscription)
   - job: waitForValidation
-    dependsOn: Plan
+    dependsOn: Plan-job
     pool: server
     steps:
     - task: ManualValidation@0
