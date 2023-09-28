@@ -142,7 +142,7 @@ resource "azurerm_key_vault" "kv_for_app" {
     bypass = "AzureServices"
 
     # The list of allowed ip addresses.
-    ip_rules  = "${concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)])}"
+    ip_rules  = "${concat(var.outbound_ip_address_list,  )}"
   }
 }
 
