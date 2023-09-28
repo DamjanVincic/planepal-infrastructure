@@ -115,7 +115,7 @@ resource "azurerm_key_vault" "kv_for_app" {
     object_id = var.principal_id
 
     secret_permissions = [
-      "Get", "List", "Create",
+      "Get", "List", "Set",
     ]
   }
 
