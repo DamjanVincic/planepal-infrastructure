@@ -48,6 +48,21 @@ variable "key_sql_password" {
   description = "Key for SQL password in DevOps database"
 }
 
+variable "kv_base_URL" {
+  type        = string
+}
+
+variable "kv_API_key" {
+  type        = string
+}
+
+variable "kv_email" {
+  type        = string
+}
+
+variable "kv_email_pass" {
+  type        = string
+}
 
 data "azurerm_key_vault" "devops_kv" {
   name                = var.devops_kv_name
@@ -96,8 +111,27 @@ resource "azurerm_key_vault_access_policy" "kv_access_policy" {
   object_id    = var.principal_id
 
   secret_permissions = [
-    "Get",
+    "Get", "List"
   ]
 }
 
+resource "azurerm_key_vault_secret" "kv_API_key" {
+  name         = kv_API_key
+  value        = var.kv_API_key
+  key_vault_id = azurerm_key_vault.kv_for_app.id
+}
+
+resource "azurerm_key_vault_secret" "kv_base_URL" {
+  name         = kv_base_URL
+  value        = var.kv_base_URL
+  key_vault_id = azurerm_key_vault.kv_for_app.id
+}
+
+
+resource "azurerm_key_vault_secret" "kv_email_pass" {
+  name         = kv_email_pass
+  value        = var.kv_email_pass
+  content_type = var.kv_email
+  key_vault_id = azurerm_key_vault.kv_for_app.id
+}
 

@@ -53,6 +53,10 @@ module "key_vault" {
   devops_kv_name   = var.devops_kv_name
   key_sql_username = var.key_sql_username
   key_sql_password = var.key_sql_password
+  kv_API_key       = var.kv_API_key
+  kv_email         = var.kv_email
+  kv_email_pass    = var.kv_email_pass
+
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
 }
 
