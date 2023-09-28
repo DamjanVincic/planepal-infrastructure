@@ -109,7 +109,7 @@ resource "azurerm_key_vault" "kv_for_app" {
   location                   = var.location
   resource_group_name        = var.resource_group
   tenant_id                  = var.tenant_id
-  soft_delete_retention_days = 7
+  soft_delete_retention_days = 0
   purge_protection_enabled   = false
 
   sku_name = var.kv_app_sku_name
@@ -119,7 +119,7 @@ resource "azurerm_key_vault" "kv_for_app" {
     object_id = var.principal_id
 
     secret_permissions = [
-      "Get", "List", "Set",
+      "Get", "List", "Set", "Delete",
     ]
   }
 
@@ -128,7 +128,7 @@ resource "azurerm_key_vault" "kv_for_app" {
     object_id = data.azurerm_client_config.current.object_id
 
     secret_permissions = [
-      "Get", "List", "Set",
+      "Get", "List", "Set", "Delete",
     ]
   }
 
