@@ -92,24 +92,24 @@ resource "azurerm_monitor_metric_alert" "alert_app_service" {
   }
 }
 
-resource "azurerm_monitor_metric_alert" "alert_app_service-02" {
-  name                = "ma-${var.app_name}-${var.environment}-${var.location}-02"
-  resource_group_name = var.resource_group_name
-  scopes              = [var.app_service_id]
-  description         = "Action will be triggered when average MemoryPercentage is greater than 80."
+# resource "azurerm_monitor_metric_alert" "alert_app_service-02" {
+#   name                = "ma-${var.app_name}-${var.environment}-${var.location}-03"
+#   resource_group_name = var.resource_group_name
+#   scopes              = [var.app_service_id]
+#   description         = "Action will be triggered when average MemoryPercentage is greater than 80."
 
-  criteria {
-    metric_namespace = "Microsoft.Web/sites"
-    metric_name      = "MemoryPercentage"
-    aggregation      = "Average"
-    operator         = "GreaterThan"
-    threshold        = 80
-  }
+#   criteria {
+#     metric_namespace = "Microsoft.Web/sites"
+#     metric_name      = "MemoryPercentage"
+#     aggregation      = "Average"
+#     operator         = "GreaterThan"
+#     threshold        = 80
+#   }
 
-  action {
-    action_group_id = azurerm_monitor_action_group.action_group.id
-  }
-}
+#   action {
+#     action_group_id = azurerm_monitor_action_group.action_group.id
+#   }
+# }
 
 resource "azurerm_monitor_metric_alert" "alert_storage_account" {
   name                = "ma-${var.app_name}-${var.environment}-${var.location}-02"

@@ -1,9 +1,16 @@
 trigger:
 - none
 
+parameters:
+  - name: environment
+    displayName: Environment
+    type: string
+    default: dev
+    values:
+    - dev
+
 variables:
 - template: vars/vars-global.yaml
-- template: vars/vars-dev.yaml
 
 pool:
   vmImage: ubuntu-latest
