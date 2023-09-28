@@ -98,6 +98,10 @@ data "azurerm_key_vault_secret" "kv_api_key" {
   key_vault_id = data.azurerm_key_vault.devops_kv.id
 }
 
+data "http" "myip" {
+  url = "https://ipv4.icanhazip.com"
+}
+
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "kv_for_app" {
@@ -128,17 +132,17 @@ resource "azurerm_key_vault" "kv_for_app" {
     ]
   }
 
-  # network_acls {
-  #   # The Default Action to use when no rules match from ip_rules / 
-  #   # virtual_network_subnet_ids. Possible values are Allow and Deny
-  #   default_action = "Deny"
+  network_acls {
+    # The Default Action to use when no rules match from ip_rules / 
+    # virtual_network_subnet_ids. Possible values are Allow and Deny
+    default_action = "Deny"
 
-  #   # Allows all azure services to access your keyvault. Can be set to 'None'
-  #   bypass = "AzureServices"
+    # Allows all azure services to access your keyvault. Can be set to 'None'
+    bypass = "AzureServices"
 
-  #   # The list of allowed ip addresses.
-  #   ip_rules  = "${concat(var.outbound_ip_address_list, [ "13.107.6.0/24", "13.107.9.0/24","13.107.42.0/24","13.107.43.0/24"])}"
-  # }
+    # The list of allowed ip addresses.
+    ip_rules  = "${concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)])}"
+  }
 }
 
 # resource "azurerm_key_vault_access_policy" "kv_access_policy" {
