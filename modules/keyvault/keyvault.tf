@@ -110,6 +110,15 @@ resource "azurerm_key_vault" "kv_for_app" {
 
   sku_name = var.kv_app_sku_name
 
+  access_policy {
+    tenant_id = var.tenant_id
+    object_id = var.principal_id
+
+    secret_permissions = [
+      "Get", "List",
+    ]
+  }
+
   # network_acls {
   #   # The Default Action to use when no rules match from ip_rules / 
   #   # virtual_network_subnet_ids. Possible values are Allow and Deny
@@ -124,15 +133,15 @@ resource "azurerm_key_vault" "kv_for_app" {
   # }
 }
 
-resource "azurerm_key_vault_access_policy" "kv_access_policy" {
-  key_vault_id = azurerm_key_vault.kv_for_app.id
-  tenant_id    = var.tenant_id
-  object_id    = var.principal_id
+# resource "azurerm_key_vault_access_policy" "kv_access_policy" {
+#   key_vault_id = azurerm_key_vault.kv_for_app.id
+#   tenant_id    = var.tenant_id
+#   object_id    = var.principal_id
 
-  secret_permissions = [
-    "Get", "List"
-  ]
-}
+#   secret_permissions = [
+#     "Get", "List"
+#   ]
+# }
 
 resource "azurerm_key_vault_secret" "kv_API_key" {
   name         = data.azurerm_key_vault_secret.kv_api_key.name
