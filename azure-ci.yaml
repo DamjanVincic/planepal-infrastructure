@@ -1,36 +1,22 @@
-trigger:
-- none
-
-variables:
-- template: vars/vars-global.yaml
-- template: vars/vars-dev.yaml
+trigger: none
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
 
 steps:
-- task: TerraformInstaller@1
+- task: DownloadBuildArtifacts@1
+  displayName: 'Download Build Artifacts'
   inputs:
-    terraformVersion: 'latest'
-
-- task: TerraformTaskV4@4
+    buildType: specific
+    project: 'Automation'
+    pipeline: 'CI App'
+    artifactName: 'drop'
+    downloadPath: '$(Build.ArtifactsDirectory)'
+- task: AzureRmWebAppDeployment@4
   inputs:
-    provider: 'azurerm'
-    command: 'init'
-    backendServiceArm: $(subscription)
-    backendAzureRmResourceGroupName: $(resource-group)
-    backendAzureRmStorageAccountName: $(storage-account)
-    backendAzureRmContainerName: $(container-name)
-    backendAzureRmKey: '$(tfstate-key)-$(environment).tfstate'
-
-- task: TerraformTaskV4@4
-  inputs:
-    provider: 'azurerm'
-    command: 'validate'
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Levi9Internship2023SP-Automation'
+    appType: 'webApp'
+    WebAppName: 'app-PlanePal-dev-northeurope-00'
+    package: 'D:\a\1\s\$(Build.ArtifactsDirectory)\drop/WebApp.zip'
     
-- task: TerraformTaskV4@4
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    # commandOptions: '-out=plan'
-    environmentServiceNameAzureRM: $(subscription)
