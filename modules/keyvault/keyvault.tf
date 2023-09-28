@@ -115,7 +115,7 @@ resource "azurerm_key_vault" "kv_for_app" {
     object_id = var.principal_id
 
     secret_permissions = [
-      "Get", "List", "Set",
+      "Get", "List", "Set", "Delete",
     ]
   }
 
@@ -124,7 +124,7 @@ resource "azurerm_key_vault" "kv_for_app" {
     object_id = data.azurerm_client_config.current.object_id
 
     secret_permissions = [
-      "Get", "List", "Set",
+      "Get", "List", "Set", "Delete",
     ]
   }
 
