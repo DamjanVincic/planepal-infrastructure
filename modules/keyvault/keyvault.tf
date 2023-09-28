@@ -48,20 +48,24 @@ variable "key_sql_password" {
   description = "Key for SQL password in DevOps database"
 }
 
+variable "kv_base_URL_name" {
+  type = string
+}
+
 variable "kv_base_URL" {
-  type        = string
+  type = string
 }
 
 variable "kv_API_key" {
-  type        = string
+  type = string
 }
 
-variable "kv_email" {
-  type        = string
+variable "kv_email_key" {
+  type = string
 }
 
-variable "kv_email_pass" {
-  type        = string
+variable "kv_email_pass_key" {
+  type = string
 }
 
 data "azurerm_key_vault" "devops_kv" {
@@ -79,6 +83,21 @@ data "azurerm_key_vault_secret" "sql_password" {
   key_vault_id = data.azurerm_key_vault.devops_kv.id
 }
 
+data "azurerm_key_vault_secret" "kv_email" {
+  name         = var.kv_email_key
+  key_vault_id = data.azurerm_key_vault.devops_kv.id
+}
+
+data "azurerm_key_vault_secret" "kv_email_password" {
+  name         = var.kv_email_pass_key
+  key_vault_id = data.azurerm_key_vault.devops_kv.id
+}
+
+data "azurerm_key_vault_secret" "kv_api_key" {
+  name         = var.kv_API_key
+  key_vault_id = data.azurerm_key_vault.devops_kv.id
+}
+
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "kv_for_app" {
@@ -91,48 +110,68 @@ resource "azurerm_key_vault" "kv_for_app" {
 
   sku_name = var.kv_app_sku_name
 
-  network_acls {
-    # The Default Action to use when no rules match from ip_rules / 
-    # virtual_network_subnet_ids. Possible values are Allow and Deny
-  default_action = "Deny"
+  access_policy {
+    tenant_id = var.tenant_id
+    object_id = var.principal_id
 
-    # Allows all azure services to access your keyvault. Can be set to 'None'
-  bypass         = "AzureServices"
+    secret_permissions = [
+      "Get", "List", "Set",
+    ]
+  }
 
-    # The list of allowed ip addresses.
- 
-  ip_rules  = "${concat(var.outbound_ip_address_list, [ "13.107.6.0/24", "13.107.9.0/24","13.107.42.0/24","13.107.43.0/24"])}"
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
 
-  }  
+    secret_permissions = [
+      "Get", "List", "Set",
+    ]
+  }
+
+  # network_acls {
+  #   # The Default Action to use when no rules match from ip_rules / 
+  #   # virtual_network_subnet_ids. Possible values are Allow and Deny
+  #   default_action = "Deny"
+
+  #   # Allows all azure services to access your keyvault. Can be set to 'None'
+  #   bypass = "AzureServices"
+
+  #   # The list of allowed ip addresses.
+  #   ip_rules  = "${concat(var.outbound_ip_address_list, [ "13.107.6.0/24", "13.107.9.0/24","13.107.42.0/24","13.107.43.0/24"])}"
+  # }
 }
 
-resource "azurerm_key_vault_access_policy" "kv_access_policy" {
-  key_vault_id = azurerm_key_vault.kv_for_app.id
-  tenant_id    = var.tenant_id
-  object_id    = var.principal_id
+# resource "azurerm_key_vault_access_policy" "kv_access_policy" {
+#   key_vault_id = azurerm_key_vault.kv_for_app.id
+#   tenant_id    = var.tenant_id
+#   object_id    = var.principal_id
 
-  secret_permissions = [
-    "Get", "List"
-  ]
-}
+#   secret_permissions = [
+#     "Get", "List"
+#   ]
+# }
 
 resource "azurerm_key_vault_secret" "kv_API_key" {
-  name         = kv_API_key
-  value        = var.kv_API_key
+  name         = data.azurerm_key_vault_secret.kv_api_key.name
+  value        = data.azurerm_key_vault_secret.kv_api_key.value
   key_vault_id = azurerm_key_vault.kv_for_app.id
 }
 
 resource "azurerm_key_vault_secret" "kv_base_URL" {
-  name         = kv_base_URL
+  name         = var.kv_base_URL_name
   value        = var.kv_base_URL
   key_vault_id = azurerm_key_vault.kv_for_app.id
 }
 
+resource "azurerm_key_vault_secret" "kv_email" {
+  name         = data.azurerm_key_vault_secret.kv_email.name
+  value        = data.azurerm_key_vault_secret.kv_email.value
+  key_vault_id = azurerm_key_vault.kv_for_app.id
+}
 
 resource "azurerm_key_vault_secret" "kv_email_pass" {
-  name         = kv_email_pass
-  value        = var.kv_email_pass
-  content_type = var.kv_email
+  name         = data.azurerm_key_vault_secret.kv_email_password.name
+  value        = data.azurerm_key_vault_secret.kv_email_password.value
   key_vault_id = azurerm_key_vault.kv_for_app.id
 }
 
