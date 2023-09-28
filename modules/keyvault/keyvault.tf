@@ -67,6 +67,10 @@ variable "kv_email_key" {
 variable "kv_email_pass_key" {
   type = string
 }
+variable "ip_range_azure" {
+  
+}
+
 
 data "azurerm_key_vault" "devops_kv" {
   name                = var.devops_kv_name
@@ -142,7 +146,7 @@ resource "azurerm_key_vault" "kv_for_app" {
     bypass = "AzureServices"
 
     # The list of allowed ip addresses.
-    ip_rules  = "${concat(var.outbound_ip_address_list,  )}"
+    ip_rules  = "${concat(var.outbound_ip_address_list, var.ip_range_azure  )}"
   }
 }
 

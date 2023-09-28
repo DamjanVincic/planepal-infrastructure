@@ -67,6 +67,7 @@ module "key_vault" {
   kv_base_URL_name         = var.kv_base_URL_name
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
+  ip_range_azure           = var.ip_range_azure
    
 }
 
