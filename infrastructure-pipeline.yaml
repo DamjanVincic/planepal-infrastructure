@@ -43,7 +43,7 @@ stages:
         provider: 'azurerm'
         command: 'plan'
         environmentServiceNameAzureRM: $(subscription)
-    - task: ManualValidation@0
+    - task: ManualValidation
       inputs:
         notifyUsers: 'd.vincic-int@levi9.com'
   # - job: waitForValidation
