@@ -48,6 +48,10 @@ variable "key_sql_password" {
   description = "Key for SQL password in DevOps database"
 }
 
+variable "kv_base_URL_name" {
+  type = string
+}
+
 variable "kv_base_URL" {
   type        = string
 }
@@ -56,11 +60,11 @@ variable "kv_API_key" {
   type        = string
 }
 
-variable "kv_email" {
+variable "kv_email_key" {
   type        = string
 }
 
-variable "kv_email_pass" {
+variable "kv_email_pass_key" {
   type        = string
 }
 
@@ -76,6 +80,21 @@ data "azurerm_key_vault_secret" "sql_username" {
 
 data "azurerm_key_vault_secret" "sql_password" {
   name         = var.key_sql_password
+  key_vault_id = data.azurerm_key_vault.devops_kv.id
+}
+
+data "azurerm_key_vault_secret" "kv_email" {
+  name = var.kv_email_key
+  key_vault_id = data.azurerm_key_vault.devops_kv.id
+}
+
+data "azurerm_key_vault_secret" "kv_email_password" {
+  name = var.kv_email_pass_key
+  key_vault_id = data.azurerm_key_vault.devops_kv.id
+}
+
+data "azurerm_key_vault_secret" "kv_api_key" {
+  name = var.kv_API_key
   key_vault_id = data.azurerm_key_vault.devops_kv.id
 }
 
@@ -116,22 +135,26 @@ resource "azurerm_key_vault_access_policy" "kv_access_policy" {
 }
 
 resource "azurerm_key_vault_secret" "kv_API_key" {
-  name         = kv_API_key
-  value        = var.kv_API_key
+  name         = data.azurerm_key_vault_secret.kv_api_key.name
+  value        = data.azurerm_key_vault_secret.kv_api_key.value
   key_vault_id = azurerm_key_vault.kv_for_app.id
 }
 
 resource "azurerm_key_vault_secret" "kv_base_URL" {
-  name         = kv_base_URL
+  name         = var.kv_base_URL_name
   value        = var.kv_base_URL
   key_vault_id = azurerm_key_vault.kv_for_app.id
 }
 
+resource "azurerm_key_vault_secret" "kv_email" {
+  name = data.azurerm_key_vault_secret.kv_email.name
+  value = data.azurerm_key_vault_secret.kv_email.value
+  key_vault_id = azurerm_key_vault.kv_for_app.id
+}
 
 resource "azurerm_key_vault_secret" "kv_email_pass" {
-  name         = kv_email_pass
-  value        = var.kv_email_pass
-  content_type = var.kv_email
+  name         = data.azurerm_key_vault_secret.kv_email_password.name
+  value        = data.azurerm_key_vault_secret.kv_email_password.value
   key_vault_id = azurerm_key_vault.kv_for_app.id
 }
 

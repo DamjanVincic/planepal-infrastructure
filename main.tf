@@ -42,7 +42,6 @@ module "storage" {
 module "key_vault" {
   source = "./modules/keyvault"
 
-
   location         = var.location
   resource_group   = var.resource_group
   app_name         = var.app_name
@@ -54,9 +53,10 @@ module "key_vault" {
   key_sql_username = var.key_sql_username
   key_sql_password = var.key_sql_password
   kv_API_key       = var.kv_API_key
-  kv_email         = var.kv_email
-  kv_email_pass    = var.kv_email_pass
-
+  kv_email_key         = var.kv_email_key
+  kv_email_pass_key    = var.kv_email_pass_key
+  kv_base_URL_name = var.kv_base_URL_name
+  kv_base_URL = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
 }
 
@@ -75,6 +75,7 @@ module "logging" {
 
 module "sql" {
   source                = "./modules/sql"
+  
   resource_group_name   = var.resource_group
   app_name              = var.app_name
   environment           = var.environment
