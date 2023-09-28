@@ -44,10 +44,10 @@ stages:
         command: 'plan'
         environmentServiceNameAzureRM: $(subscription)
   - job: waitForValidation
-      displayName: Wait for external validation
       pool: server
       steps:
       - task: ManualValidation@0
+        displayName: Wait for validation
         timeoutInMinutes: 1440
         inputs:
           notifyUsers: |
