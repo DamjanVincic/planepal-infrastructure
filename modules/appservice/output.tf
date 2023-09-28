@@ -12,3 +12,7 @@ output "web_app_id" {
 output "outbound_ip_address_list" {
   value = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.outbound_ip_address_list
 }
+
+output "app_service_plan_id" {
+  value = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
+}

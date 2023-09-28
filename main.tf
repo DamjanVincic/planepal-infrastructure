@@ -71,6 +71,7 @@ module "logging" {
   app_service_id       = module.app_service.web_app_id
   storage_account_id   = module.storage.account_id
   database_id          = module.sql.sqldb_id
+  app_service_plan_id  = module.app_service.app_service_plan_id
 }
 
 module "sql" {

@@ -105,6 +105,7 @@ variable "kv_base_URL" {
 
 variable "kv_API_key" {
   type    = string
+<<<<<<< HEAD
   default = "api-key"
 }
 
@@ -116,4 +117,17 @@ variable "kv_email_key" {
 variable "kv_email_pass_key" {
   type    = string
   default = "kv-email-password"
+=======
+  default = "80a59692084fa732aa86028061a0d769"
+}
+
+variable "kv_email" {
+  type    = string
+  default = "yourplainpal@gmail.com"
+}
+
+variable "kv_email_pass" {
+  type    = string
+  default = "zboi ogmk minq lrya"
+>>>>>>> development
 }
