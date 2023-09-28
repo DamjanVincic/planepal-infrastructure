@@ -128,18 +128,17 @@ resource "azurerm_key_vault" "kv_for_app" {
     ]
   }
 
-  # network_acls {
-  #   # The Default Action to use when no rules match from ip_rules / 
-  #   # virtual_network_subnet_ids. Possible values are Allow and Deny
-  #   default_action = "Deny"
+  network_acls {
+    # The Default Action to use when no rules match from ip_rules / 
+    # virtual_network_subnet_ids. Possible values are Allow and Deny
+    default_action = "Deny"
 
-  #   # Allows all azure services to access your keyvault. Can be set to 'None'
-  #   bypass = "AzureServices"
+    # Allows all azure services to access your keyvault. Can be set to 'None'
+    bypass = "AzureServices"
 
-  #   # The list of allowed ip addresses.
-  #   ip_rules = var.outbound_ip_address_list
-
-  # }
+    # The list of allowed ip addresses.
+    ip_rules  = "${concat(var.outbound_ip_address_list, [ "13.107.6.0/24", "13.107.9.0/24","13.107.42.0/24","13.107.43.0/24"])}"
+  }
 }
 
 # resource "azurerm_key_vault_access_policy" "kv_access_policy" {
