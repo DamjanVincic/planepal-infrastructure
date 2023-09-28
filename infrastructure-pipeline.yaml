@@ -44,7 +44,7 @@ stages:
         command: 'plan'
         environmentServiceNameAzureRM: $(subscription)
   - job: waitForValidation
-    dependsOn: Plan_job
+    # dependsOn: Plan_job
     pool: server
     steps:
     - task: ManualValidation@0
