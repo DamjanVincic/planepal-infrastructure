@@ -86,10 +86,10 @@ stages:
         command: 'apply'
         environmentServiceNameAzureRM: "$(subscription)"
 
-    - task: TerraformTaskV4@4
-      displayName: 'Terraform destroy'
-      inputs:
-        provider: 'azurerm'
-        command: 'destroy'
-        environmentServiceNameAzureRM: "$(subscription)"         
+    # - task: TerraformTaskV4@4
+    #   displayName: 'Terraform destroy'
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'destroy'
+    #     environmentServiceNameAzureRM: "$(subscription)"         
 
