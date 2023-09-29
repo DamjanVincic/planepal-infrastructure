@@ -157,7 +157,12 @@ resource "azurerm_key_vault" "kv_for_app" {
      ip_rules  = "${concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)])}"
   }
 }
-
+resource "azurerm_management_lock" "public-ip0" {
+  name       = "resource-ip"
+  scope      = azurerm_key_vault.kv_for_app.id
+  lock_level = "CanNotDelete"
+  notes      = "Locked because "
+}
 # resource "azurerm_key_vault_access_policy" "kv_access_policy" {
 #   key_vault_id = azurerm_key_vault.kv_for_app.id
 #   tenant_id    = var.tenant_id
