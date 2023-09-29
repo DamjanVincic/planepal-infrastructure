@@ -96,9 +96,14 @@ resource "azurerm_monitor_action_group" "action_group" {
   short_name          = "devops_ag"
   enabled             = true
 
-  email_receiver {
-    name          = each.value.name
-    email_address = each.value.email
+  dynamic "email_receiver" {
+    for_each = var.email_receiver
+
+    content {
+      name          = each.value.name
+      email_address = each.value.email
+    }
+    
   }
 }
 
