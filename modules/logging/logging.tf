@@ -78,24 +78,94 @@ resource "azurerm_monitor_action_group" "action_group" {
   }
 }
 
+variable "alerts_map" {
+
+  type = map(object({
+    name = string
+    scope = string
+    message = string
+    metric_namespace = string
+    metric_name = string
+    aggregation = string
+    operator = string
+    threshold = number
+  }))
+  default = {
+    "alert_app_service" = {
+      name = "ma-${var.app_name}-${var.environment}-${var.location}-01"
+      scope = var.app_service_id
+      message = "Action will be triggered when CpuTime is greater than 80."
+      metric_namespace = "Microsoft.Web/sites"
+      metric_name = "CpuTime"
+      aggregation = "Total"
+      operator = "GreaterThan"
+      threshold = 80
+    }
+
+    "alert_storage_account" = {
+      name = "ma-${var.app_name}-${var.environment}-${var.location}-02"
+      scope = var.storage_account_id
+      message = "Action will be triggered when Transactions count is greater than 50."
+      metric_namespace = "Microsoft.Storage/storageAccounts"
+      metric_name = "Transactions"
+      aggregation = "Total"
+      operator = "GreaterThan"
+      threshold = 50
+    }
+
+    "alert_database" = {
+      name = "ma-${var.app_name}-${var.environment}-${var.location}-03"
+      scope = var.database_id
+      message = "Action will be triggered when DTU is greater than 60."
+      metric_namespace = "Microsoft.Sql/servers/databases"
+      metric_name = "dtu_consumption_percent"
+      aggregation = "Maximum"
+      operator = "GreaterThan"
+      threshold = 90
+    }
+  }
+  
+}
+
 resource "azurerm_monitor_metric_alert" "alert_app_service" {
-  name                = "ma-${var.app_name}-${var.environment}-${var.location}-01"
+  for_each = var.alerts_map
+
+  name                = each.value.name
   resource_group_name = var.resource_group_name
-  scopes              = [var.app_service_id]
-  description         = "Action will be triggered when CpuTime is greater than 80."
+  scopes              = [each.value.scope]
+  description         = each.value.message
 
   criteria {
-    metric_namespace = "Microsoft.Web/sites"
-    metric_name      = "CpuTime"
-    aggregation      = "Total"
-    operator         = "GreaterThan"
-    threshold        = 80
+    metric_namespace = each.value.metric_namespace
+    metric_name      = each.value.metric_name
+    aggregation      = each.value.agreggation
+    operator         = each.value.operator
+    threshold        = each.value.threshold
   }
 
   action {
     action_group_id = azurerm_monitor_action_group.action_group.id
   }
 }
+
+# resource "azurerm_monitor_metric_alert" "alert_app_service" {
+#   name                = "ma-${var.app_name}-${var.environment}-${var.location}-01"
+#   resource_group_name = var.resource_group_name
+#   scopes              = [var.app_service_id]
+#   description         = "Action will be triggered when CpuTime is greater than 80."
+
+#   criteria {
+#     metric_namespace = "Microsoft.Web/sites"
+#     metric_name      = "CpuTime"
+#     aggregation      = "Total"
+#     operator         = "GreaterThan"
+#     threshold        = 80
+#   }
+
+#   action {
+#     action_group_id = azurerm_monitor_action_group.action_group.id
+#   }
+# }
 
 # resource "azurerm_monitor_metric_alert" "alert_app_service-02" {
 #   name                = "ma-${var.app_name}-${var.environment}-${var.location}-04"
@@ -116,43 +186,43 @@ resource "azurerm_monitor_metric_alert" "alert_app_service" {
 #   }
 # }
 
-resource "azurerm_monitor_metric_alert" "alert_storage_account" {
-  name                = "ma-${var.app_name}-${var.environment}-${var.location}-02"
-  resource_group_name = data.azurerm_resource_group.devops_rg.name
-  scopes              = [var.storage_account_id]
-  description         = "Action will be triggered when Transactions count is greater than 50."
+# resource "azurerm_monitor_metric_alert" "alert_storage_account" {
+#   name                = "ma-${var.app_name}-${var.environment}-${var.location}-02"
+#   resource_group_name = data.azurerm_resource_group.devops_rg.name
+#   scopes              = [var.storage_account_id]
+#   description         = "Action will be triggered when Transactions count is greater than 50."
 
-  criteria {
-    metric_namespace = "Microsoft.Storage/storageAccounts"
-    metric_name      = "Transactions"
-    aggregation      = "Total"
-    operator         = "GreaterThan"
-    threshold        = 50
-  }
+#   criteria {
+#     metric_namespace = "Microsoft.Storage/storageAccounts"
+#     metric_name      = "Transactions"
+#     aggregation      = "Total"
+#     operator         = "GreaterThan"
+#     threshold        = 50
+#   }
 
-  action {
-    action_group_id = azurerm_monitor_action_group.action_group.id
-  }
-}
+#   action {
+#     action_group_id = azurerm_monitor_action_group.action_group.id
+#   }
+# }
 
-resource "azurerm_monitor_metric_alert" "alert_database" {
-  name                = "ma-${var.app_name}-${var.environment}-${var.location}-03"
-  resource_group_name = data.azurerm_resource_group.devops_rg.name
-  scopes              = [var.database_id]
-  description         = "Action will be triggered when DTU is greater than 60."
+# resource "azurerm_monitor_metric_alert" "alert_database" {
+#   name                = "ma-${var.app_name}-${var.environment}-${var.location}-03"
+#   resource_group_name = data.azurerm_resource_group.devops_rg.name
+#   scopes              = [var.database_id]
+#   description         = "Action will be triggered when DTU is greater than 60."
 
-  criteria {
-    metric_namespace = "Microsoft.Sql/servers/databases"
-    metric_name      = "dtu_consumption_percent"
-    aggregation      = "Maximum"
-    operator         = "GreaterThan"
-    threshold        = 90
-  }
+#   criteria {
+#     metric_namespace = "Microsoft.Sql/servers/databases"
+#     metric_name      = "dtu_consumption_percent"
+#     aggregation      = "Maximum"
+#     operator         = "GreaterThan"
+#     threshold        = 90
+#   }
 
-  action {
-    action_group_id = azurerm_monitor_action_group.action_group.id
-  }
-}
+#   action {
+#     action_group_id = azurerm_monitor_action_group.action_group.id
+#   }
+# }
 
 resource "azurerm_monitor_activity_log_alert" "alert_serviceHealth" {
   name                = "ala-${var.app_name}-${var.environment}-${var.location}-01"
