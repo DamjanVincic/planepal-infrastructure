@@ -9,7 +9,7 @@ steps:
   inputs:
     buildType: specific
     project: 'Automation'
-    pipeline: 'CI App'
+    pipeline: 'app ci'
     artifactName: 'drop'
     downloadPath: '$(Build.ArtifactsDirectory)'
 - task: AzureRmWebAppDeployment@4
