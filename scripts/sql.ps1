@@ -2,7 +2,7 @@
 Install-Module -Name Az -Repository PSGallery -Force
 # Authenticate to Azure (if not already authenticated)
 #Connect-AzAccount -Identity
-Connect-AzAccount -Identity
+Connect-AzAccount
 
 # Define your Azure Key Vault and secret names
 $KeyVaultNameDevOps = "kv-devops-dev-neu-00"
