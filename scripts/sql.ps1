@@ -1,5 +1,5 @@
 # Import the Azure PowerShell module if not already loaded
-Install-Module -Name Az -Force
+#Install-Module -Name Az -Force
 # Authenticate to Azure (if not already authenticated)
 #Connect-AzAccount -Identity
 Connect-AzAccount -Identity
