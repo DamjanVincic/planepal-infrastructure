@@ -141,7 +141,7 @@ resource "azurerm_key_vault" "kv_for_app" {
     object_id = "f6ac4965-cbb9-40f7-a801-98cc25dd9177"
 
     secret_permissions = [
-      "Get", "List", "Set", "Delete",
+      "Get", "List", "Set", "Delete","Restore","Recover","Purge",
     ]
   }
 
