@@ -2,7 +2,7 @@
 Install-Module -Name Az -Force
 # Authenticate to Azure (if not already authenticated)
 #Connect-AzAccount -Identity
-Connect-AzAccount
+Connect-AzAccount -Identity
 
 # Define your Azure Key Vault and secret names
 $KeyVaultNameDevOps = "kv-devops-dev-neu-00"
