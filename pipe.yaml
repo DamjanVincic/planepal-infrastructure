@@ -14,3 +14,4 @@ steps:
   inputs:
     azureSubscription: 'Levi9Internship2023SP-Automation'
     ScriptPath: ./scripts/sql.ps1
+    azurePowerShellVersion: "LatestVersion"
