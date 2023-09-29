@@ -6,13 +6,20 @@ terraform {
     }
   }
   backend "azurerm" {
-
+    resource_group_name  = "DevOps"
+      storage_account_name = "stdevopsneu01"
+      container_name       = "tfstate"
+      key                  = "terraform-dev.tfstate"
   }
 }
 
 provider "azurerm" {
   skip_provider_registration = true
-  features {}
+   features {
+    key_vault {
+      recover_soft_deleted_key_vaults = true
+    }
+  }
 }
 
 module "app_service" {
@@ -58,6 +65,8 @@ module "key_vault" {
   kv_base_URL_name         = var.kv_base_URL_name
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
+  ip_range_azure           = var.ip_range_azure
+   
 }
 
 module "logging" {

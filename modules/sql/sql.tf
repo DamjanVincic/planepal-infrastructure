@@ -43,6 +43,11 @@ resource "azurerm_mssql_server" "sql-planepal-dev-neu-01" {
   version                      = var.sql_version
   administrator_login          = var.sql_login.value
   administrator_login_password = var.sql_password.value
+    timeouts {
+    create = "2h30m"
+    update = "2h"
+    delete = "20m"
+  }
 
 }
 
@@ -65,7 +70,11 @@ resource "azurerm_mssql_database" "sqldb-planepal-dev-neu-01" {
   collation   = "SQL_Latin1_General_CP1_CI_AS"
   max_size_gb = var.sqldb_sku_max_gb_size
   server_id   = azurerm_mssql_server.sql-planepal-dev-neu-01.id
-
+  timeouts {
+    create = "2h30m"
+    update = "2h"
+    delete = "20m"
+  }
   tags = {
     environment = "development"
   }
