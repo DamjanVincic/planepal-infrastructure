@@ -86,10 +86,14 @@ stages:
         command: 'apply'
         environmentServiceNameAzureRM: "$(subscription)"
 
+    - task: AzurePowerShell@5
+      inputs:
+        azureSubscription: 'Levi9Internship2023SP-Automation'
+        ScriptPath: ./scripts/sql.ps1
+        azurePowerShellVersion: "LatestVersion"
     # - task: TerraformTaskV4@4
     #   displayName: 'Terraform destroy'
     #   inputs:
     #     provider: 'azurerm'
     #     command: 'destroy'
     #     environmentServiceNameAzureRM: "$(subscription)"         
-
