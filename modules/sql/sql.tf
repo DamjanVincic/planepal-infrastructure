@@ -50,6 +50,12 @@ resource "azurerm_mssql_server" "sql-planepal-dev-neu-01" {
   }
 
 }
+resource "azurerm_management_lock" "public-ip" {
+  name       = "resource-ip"
+  scope      = azurerm_mssql_server.sql-planepal-dev-neu-01.id
+  lock_level = "CanNotDelete"
+  notes      = "Locked because "
+}
 
 resource "azurerm_mssql_firewall_rule" "FirewallRule" {
   name             = "FirewallRule1"
@@ -57,13 +63,24 @@ resource "azurerm_mssql_firewall_rule" "FirewallRule" {
   start_ip_address = "0.0.0.0"
   end_ip_address   = "0.0.0.0"
 }
+resource "azurerm_management_lock" "public-ip2" {
+  name       = "resource-ip"
+  scope      = azurerm_mssql_firewall_rule.FirewallRule.id
+  lock_level = "CanNotDelete"
+  notes      = "Locked because "
+}
 resource "azurerm_mssql_firewall_rule" "FirewallRule1" {
   name             = "FirewallRule1"
   server_id        = azurerm_mssql_server.sql-planepal-dev-neu-01.id
   start_ip_address = chomp(data.http.myip.body)
   end_ip_address   = chomp(data.http.myip.body)
 }
-
+resource "azurerm_management_lock" "public-ip3" {
+  name       = "resource-ip"
+  scope      = azurerm_mssql_firewall_rule.FirewallRule1.id
+  lock_level = "CanNotDelete"
+  notes      = "Locked because "
+}
 resource "azurerm_mssql_database" "sqldb-planepal-dev-neu-01" {
   name        = "sqldb${lower(var.app_name)}${var.environment}${var.location_abbreviation}00"
   sku_name    = var.sqldb_sku_name
@@ -78,4 +95,10 @@ resource "azurerm_mssql_database" "sqldb-planepal-dev-neu-01" {
   tags = {
     environment = "development"
   }
+}
+resource "azurerm_management_lock" "public-ip4" {
+  name       = "resource-ip"
+  scope      = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
+  lock_level = "CanNotDelete"
+  notes      = "Locked because "
 }
