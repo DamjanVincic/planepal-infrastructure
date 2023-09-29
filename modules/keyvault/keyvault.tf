@@ -113,7 +113,7 @@ resource "azurerm_key_vault" "kv_for_app" {
   location                   = var.location
   resource_group_name        = var.resource_group
   tenant_id                  = var.tenant_id
-  soft_delete_retention_days = 7
+  soft_delete_retention_days = 30
   purge_protection_enabled   = false
   
 
@@ -146,7 +146,7 @@ resource "azurerm_key_vault" "kv_for_app" {
     bypass = "AzureServices"
 
     # The list of allowed ip addresses.
-    ip_rules  = "${concat(var.outbound_ip_address_list, var.ip_range_azure  )}"
+     ip_rules  = "${concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)])}"
   }
 }
 
@@ -160,39 +160,39 @@ resource "azurerm_key_vault" "kv_for_app" {
 #   ]
 # }
 
-resource "azurerm_key_vault_secret" "kv_API_key" {
-  name         = data.azurerm_key_vault_secret.kv_api_key.name
-  value        = data.azurerm_key_vault_secret.kv_api_key.value
-  key_vault_id = azurerm_key_vault.kv_for_app.id
-  depends_on = [
-    azurerm_key_vault.kv_for_app
-  ]
-}
+# resource "azurerm_key_vault_secret" "kv_API_key" {
+#   name         = data.azurerm_key_vault_secret.kv_api_key.name
+#   value        = data.azurerm_key_vault_secret.kv_api_key.value
+#   key_vault_id = azurerm_key_vault.kv_for_app.id
+#   depends_on = [
+#     azurerm_key_vault.kv_for_app
+#   ]
+# }
 
-resource "azurerm_key_vault_secret" "kv_base_URL" {
-  name         = var.kv_base_URL_name
-  value        = var.kv_base_URL
-  key_vault_id = azurerm_key_vault.kv_for_app.id
-  depends_on = [
-    azurerm_key_vault.kv_for_app
-  ]
-}
+# resource "azurerm_key_vault_secret" "kv_base_URL" {
+#   name         = var.kv_base_URL_name
+#   value        = var.kv_base_URL
+#   key_vault_id = azurerm_key_vault.kv_for_app.id
+#   depends_on = [
+#     azurerm_key_vault.kv_for_app
+#   ]
+# }
 
-resource "azurerm_key_vault_secret" "kv_email" {
-  name         = data.azurerm_key_vault_secret.kv_email.name
-  value        = data.azurerm_key_vault_secret.kv_email.value
-  key_vault_id = azurerm_key_vault.kv_for_app.id
-  depends_on = [
-    azurerm_key_vault.kv_for_app
-  ]
-}
+# resource "azurerm_key_vault_secret" "kv_email" {
+#   name         = data.azurerm_key_vault_secret.kv_email.name
+#   value        = data.azurerm_key_vault_secret.kv_email.value
+#   key_vault_id = azurerm_key_vault.kv_for_app.id
+#   depends_on = [
+#     azurerm_key_vault.kv_for_app
+#   ]
+# }
 
-resource "azurerm_key_vault_secret" "kv_email_pass" {
-  name         = data.azurerm_key_vault_secret.kv_email_password.name
-  value        = data.azurerm_key_vault_secret.kv_email_password.value
-  key_vault_id = azurerm_key_vault.kv_for_app.id
-   depends_on = [
-    azurerm_key_vault.kv_for_app
-  ]
-}
+# resource "azurerm_key_vault_secret" "kv_email_pass" {
+#   name         = data.azurerm_key_vault_secret.kv_email_password.name
+#   value        = data.azurerm_key_vault_secret.kv_email_password.value
+#   key_vault_id = azurerm_key_vault.kv_for_app.id
+#    depends_on = [
+#     azurerm_key_vault.kv_for_app
+#   ]
+# }
 
