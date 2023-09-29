@@ -83,6 +83,8 @@ module "logging" {
   storage_account_id   = module.storage.account_id
   database_id          = module.sql.sqldb_id
   app_service_plan_id  = module.app_service.app_service_plan_id
+  alerts_map = var.alerts_map
+  email_receiver = var.email_receiver
 }
 
 module "sql" {
