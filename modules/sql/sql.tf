@@ -43,7 +43,7 @@ resource "azurerm_mssql_server" "sql-planepal-dev-neu-01" {
   version                      = var.sql_version
   administrator_login          = var.sql_login.value
   administrator_login_password = var.sql_password.value
-    timeouts {
+  timeouts {
     create = "2h30m"
     update = "2h"
     delete = "20m"

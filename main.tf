@@ -6,10 +6,7 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name  = "DevOps"
-    storage_account_name = "stdevopsneu01"
-    container_name       = "tfstate"
-    key                  = "terraform-dev.tfstate"
+
   }
 }
 
@@ -61,14 +58,10 @@ module "key_vault" {
   devops_kv_name           = var.devops_kv_name
   key_sql_username         = var.key_sql_username
   key_sql_password         = var.key_sql_password
-  kv_API_key               = var.kv_API_key
-  kv_email_key             = var.kv_email_key
-  kv_email_pass_key        = var.kv_email_pass_key
+  app_secrets_keys         = var.app_secrets_keys
   kv_base_URL_name         = var.kv_base_URL_name
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
-  ip_range_azure           = var.ip_range_azure
-
 }
 
 module "logging" {
