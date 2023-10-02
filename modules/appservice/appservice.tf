@@ -26,7 +26,28 @@ variable "app_sku" {
   type = string
 }
 
+variable "default_capacity" {
+ type = number
+}
+variable "minimum" {
 
+  type = number
+}
+variable "maximum" {
+ type = number
+}
+variable "cpu_up_threshold" {
+
+}
+variable "cpu_down_threshold" {
+
+}
+variable "memory_up_threshold" {
+
+}
+variable "memory_down_threshold" {
+
+}
 resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
   name                = "asp-${var.app_name}-${var.environment}-${var.location}-00"
   resource_group_name = var.resource_group_name
@@ -64,9 +85,9 @@ resource "azurerm_monitor_autoscale_setting" "scale_action_setting" {
 name = "defaultProfile"
 
 capacity {
-  default = 1
-  minimum = 1
-  maximum = 2
+  default = var.default_capacity
+  minimum = var.minimum
+  maximum = var.maximum
 }
 
 rule {
@@ -78,7 +99,7 @@ rule {
     time_window        = "PT10M"
     time_aggregation   = "Average"
     operator           = "GreaterThan"
-    threshold          = 75
+    threshold          = var.cpu_up_threshold
   }
 
   scale_action {
@@ -98,7 +119,7 @@ rule {
     time_window        = "PT15M"
     time_aggregation   = "Average"
     operator           = "GreaterThan"
-    threshold          = 90
+    threshold          = var.memory_up_threshold
   }
 
   scale_action {
@@ -117,7 +138,7 @@ rule {
     time_window        = "PT10M"
     time_aggregation   = "Average"
     operator           = "LessThan"
-    threshold          = 40
+    threshold          = var.memory_down_threshold
   }
 
    scale_action {
@@ -136,7 +157,7 @@ rule {
     time_window        = "PT10M"
     time_aggregation   = "Average"
     operator           = "LessThan"
-    threshold          = 45
+    threshold          = var.cpu_down_threshold
   }
 
    scale_action {

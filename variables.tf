@@ -208,3 +208,32 @@ variable "levi9_public_ip" {
   type    = string
   default = "178.220.237.81"
 }
+
+variable "app_service_default_capacity" {
+  type    = number
+  default = 1
+}
+variable "app_service_minimum" {
+type    = number
+  default = 1
+}
+variable "app_service_maximum" {
+type    = number
+  default = 2
+}
+variable "cpu_up_threshold" {
+
+  default = 75
+}
+variable "cpu_down_threshold" {
+
+  default = 45
+}
+variable "memory_up_threshold" {
+
+  default = 90
+}
+variable "memory_down_threshold" {
+
+  default = 40
+}
