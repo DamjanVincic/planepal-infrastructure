@@ -27,7 +27,6 @@ variable "subnets" {
     name = string
     resource_group_name = string
     address_prefixes = string
-    delegation = string
   }))
 }
 
@@ -45,13 +44,4 @@ resource "azurerm_subnet" "az_subnet" {
   resource_group_name  = each.value.resource_group_name
   virtual_network_name = azurerm_virtual_network.az_vNet.name
   address_prefixes     = [each.value.address_prefixes]
-
-  delegation {
-    name = each.value.delegation
-
-    service_delegation {
-      name    = "Microsoft.Web/serverFarms"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
-    }
-  }
 }

@@ -235,33 +235,28 @@ variable "subnets" {
     name                = string
     resource_group_name = string
     address_prefixes    = string
-    delegation          = string
   }))
   default = {
     "subnet_app" = {
       name                = "snet-PlanePal-dev-neu-01"
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.0.0/24"
-      delegation          = "subnet1_delegation"
     }
 
     "subnet_sql" = {
       name                = "snet-PlanePal-dev-neu-02"
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.1.0/24"
-      delegation          = "subnet2_delegation"
     }
     "subnet_storage" = {
       name                = "snet-PlanePal-dev-neu-03"
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.2.0/24"
-      delegation          = "subnet3_delegation"
     }
     "subnet_app_storage" = {
       name                = "snet-PlanePal-dev-neu-04"
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.3.0/24"
-      delegation          = "subnet4_delegation"
     }
   }
 }
