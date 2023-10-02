@@ -79,7 +79,7 @@ resource "azurerm_network_security_group" "st_app_nsg" {
     priority                   = 100
     direction                  = "Inbound"
     source_port_range          = "*"
-    destination_port_range     = "*"
+    destination_port_ranges    = [80, 443]
     source_address_prefixes    = var.outbound_ip_address_list
     destination_address_prefix = "*"
   }
@@ -91,7 +91,7 @@ resource "azurerm_network_security_group" "st_app_nsg" {
     priority                   = 101
     direction                  = "Inbound"
     source_port_range          = "*"
-    destination_port_range     = "*"
+    destination_port_ranges    = [80, 443]
     source_address_prefix      = var.levi9_public_ip
     destination_address_prefix = "*"
   }
