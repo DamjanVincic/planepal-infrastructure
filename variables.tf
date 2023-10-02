@@ -184,7 +184,6 @@ variable "email_receiver" {
 variable "alerts_map" {
   type = map(object({
     name             = string
-    scope            = string
     message          = string
     metric_namespace = string
     metric_name      = string
@@ -195,7 +194,6 @@ variable "alerts_map" {
   default = {
     "alert_app_service" = {
       name             = "ma-PlanePal-dev-neu-01"
-      scope            = module.app_service.web_app_id
       message          = "Action will be triggered when CpuTime is greater than 80."
       metric_namespace = "Microsoft.Web/sites"
       metric_name      = "CpuTime"
@@ -206,7 +204,6 @@ variable "alerts_map" {
 
     "alert_storage_account" = {
       name             = "ma-PlanePal-dev-neu-02"
-      scope            = module.storage.storage_account_id
       message          = "Action will be triggered when Transactions count is greater than 50."
       metric_namespace = "Microsoft.Storage/storageAccounts"
       metric_name      = "Transactions"
@@ -217,7 +214,6 @@ variable "alerts_map" {
 
     "alert_database" = {
       name             = "ma-PlanePal-dev-neu-03"
-      scope            = module.sql.sqldb_id
       message          = "Action will be triggered when DTU is greater than 60."
       metric_namespace = "Microsoft.Sql/servers/databases"
       metric_name      = "dtu_consumption_percent"
