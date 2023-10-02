@@ -175,7 +175,7 @@ resource "azurerm_private_endpoint" "kv_app_ep" {
 }
 
 resource "azurerm_private_dns_zone" "az_kv_dns_zone" {
-  name                = "privatelink-vaultcore-azure-net"
+  name                = "privatelink.vaultcore.azure.net"
   resource_group_name = var.resource_group_name
 }
 
@@ -183,6 +183,6 @@ resource "azurerm_private_dns_zone_virtual_network_link" "az_kv_virtual_network_
   name                  = "${azurerm_private_dns_zone.az_kv_dns_zone}-link"
   resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.az_kv_dns_zone.name
-  virtual_network_id    = azurerm_virtual_network.az_vNet.id
+  virtual_network_id    = module.network.az_vNet.id
   registration_enabled  = false
 }
