@@ -161,10 +161,10 @@ resource "azurerm_private_endpoint" "kv_app_ep" {
   resource_group_name = var.resource_group
   location            = var.location
   subnet_id           = module.network.subnet["subnet_app_key_vault"].id
-  #private_dns_zone_group {
-   # name                 = "default"
-  #private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zones["privatelink-vaultcore-azure-net"].id]
-  #}
+  private_dns_zone_group {
+    name                 = "default"
+  private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zones["privatelink.vaultcore.azure.net"].id]
+  }
   private_service_connection {
     is_manual_connection           = false
     private_connection_resource_id = azurerm_key_vault.kv_for_app.id
