@@ -85,10 +85,10 @@ resource "azurerm_private_endpoint" "private-ep-sql" {
   resource_group_name = var.resource_group
   location            = var.location
   subnet_id           = module.network.subnet["subnet_sql"].id
-  #private_dns_zone_group {
-  #  name                 = "default"
-  #  private_dns_zone_ids = module.azurerm_private_dns_zone.az_dns_zone.id
-  #}
+  private_dns_zone_group {
+    name                 = "default"
+    private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zones["privatelink.database.windows.net"].id]
+  }
   private_service_connection {
     is_manual_connection           = false
     private_connection_resource_id = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
@@ -99,7 +99,7 @@ resource "azurerm_private_endpoint" "private-ep-sql" {
 }
 
 resource "azurerm_private_dns_zone" "az_sql_dns_zone" {
-  name                = "	privatelink.database.windows.net"
+  name                = "privatelink.database.windows.net"
   resource_group_name = var.resource_group_name
 }
 
