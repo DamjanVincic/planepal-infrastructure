@@ -62,6 +62,6 @@ resource "azurerm_private_dns_zone_virtual_network_link" "az_virtual_network_lin
 
 private_dns_zone_group {
     name                 = "default"
-  private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zones["privatelink-vaultcore-azure-net"].id]
+  private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zones["privatelink.vaultcore.azure.net"].id]
   }
 
