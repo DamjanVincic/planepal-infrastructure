@@ -15,11 +15,11 @@ terraform {
 
 provider "azurerm" {
   skip_provider_registration = true
-   features {
+  features {
     key_vault {
       purge_soft_deleted_secrets_on_destroy = false
-      purge_soft_delete_on_destroy    = false
-      recover_soft_deleted_key_vaults = true
+      purge_soft_delete_on_destroy          = false
+      recover_soft_deleted_key_vaults       = true
     }
   }
 }
@@ -61,7 +61,7 @@ module "key_vault" {
   devops_kv_name           = var.devops_kv_name
   key_sql_username         = var.key_sql_username
   key_sql_password         = var.key_sql_password
-  app_secrets_keys = var.app_secrets_keys
+  app_secrets_keys         = var.app_secrets_keys
   kv_base_URL_name         = var.kv_base_URL_name
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list

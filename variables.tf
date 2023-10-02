@@ -46,7 +46,7 @@ variable "sql_version" {
 
 variable "sqldb_sku_name" {
   type    = string
-  default = "basic"
+  default = "Basic"
 }
 
 variable "sqldb_sku_max_gb_size" {
@@ -104,6 +104,6 @@ variable "kv_base_URL" {
 }
 
 variable "app_secrets_keys" {
-  type = list(string)
-  default = [ "api-key", "kv-email", "kv-email-password" ]
+  type    = list(string)
+  default = ["api-key", "kv-email", "kv-email-password"]
 }
