@@ -37,6 +37,10 @@ variable "subnet_id" {
   type        = string
 }
 
+variable "levi9_public_ip" {
+  type = string
+}
+
 resource "azurerm_storage_account" "storage_account" {
   name                     = "st${lower(var.app_name)}${var.environment}01"
   resource_group_name      = var.resource_group
@@ -61,4 +65,39 @@ resource "azurerm_private_endpoint" "storage_account_endpoint" {
     private_connection_resource_id = azurerm_storage_account.storage_account.id
     is_manual_connection           = false
   }
+}
+
+resource "azurerm_network_security_group" "st_app_nsg" {
+  name                = "nsg-st-${lower(var.app_name)}-${var.environment}-${var.location}-01"
+  location            = var.location
+  resource_group_name = var.resource_group
+
+  security_rule {
+    name              = "allow-app"
+    protocol          = "Tcp"
+    access            = "Allow"
+    priority          = 100
+    direction         = "Inbound"
+    source_port_range = "*"
+    destination_port_range = "*"
+    source_address_prefixes = var.outbound_ip_address_list
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name              = "allow-levi9"
+    protocol          = "Tcp"
+    access            = "Allow"
+    priority          = 101
+    direction         = "Inbound"
+    source_port_range = "*"
+    destination_port_range = "*"
+    source_address_prefix = var.levi9_public_ip
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
+  subnet_id                 = var.subnet_id
+  network_security_group_id = azurerm_network_security_group.st_app_nsg.id
 }

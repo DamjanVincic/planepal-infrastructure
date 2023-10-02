@@ -31,7 +31,7 @@ variable "dot_net_version" {
 variable "app_sku" {
   type        = string
   description = "Plan for application"
-  default     = "F1"
+  default     = "B1"
 }
 
 variable "location_abbreviation" {
@@ -202,4 +202,9 @@ variable "subnets" {
 variable "address_space" {
   type    = string
   default = "10.0.0.0/16"
+}
+
+variable "levi9_public_ip" {
+  type    = string
+  default = "178.220.237.81"
 }
