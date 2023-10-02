@@ -95,4 +95,16 @@ module "sql" {
   sql_password          = module.key_vault.sql_password
 }
 
+module "network" {
+  source = "./modules/network"
+
+  app_name                = var.app_name
+  environment             = var.environment
+  location                = var.location_abbreviation
+  resource_group_name     = var.resource_group
+  resource_group_location = var.location
+  address_space           = var.address_space
+  subnets                 = var.subnets
+}
+
 

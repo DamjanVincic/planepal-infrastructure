@@ -103,7 +103,98 @@ variable "kv_base_URL" {
   default = "http://api.aviationstack.com/v1/"
 }
 
-variable "app_secrets_keys" {
-  type    = list(string)
-  default = ["api-key", "kv-email", "kv-email-password"]
+
+
+
+
+variable "email_receiver" {
+  type = map(object({
+    name  = string
+    email = string
+  }))
+  default = {
+    "receiver1" = {
+      name  = "Stefan Zivkov"
+      email = "s.zivkov-int@levi9.com"
+    }
+
+    "receiver2" = {
+      name  = "Branislav"
+      email = "branislav.zuber@levi9.com"
+    }
+  }
+}
+
+variable "alerts_map" {
+  type = map(object({
+    name             = string
+    message          = string
+    metric_namespace = string
+    metric_name      = string
+    aggregation      = string
+    operator         = string
+    threshold        = number
+  }))
+  default = {
+    "alert_app_service" = {
+      name             = "ma-PlanePal-dev-neu-01"
+      message          = "Action will be triggered when CpuTime is greater than 80."
+      metric_namespace = "Microsoft.Web/sites"
+      metric_name      = "CpuTime"
+      aggregation      = "Total"
+      operator         = "GreaterThan"
+      threshold        = 80
+    }
+
+    "alert_storage_account" = {
+      name             = "ma-PlanePal-dev-neu-02"
+      message          = "Action will be triggered when Transactions count is greater than 50."
+      metric_namespace = "Microsoft.Storage/storageAccounts"
+      metric_name      = "Transactions"
+      aggregation      = "Total"
+      operator         = "GreaterThan"
+      threshold        = 50
+    }
+
+    "alert_database" = {
+      name             = "ma-PlanePal-dev-neu-03"
+      message          = "Action will be triggered when DTU is greater than 60."
+      metric_namespace = "Microsoft.Sql/servers/databases"
+      metric_name      = "dtu_consumption_percent"
+      aggregation      = "Maximum"
+      operator         = "GreaterThan"
+      threshold        = 90
+    }
+  }
+}
+
+variable "subnets" {
+  type = map(object({
+    name                = string
+    resource_group_name = string
+    address_prefixes    = string
+  }))
+  default = {
+    "subnet_app" = {
+      name                = "snet-PlanePal-dev-neu-01"
+      resource_group_name = "DevOps"
+      address_prefixes    = "10.0.0.0/24"
+    }
+
+    "subnet_sql" = {
+      name                = "snet-PlanePal-dev-neu-02"
+      resource_group_name = "DevOps"
+      address_prefixes    = "10.0.1.0/24"
+    }
+    "subnet_storage" = {
+      name                = "snet-PlanePal-dev-neu-03"
+      resource_group_name = "DevOps"
+      address_prefixes    = "10.0.2.0/24"
+    }
+    "subnet_app_storage" = {
+      name                = "snet-PlanePal-dev-neu-04"
+      resource_group_name = "DevOps"
+      address_prefixes    = "10.0.3.0/24"
+    }
+  }
 }
