@@ -117,6 +117,12 @@ variable "kv_email_pass_key" {
   type    = string
   default = "kv-email-password"
 }
+
+variable "address_space" {
+  type    = string
+  default = "10.0.0.0/16"
+}
+
 variable "ip_range_azure" {
   default = [
     "13.69.0.0/17", "13.73.128.0/18", "13.73.224.0/21", "13.80.0.0/15", "13.88.200.0/21",
@@ -220,6 +226,42 @@ variable "alerts_map" {
       aggregation      = "Maximum"
       operator         = "GreaterThan"
       threshold        = 90
+    }
+  }
+}
+
+variable "subnets" {
+  type = map(object({
+    name                = string
+    resource_group_name = string
+    address_prefixes    = string
+    delegation          = string
+  }))
+  default = {
+    "subnet1" = {
+      name                = "snet-PlanePal-dev-neu-01"
+      resource_group_name = "DevOps"
+      address_prefixes    = "10.0.0.0/24"
+      delegation          = "subnet1_delegation"
+    }
+
+    "subnet2" = {
+      name                = "snet-PlanePal-dev-neu-02"
+      resource_group_name = "DevOps"
+      address_prefixes    = "10.0.1.0/24"
+      delegation          = "subnet2_delegation"
+    }
+    "subnet3" = {
+      name                = "snet-PlanePal-dev-neu-03"
+      resource_group_name = "DevOps"
+      address_prefixes    = "10.0.2.0/24"
+      delegation          = "subnet3_delegation"
+    }
+    "subnet4" = {
+      name                = "snet-PlanePal-dev-neu-04"
+      resource_group_name = "DevOps"
+      address_prefixes    = "10.0.3.0/24"
+      delegation          = "subnet4_delegation"
     }
   }
 }
