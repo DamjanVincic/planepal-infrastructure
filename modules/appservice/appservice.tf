@@ -60,93 +60,93 @@ resource "azurerm_monitor_autoscale_setting" "scale_action_setting" {
   location            = var.location
   target_resource_id  = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.id
 
- profile {
-name = "defaultProfile"
+  profile {
+    name = "defaultProfile"
 
-capacity {
-  default = 1
-  minimum = 1
-  maximum = 2
-}
+    capacity {
+      default = 1
+      minimum = 1
+      maximum = 2
+    }
 
-rule {
-  metric_trigger {
-    metric_name        = "CPU Time"
-    metric_resource_id = "${azurerm_service_plan.service-plan-planepal-dev-neu-00.id}"
-    time_grain         = "PT1M"
-    statistic          = "Average"
-    time_window        = "PT10M"
-    time_aggregation   = "Average"
-    operator           = "GreaterThan"
-    threshold          = 75
-  }
+    rule {
+      metric_trigger {
+        metric_name        = "CPU Time"
+        metric_resource_id = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT10M"
+        time_aggregation   = "Average"
+        operator           = "GreaterThan"
+        threshold          = 75
+      }
 
-  scale_action {
-    direction = "Increase"
-    type      = "ChangeCount"
-    value     = "1"
-    cooldown  = "PT1M"
-  }
-}
+      scale_action {
+        direction = "Increase"
+        type      = "ChangeCount"
+        value     = "1"
+        cooldown  = "PT1M"
+      }
+    }
 
-rule {
-  metric_trigger {
-    metric_name        = "Average memory working set"
-    metric_resource_id = "${azurerm_service_plan.service-plan-planepal-dev-neu-00.id}"
-    time_grain         = "PT1M"
-    statistic          = "Average"
-    time_window        = "PT15M"
-    time_aggregation   = "Average"
-    operator           = "GreaterThan"
-    threshold          = 90
-  }
+    rule {
+      metric_trigger {
+        metric_name        = "Average memory working set"
+        metric_resource_id = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT15M"
+        time_aggregation   = "Average"
+        operator           = "GreaterThan"
+        threshold          = 90
+      }
 
-  scale_action {
-    direction = "Increase"
-    type      = "ChangeCount"
-    value     = "1"
-    cooldown  = "PT1M"
-  }
-}
-rule {
-  metric_trigger {
-    metric_name        = "Average memory working set"
-    metric_resource_id = "${azurerm_service_plan.service-plan-planepal-dev-neu-00.id}"
-    time_grain         = "PT1M"
-    statistic          = "Average"
-    time_window        = "PT10M"
-    time_aggregation   = "Average"
-    operator           = "LessThan"
-    threshold          = 40
-  }
+      scale_action {
+        direction = "Increase"
+        type      = "ChangeCount"
+        value     = "1"
+        cooldown  = "PT1M"
+      }
+    }
+    rule {
+      metric_trigger {
+        metric_name        = "Average memory working set"
+        metric_resource_id = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT10M"
+        time_aggregation   = "Average"
+        operator           = "LessThan"
+        threshold          = 40
+      }
 
-   scale_action {
-    direction = "Decrease"
-    type      = "ChangeCount"
-    value     = "1"
-    cooldown  = "PT1M"
-  }
-}
-rule {
-  metric_trigger {
-    metric_name        = "CPU Time"
-    metric_resource_id = "${azurerm_service_plan.service-plan-planepal-dev-neu-00.id}"
-    time_grain         = "PT1M"
-    statistic          = "Average"
-    time_window        = "PT10M"
-    time_aggregation   = "Average"
-    operator           = "LessThan"
-    threshold          = 45
-  }
+      scale_action {
+        direction = "Decrease"
+        type      = "ChangeCount"
+        value     = "1"
+        cooldown  = "PT1M"
+      }
+    }
+    rule {
+      metric_trigger {
+        metric_name        = "CPU Time"
+        metric_resource_id = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT10M"
+        time_aggregation   = "Average"
+        operator           = "LessThan"
+        threshold          = 45
+      }
 
-   scale_action {
-    direction = "Decrease"
-    type      = "ChangeCount"
-    value     = "1"
-    cooldown  = "PT1M"
+      scale_action {
+        direction = "Decrease"
+        type      = "ChangeCount"
+        value     = "1"
+        cooldown  = "PT1M"
+      }
+    }
   }
-}
-}  
 
   notification {
     email {

@@ -6,7 +6,7 @@ terraform {
     }
   }
   backend "azurerm" {
-    
+
   }
 }
 
@@ -107,6 +107,7 @@ module "network" {
   resource_group_location = var.location
   address_space           = var.address_space
   subnets                 = var.subnets
+  app_st_name             = module.storage.name
 }
 
 
