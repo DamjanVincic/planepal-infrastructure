@@ -32,6 +32,15 @@ variable "outbound_ip_address_list" {
   description = "List of ips used by app service"
 }
 
+variable "subnet_id" {
+  description = "Subnet ID"
+  type        = string
+}
+
+variable "levi9_public_ip" {
+  type = string
+}
+
 resource "azurerm_storage_account" "storage_account" {
   name                     = "st${lower(var.app_name)}${var.environment}01"
   resource_group_name      = var.resource_group
@@ -43,4 +52,52 @@ resource "azurerm_storage_account" "storage_account" {
 resource "azurerm_storage_container" "storage_container" {
   name                 = "sc-${lower(var.app_name)}-${var.environment}-${var.location}-01"
   storage_account_name = azurerm_storage_account.storage_account.name
+}
+
+resource "azurerm_private_endpoint" "storage_account_endpoint" {
+  name                = "pe-st-${lower(var.app_name)}-${var.environment}-${var.location}-01"
+  location            = var.location
+  resource_group_name = var.resource_group
+  subnet_id           = var.subnet_id
+
+  private_service_connection {
+    name                           = "storage-account-connection-01"
+    private_connection_resource_id = azurerm_storage_account.storage_account.id
+    is_manual_connection           = false
+  }
+}
+
+resource "azurerm_network_security_group" "st_app_nsg" {
+  name                = "nsg-st-${lower(var.app_name)}-${var.environment}-${var.location}-01"
+  location            = var.location
+  resource_group_name = var.resource_group
+
+  security_rule {
+    name                       = "allow-app"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 100
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_ranges    = [80, 443]
+    source_address_prefixes    = var.outbound_ip_address_list
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "allow-levi9"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 101
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_ranges    = [80, 443]
+    source_address_prefix      = var.levi9_public_ip
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
+  subnet_id                 = var.subnet_id
+  network_security_group_id = azurerm_network_security_group.st_app_nsg.id
 }
