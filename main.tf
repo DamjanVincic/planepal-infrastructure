@@ -28,6 +28,13 @@ module "app_service" {
   environment         = var.environment
   dot_net_version     = var.dot_net_version
   app_sku             = var.app_sku
+  default_capacity    = var.app_service_default_capacity
+  minimum             = var.app_service_minimum
+  maximum             = var.app_service_maximum
+  cpu_up_threshold    = var.cpu_up_threshold
+  cpu_down_threshold  = var.cpu_down_threshold
+  memory_up_threshold = var.memory_up_threshold
+  memory_down_threshold= var.memory_down_threshold
 }
 
 module "storage" {
