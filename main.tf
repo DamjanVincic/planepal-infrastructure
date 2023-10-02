@@ -62,7 +62,7 @@ module "key_vault" {
   kv_base_URL_name         = var.kv_base_URL_name
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
-  subnet_id                = module.network.subnet["subnet_app_storage"].id
+  subnet_id                = module.network.subnet["subnet_app_key_vault"].id
 }
 
 module "logging" {
