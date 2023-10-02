@@ -7,19 +7,19 @@ terraform {
   }
   backend "azurerm" {
     resource_group_name  = "DevOps"
-      storage_account_name = "stdevopsneu01"
-      container_name       = "tfstate"
-      key                  = "terraform-dev.tfstate"
+    storage_account_name = "stdevopsneu01"
+    container_name       = "tfstate"
+    key                  = "terraform-dev.tfstate"
   }
 }
 
 provider "azurerm" {
   skip_provider_registration = true
-   features {
+  features {
     key_vault {
       purge_soft_deleted_secrets_on_destroy = false
-      purge_soft_delete_on_destroy    = false
-      recover_soft_deleted_key_vaults = true
+      purge_soft_delete_on_destroy          = false
+      recover_soft_deleted_key_vaults       = true
     }
   }
 }
@@ -68,7 +68,7 @@ module "key_vault" {
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
   ip_range_azure           = var.ip_range_azure
-   
+
 }
 
 module "logging" {
@@ -100,3 +100,21 @@ module "sql" {
   sql_password          = module.key_vault.sql_password
 }
 
+module "automation" {
+  source = "./modules/automation"
+
+  resource_group_name      = var.resource_group
+  app_name                 = var.app_name
+  environment              = var.environment
+  location                 = var.location
+  location_abbreviation    = var.location_abbreviation
+  aa_sku_name              = var.aa_sku_name
+  aar_runbook_type         = var.aar_runbook_type
+  aar_log_verbose          = var.aar_log_verbose
+  aar_log_progress         = var.aar_log_progress
+  aas_start_time           = var.aas_start_time
+  aas_timezone             = var.aas_timezone
+  st_account_tier          = var.stdb_account_tier
+  st_replication_type      = var.stdb_replication_type
+  sc_container_access_type = var.scdb_container_access_type
+}
