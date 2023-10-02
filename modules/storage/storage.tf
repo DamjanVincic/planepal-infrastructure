@@ -73,26 +73,26 @@ resource "azurerm_network_security_group" "st_app_nsg" {
   resource_group_name = var.resource_group
 
   security_rule {
-    name              = "allow-app"
-    protocol          = "Tcp"
-    access            = "Allow"
-    priority          = 100
-    direction         = "Inbound"
-    source_port_range = "*"
-    destination_port_range = "*"
-    source_address_prefixes = var.outbound_ip_address_list
+    name                       = "allow-app"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 100
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefixes    = var.outbound_ip_address_list
     destination_address_prefix = "*"
   }
 
   security_rule {
-    name              = "allow-levi9"
-    protocol          = "Tcp"
-    access            = "Allow"
-    priority          = 101
-    direction         = "Inbound"
-    source_port_range = "*"
-    destination_port_range = "*"
-    source_address_prefix = var.levi9_public_ip
+    name                       = "allow-levi9"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 101
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = var.levi9_public_ip
     destination_address_prefix = "*"
   }
 }
