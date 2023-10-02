@@ -103,9 +103,10 @@ variable "kv_base_URL" {
   default = "http://api.aviationstack.com/v1/"
 }
 
-
-
-
+variable "app_secrets_keys" {
+  type    = list(string)
+  default = ["api-key", "kv-email", "kv-email-password"]
+}
 
 variable "email_receiver" {
   type = map(object({
