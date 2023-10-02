@@ -56,19 +56,8 @@ variable "kv_base_URL" {
   type = string
 }
 
-variable "kv_API_key" {
-  type = string
-}
-
-variable "kv_email_key" {
-  type = string
-}
-
-variable "kv_email_pass_key" {
-  type = string
-}
-variable "ip_range_azure" {
-  
+variable "app_secrets_keys" {
+  type = list(string)
 }
 
 
@@ -87,20 +76,12 @@ data "azurerm_key_vault_secret" "sql_password" {
   key_vault_id = data.azurerm_key_vault.devops_kv.id
 }
 
-data "azurerm_key_vault_secret" "kv_email" {
-  name         = var.kv_email_key
-  key_vault_id = data.azurerm_key_vault.devops_kv.id
-}
+# data "azurerm_key_vault_secret" "app_secrets" {
+#   for_each = toset(var.app_secrets_keys)
 
-data "azurerm_key_vault_secret" "kv_email_password" {
-  name         = var.kv_email_pass_key
-  key_vault_id = data.azurerm_key_vault.devops_kv.id
-}
-
-data "azurerm_key_vault_secret" "kv_api_key" {
-  name         = var.kv_API_key
-  key_vault_id = data.azurerm_key_vault.devops_kv.id
-}
+#   name = each.key
+#   key_vault_id = data.azurerm_key_vault.devops_kv.id
+# }
 
 data "http" "myip" {
   url = "https://ipv4.icanhazip.com"
@@ -168,13 +149,12 @@ resource "azurerm_key_vault" "kv_for_app" {
 #   ]
 # }
 
-# resource "azurerm_key_vault_secret" "kv_API_key" {
-#   name         = data.azurerm_key_vault_secret.kv_api_key.name
-#   value        = data.azurerm_key_vault_secret.kv_api_key.value
-#   key_vault_id = azurerm_key_vault.kv_for_app.id
-#   depends_on = [
-#     azurerm_key_vault.kv_for_app
-#   ]
+# resource "azurerm_key_vault_secret" "app_secrets" {
+#   for_each = data.azurerm_key_vault_secret.app_secrets
+
+#   name = each.value.name
+#   value = each.value.value
+#   key_vault_id = data.azurerm_key_vault.devops_kv.id
 # }
 
 # resource "azurerm_key_vault_secret" "kv_base_URL" {
@@ -185,22 +165,3 @@ resource "azurerm_key_vault" "kv_for_app" {
 #     azurerm_key_vault.kv_for_app
 #   ]
 # }
-
-# resource "azurerm_key_vault_secret" "kv_email" {
-#   name         = data.azurerm_key_vault_secret.kv_email.name
-#   value        = data.azurerm_key_vault_secret.kv_email.value
-#   key_vault_id = azurerm_key_vault.kv_for_app.id
-#   depends_on = [
-#     azurerm_key_vault.kv_for_app
-#   ]
-# }
-
-# resource "azurerm_key_vault_secret" "kv_email_pass" {
-#   name         = data.azurerm_key_vault_secret.kv_email_password.name
-#   value        = data.azurerm_key_vault_secret.kv_email_password.value
-#   key_vault_id = azurerm_key_vault.kv_for_app.id
-#    depends_on = [
-#     azurerm_key_vault.kv_for_app
-#   ]
-# }
-
