@@ -34,7 +34,7 @@ variable "outbound_ip_address_list" {
 
 variable "subnet_id" {
   description = "Subnet ID"
-  type = string
+  type        = string
 }
 
 resource "azurerm_storage_account" "storage_account" {

@@ -6,10 +6,7 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name  = "DevOps"
-    storage_account_name = "stdevopsneu01"
-    container_name       = "tfstate"
-    key                  = "terraform-dev.tfstate"
+    
   }
 }
 
@@ -46,7 +43,7 @@ module "storage" {
   location                 = var.location
   environment              = var.environment
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
-  subnet_id = module.network.subnet["subnet_app_storage"].id
+  subnet_id                = module.network.subnet["subnet_app_storage"].id
 }
 
 module "key_vault" {

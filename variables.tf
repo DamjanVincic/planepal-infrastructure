@@ -200,6 +200,6 @@ variable "subnets" {
 }
 
 variable "address_space" {
-  type = string
+  type    = string
   default = "10.0.0.0/16"
 }
