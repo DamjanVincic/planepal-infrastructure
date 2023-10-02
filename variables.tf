@@ -31,7 +31,7 @@ variable "dot_net_version" {
 variable "app_sku" {
   type        = string
   description = "Plan for application"
-  default     = "F1"
+  default     = "B1"
 }
 
 variable "location_abbreviation" {
@@ -103,9 +103,10 @@ variable "kv_base_URL" {
   default = "http://api.aviationstack.com/v1/"
 }
 
-
-
-
+variable "app_secrets_keys" {
+  type    = list(string)
+  default = ["api-key", "kv-email", "kv-email-password"]
+}
 
 variable "email_receiver" {
   type = map(object({
@@ -180,13 +181,12 @@ variable "subnets" {
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.0.0/24"
     }
-
     "subnet_sql" = {
       name                = "snet-PlanePal-dev-neu-02"
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.1.0/24"
     }
-    "subnet_storage" = {
+    "subnet_app_keyvault" = {
       name                = "snet-PlanePal-dev-neu-03"
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.2.0/24"
@@ -197,4 +197,14 @@ variable "subnets" {
       address_prefixes    = "10.0.3.0/24"
     }
   }
+}
+
+variable "address_space" {
+  type    = string
+  default = "10.0.0.0/16"
+}
+
+variable "levi9_public_ip" {
+  type    = string
+  default = "178.220.237.81"
 }

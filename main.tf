@@ -6,7 +6,7 @@ terraform {
     }
   }
   backend "azurerm" {
-
+    
   }
 }
 
@@ -43,6 +43,8 @@ module "storage" {
   location                 = var.location
   environment              = var.environment
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
+  subnet_id                = module.network.subnet["subnet_app_storage"].id
+  levi9_public_ip          = var.levi9_public_ip
 }
 
 module "key_vault" {

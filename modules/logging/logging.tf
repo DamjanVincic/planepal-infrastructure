@@ -46,19 +46,19 @@ variable "app_service_plan_id" {
 
 variable "alerts_map" {
   type = map(object({
-    name = string
-    message = string
+    name             = string
+    message          = string
     metric_namespace = string
-    metric_name = string
-    aggregation = string
-    operator = string
-    threshold = number
+    metric_name      = string
+    aggregation      = string
+    operator         = string
+    threshold        = number
   }))
 }
 
 variable "email_receiver" {
   type = map(object({
-    name = string
+    name  = string
     email = string
   }))
 }
@@ -78,7 +78,7 @@ resource "azurerm_log_analytics_workspace" "log-a-w" {
 }
 
 resource "azurerm_monitor_action_group" "action_group" {
-    
+
   name                = "ag-${var.app_name}-${var.environment}-${var.location}-01"
   resource_group_name = var.resource_group_name
   short_name          = "devops_ag"
@@ -91,7 +91,7 @@ resource "azurerm_monitor_action_group" "action_group" {
       name          = email_receiver.value.name
       email_address = email_receiver.value.email
     }
-    
+
   }
 }
 
