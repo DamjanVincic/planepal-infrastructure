@@ -46,7 +46,7 @@ resource "azurerm_subnet" "az_subnet" {
   address_prefixes     = [each.value.address_prefixes]
   enforce_private_link_endpoint_network_policies = true
 }
-
+/*
 resource "azurerm_private_dns_zone" "az_dns_zone" {
   name                = "planePal.com"
   resource_group_name = var.resource_group_name
@@ -58,5 +58,10 @@ resource "azurerm_private_dns_zone_virtual_network_link" "az_virtual_network_lin
   private_dns_zone_name = azurerm_private_dns_zone.az_dns_zone.name
   virtual_network_id    = azurerm_virtual_network.az_vNet.id
   registration_enabled  = false
-}
+}*/
+
+private_dns_zone_group {
+    name                 = "default"
+  private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zones["privatelink-vaultcore-azure-net"].id]
+  }
 
