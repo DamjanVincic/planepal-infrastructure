@@ -181,13 +181,12 @@ variable "subnets" {
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.0.0/24"
     }
-
     "subnet_sql" = {
       name                = "snet-PlanePal-dev-neu-02"
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.1.0/24"
     }
-    "subnet_storage" = {
+    "subnet_app_keyvault" = {
       name                = "snet-PlanePal-dev-neu-03"
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.2.0/24"
@@ -198,4 +197,9 @@ variable "subnets" {
       address_prefixes    = "10.0.3.0/24"
     }
   }
+}
+
+variable "address_space" {
+  type = string
+  default = "10.0.0.0/16"
 }
