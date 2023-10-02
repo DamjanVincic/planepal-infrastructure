@@ -101,3 +101,8 @@ resource "azurerm_subnet_network_security_group_association" "subnet_nsg_associa
   subnet_id                 = var.subnet_id
   network_security_group_id = azurerm_network_security_group.st_app_nsg.id
 }
+
+resource "azurerm_private_dns_zone" "app_st_dns_zone" {
+  name                = "${azurerm_storage_account.storage_account.name}.blob.core.windows.net"
+  resource_group_name = var.resource_group
+}

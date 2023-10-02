@@ -30,10 +30,6 @@ variable "subnets" {
   }))
 }
 
-variable "app_st_name" {
-  type = string
-}
-
 
 resource "azurerm_virtual_network" "az_vNet" {
   name                = "vnet-${var.app_name}-${var.environment}-${var.location}-01"
@@ -57,17 +53,9 @@ resource "azurerm_private_dns_zone" "az_dns_zone" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "az_virtual_network_link" {
-  name                  = "${azurerm_private_dns_zone.az_dns_zone}-link"
+  name                  = "${azurerm_private_dns_zone.az_dns_zone.name}-link"
   resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.az_dns_zone.name
   virtual_network_id    = azurerm_virtual_network.az_vNet.id
   registration_enabled  = false
-}
-
-resource "azurerm_dns_cname_record" "st_record" {
-  name                = "www"
-  zone_name           = azurerm_private_dns_zone.az_dns_zone.name
-  resource_group_name = var.resource_group_name
-  ttl                 = 300
-  record              = "${var.app_st_name}.blob.core.windows.net"
 }

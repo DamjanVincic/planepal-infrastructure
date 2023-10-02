@@ -6,7 +6,10 @@ terraform {
     }
   }
   backend "azurerm" {
-
+    resource_group_name  = "DevOps"
+    storage_account_name = "stdevopsneu01"
+    container_name       = "tfstate"
+    key                  = "terraform-dev.tfstate"
   }
 }
 
@@ -107,7 +110,6 @@ module "network" {
   resource_group_location = var.location
   address_space           = var.address_space
   subnets                 = var.subnets
-  app_st_name             = module.storage.name
 }
 
 
