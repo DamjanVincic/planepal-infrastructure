@@ -45,15 +45,24 @@ variable "app_service_plan_id" {
 }
 
 variable "alerts_map" {
-  type = map()
-  description = "Map with informations for creating metrics alerts"
+  type = map(object({
+    name = string
+    scope = string
+    message = string
+    metric_namespace = string
+    metric_name = string
+    aggregation = string
+    operator = string
+    threshold = number
+  }))
 }
 
 variable "email_receiver" {
-  type = map()
-  description = "Map with informations for creating email receivers in action group"
+  type = map(object({
+    name = string
+    email = string
+  }))
 }
-
 
 data "azurerm_resource_group" "devops_rg" {
   name = var.resource_group_name
@@ -69,28 +78,8 @@ resource "azurerm_log_analytics_workspace" "log-a-w" {
   retention_in_days   = 30
 }
 
-# variable "email_receiver" {
-#   type = map(object({
-#     name = string
-#     email = string
-#   }))
-#   default = {
-#     "receiver1" = {
-#       name = "Stefan Zivkov"
-#       email = "s.zivkov-int@levi9.com"
-#     }
-
-#     "receiver2" = {
-#       name          = "Branislav"
-#       email_address = "branislav.zuber@levi9.com"
-#     }
-#   }
-# }
-
-
 resource "azurerm_monitor_action_group" "action_group" {
-  for_each = var.email_receiver
-  
+    
   name                = "ag-${var.app_name}-${var.environment}-${var.location}-01"
   resource_group_name = var.resource_group_name
   short_name          = "devops_ag"
@@ -100,61 +89,12 @@ resource "azurerm_monitor_action_group" "action_group" {
     for_each = var.email_receiver
 
     content {
-      name          = each.value.name
-      email_address = each.value.email
+      name          = email_receiver.value.name
+      email_address = email_receiver.value.email
     }
     
   }
 }
-
-# variable "alerts_map" {
-
-#   type = map(object({
-#     name = string
-#     scope = string
-#     message = string
-#     metric_namespace = string
-#     metric_name = string
-#     aggregation = string
-#     operator = string
-#     threshold = number
-#   }))
-#   default = {
-#     "alert_app_service" = {
-#       name = "ma-${var.app_name}-${var.environment}-${var.location}-01"
-#       scope = var.app_service_id
-#       message = "Action will be triggered when CpuTime is greater than 80."
-#       metric_namespace = "Microsoft.Web/sites"
-#       metric_name = "CpuTime"
-#       aggregation = "Total"
-#       operator = "GreaterThan"
-#       threshold = 80
-#     }
-
-#     "alert_storage_account" = {
-#       name = "ma-${var.app_name}-${var.environment}-${var.location}-02"
-#       scope = var.storage_account_id
-#       message = "Action will be triggered when Transactions count is greater than 50."
-#       metric_namespace = "Microsoft.Storage/storageAccounts"
-#       metric_name = "Transactions"
-#       aggregation = "Total"
-#       operator = "GreaterThan"
-#       threshold = 50
-#     }
-
-#     "alert_database" = {
-#       name = "ma-${var.app_name}-${var.environment}-${var.location}-03"
-#       scope = var.database_id
-#       message = "Action will be triggered when DTU is greater than 60."
-#       metric_namespace = "Microsoft.Sql/servers/databases"
-#       metric_name = "dtu_consumption_percent"
-#       aggregation = "Maximum"
-#       operator = "GreaterThan"
-#       threshold = 90
-#     }
-#   }
-  
-# }
 
 resource "azurerm_monitor_metric_alert" "alert_app_service" {
   for_each = var.alerts_map
@@ -167,7 +107,7 @@ resource "azurerm_monitor_metric_alert" "alert_app_service" {
   criteria {
     metric_namespace = each.value.metric_namespace
     metric_name      = each.value.metric_name
-    aggregation      = each.value.agreggation
+    aggregation      = each.value.aggregation
     operator         = each.value.operator
     threshold        = each.value.threshold
   }
