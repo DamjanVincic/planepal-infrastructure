@@ -12,6 +12,7 @@ variable "app_name" {
   type        = string
   description = "Name of Application"
 }
+
 variable "outbound_ip_address_list" {
   description = "List of ips used by app service"
 }
@@ -56,19 +57,8 @@ variable "kv_base_URL" {
   type = string
 }
 
-variable "kv_API_key" {
-  type = string
-}
-
-variable "kv_email_key" {
-  type = string
-}
-
-variable "kv_email_pass_key" {
-  type = string
-}
-variable "ip_range_azure" {
-  
+variable "app_secrets_keys" {
+  type = list(string)
 }
 
 
@@ -87,20 +77,12 @@ data "azurerm_key_vault_secret" "sql_password" {
   key_vault_id = data.azurerm_key_vault.devops_kv.id
 }
 
-data "azurerm_key_vault_secret" "kv_email" {
-  name         = var.kv_email_key
-  key_vault_id = data.azurerm_key_vault.devops_kv.id
-}
+# data "azurerm_key_vault_secret" "app_secrets" {
+#   for_each = toset(var.app_secrets_keys)
 
-data "azurerm_key_vault_secret" "kv_email_password" {
-  name         = var.kv_email_pass_key
-  key_vault_id = data.azurerm_key_vault.devops_kv.id
-}
-
-data "azurerm_key_vault_secret" "kv_api_key" {
-  name         = var.kv_API_key
-  key_vault_id = data.azurerm_key_vault.devops_kv.id
-}
+#   name = each.key
+#   key_vault_id = data.azurerm_key_vault.devops_kv.id
+# }
 
 data "http" "myip" {
   url = "https://ipv4.icanhazip.com"
@@ -115,7 +97,7 @@ resource "azurerm_key_vault" "kv_for_app" {
   tenant_id                  = var.tenant_id
   soft_delete_retention_days = 30
   purge_protection_enabled   = false
-  
+
 
   sku_name = var.kv_app_sku_name
 
@@ -136,45 +118,31 @@ resource "azurerm_key_vault" "kv_for_app" {
       "Get", "List", "Set", "Delete",
     ]
   }
+
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = "f6ac4965-cbb9-40f7-a801-98cc25dd9177"
 
     secret_permissions = [
-      "Get", "List", "Set", "Delete","Restore","Recover","Purge",
+      "Get", "List", "Set", "Delete", "Restore", "Recover", "Purge",
     ]
   }
 
   network_acls {
-    # The Default Action to use when no rules match from ip_rules / 
-    # virtual_network_subnet_ids. Possible values are Allow and Deny
     default_action = "Deny"
 
-    # Allows all azure services to access your keyvault. Can be set to 'None'
     bypass = "AzureServices"
 
-    # The list of allowed ip addresses.
-     ip_rules  = "${concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)])}"
+    ip_rules = concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)])
   }
 }
 
-# resource "azurerm_key_vault_access_policy" "kv_access_policy" {
-#   key_vault_id = azurerm_key_vault.kv_for_app.id
-#   tenant_id    = var.tenant_id
-#   object_id    = var.principal_id
+# resource "azurerm_key_vault_secret" "app_secrets" {
+#   for_each = data.azurerm_key_vault_secret.app_secrets
 
-#   secret_permissions = [
-#     "Get", "List"
-#   ]
-# }
-
-# resource "azurerm_key_vault_secret" "kv_API_key" {
-#   name         = data.azurerm_key_vault_secret.kv_api_key.name
-#   value        = data.azurerm_key_vault_secret.kv_api_key.value
-#   key_vault_id = azurerm_key_vault.kv_for_app.id
-#   depends_on = [
-#     azurerm_key_vault.kv_for_app
-#   ]
+#   name = each.value.name
+#   value = each.value.value
+#   key_vault_id = data.azurerm_key_vault.devops_kv.id
 # }
 
 # resource "azurerm_key_vault_secret" "kv_base_URL" {
@@ -185,22 +153,3 @@ resource "azurerm_key_vault" "kv_for_app" {
 #     azurerm_key_vault.kv_for_app
 #   ]
 # }
-
-# resource "azurerm_key_vault_secret" "kv_email" {
-#   name         = data.azurerm_key_vault_secret.kv_email.name
-#   value        = data.azurerm_key_vault_secret.kv_email.value
-#   key_vault_id = azurerm_key_vault.kv_for_app.id
-#   depends_on = [
-#     azurerm_key_vault.kv_for_app
-#   ]
-# }
-
-# resource "azurerm_key_vault_secret" "kv_email_pass" {
-#   name         = data.azurerm_key_vault_secret.kv_email_password.name
-#   value        = data.azurerm_key_vault_secret.kv_email_password.value
-#   key_vault_id = azurerm_key_vault.kv_for_app.id
-#    depends_on = [
-#     azurerm_key_vault.kv_for_app
-#   ]
-# }
-
