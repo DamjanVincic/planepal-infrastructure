@@ -7,19 +7,19 @@ terraform {
   }
   backend "azurerm" {
     resource_group_name  = "DevOps"
-      storage_account_name = "stdevopsneu01"
-      container_name       = "tfstate"
-      key                  = "terraform-dev.tfstate"
+    storage_account_name = "stdevopsneu01"
+    container_name       = "tfstate"
+    key                  = "terraform-dev.tfstate"
   }
 }
 
 provider "azurerm" {
   skip_provider_registration = true
-   features {
+  features {
     key_vault {
       purge_soft_deleted_secrets_on_destroy = false
-      purge_soft_delete_on_destroy    = false
-      recover_soft_deleted_key_vaults = true
+      purge_soft_delete_on_destroy          = false
+      recover_soft_deleted_key_vaults       = true
     }
   }
 }
@@ -68,7 +68,7 @@ module "key_vault" {
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
   ip_range_azure           = var.ip_range_azure
-   
+
 }
 
 module "logging" {
@@ -83,6 +83,8 @@ module "logging" {
   storage_account_id   = module.storage.account_id
   database_id          = module.sql.sqldb_id
   app_service_plan_id  = module.app_service.app_service_plan_id
+  alerts_map           = var.alerts_map
+  email_receiver       = var.email_receiver
 }
 
 module "sql" {
@@ -99,4 +101,5 @@ module "sql" {
   sql_login             = module.key_vault.sql_username
   sql_password          = module.key_vault.sql_password
 }
+
 

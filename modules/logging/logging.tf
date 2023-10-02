@@ -44,14 +44,30 @@ variable "app_service_plan_id" {
   description = "App service plan id, used for creating storage account alert"
 }
 
+variable "alerts_map" {
+  type = map(object({
+    name = string
+    message = string
+    metric_namespace = string
+    metric_name = string
+    aggregation = string
+    operator = string
+    threshold = number
+  }))
+}
+
+variable "email_receiver" {
+  type = map(object({
+    name = string
+    email = string
+  }))
+}
 
 data "azurerm_resource_group" "devops_rg" {
   name = var.resource_group_name
 }
 
-data "azurerm_subscription" "subscription" {
-
-}
+data "azurerm_subscription" "subscription" {}
 
 resource "azurerm_log_analytics_workspace" "log-a-w" {
   name                = "log-${var.app_name}-${var.environment}-${var.location}-01"
@@ -62,91 +78,37 @@ resource "azurerm_log_analytics_workspace" "log-a-w" {
 }
 
 resource "azurerm_monitor_action_group" "action_group" {
+    
   name                = "ag-${var.app_name}-${var.environment}-${var.location}-01"
   resource_group_name = var.resource_group_name
   short_name          = "devops_ag"
   enabled             = true
 
-  email_receiver {
-    name          = "Stefan"
-    email_address = "stefanzivkov78@gmail.com"
-  }
+  dynamic "email_receiver" {
+    for_each = var.email_receiver
 
-  email_receiver {
-    name          = "Branislav"
-    email_address = "branislav.zuber@levi9.com"
+    content {
+      name          = email_receiver.value.name
+      email_address = email_receiver.value.email
+    }
+    
   }
 }
 
 resource "azurerm_monitor_metric_alert" "alert_app_service" {
-  name                = "ma-${var.app_name}-${var.environment}-${var.location}-01"
+  for_each = var.alerts_map
+
+  name                = each.value.name
   resource_group_name = var.resource_group_name
-  scopes              = [var.app_service_id]
-  description         = "Action will be triggered when CpuTime is greater than 80."
+  scopes              = [each.key == "alert_app_service" ? var.app_service_id : each.key == "alert_storage_account" ? var.storage_account_id : var.database_id]
+  description         = each.value.message
 
   criteria {
-    metric_namespace = "Microsoft.Web/sites"
-    metric_name      = "CpuTime"
-    aggregation      = "Total"
-    operator         = "GreaterThan"
-    threshold        = 80
-  }
-
-  action {
-    action_group_id = azurerm_monitor_action_group.action_group.id
-  }
-}
-
-# resource "azurerm_monitor_metric_alert" "alert_app_service-02" {
-#   name                = "ma-${var.app_name}-${var.environment}-${var.location}-04"
-#   resource_group_name = var.resource_group_name
-#   scopes              = [var.app_service_plan_id]
-#   description         = "Action will be triggered when average MemoryPercentage is greater than 80."
-
-#   criteria {
-#     metric_namespace = "Microsoft.Web/serverfarms"
-#     metric_name      = "MemoryPercentage"
-#     aggregation      = "Average"
-#     operator         = "GreaterThan"
-#     threshold        = 80
-#   }
-
-#   action {
-#     action_group_id = azurerm_monitor_action_group.action_group.id
-#   }
-# }
-
-resource "azurerm_monitor_metric_alert" "alert_storage_account" {
-  name                = "ma-${var.app_name}-${var.environment}-${var.location}-02"
-  resource_group_name = data.azurerm_resource_group.devops_rg.name
-  scopes              = [var.storage_account_id]
-  description         = "Action will be triggered when Transactions count is greater than 50."
-
-  criteria {
-    metric_namespace = "Microsoft.Storage/storageAccounts"
-    metric_name      = "Transactions"
-    aggregation      = "Total"
-    operator         = "GreaterThan"
-    threshold        = 50
-  }
-
-  action {
-    action_group_id = azurerm_monitor_action_group.action_group.id
-  }
-}
-
-resource "azurerm_monitor_metric_alert" "alert_database" {
-  name                = "ma-${var.app_name}-${var.environment}-${var.location}-03"
-  resource_group_name = data.azurerm_resource_group.devops_rg.name
-  scopes              = [var.database_id]
-  description         = "Action will be triggered when DTU is greater than 60."
-
-  criteria {
-    metric_namespace = "Microsoft.Sql/servers/databases"
-    metric_name      = "dtu_consumption_percent"
-    aggregation      = "Maximum"
-    operator         = "GreaterThan"
-    threshold        = 90
+    metric_namespace = each.value.metric_namespace
+    metric_name      = each.value.metric_name
+    aggregation      = each.value.aggregation
+    operator         = each.value.operator
+    threshold        = each.value.threshold
   }
 
   action {
