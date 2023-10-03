@@ -38,6 +38,11 @@ $SqlConnection.ConnectionString = $ConnectionString
 $SqlConnection.Open()
 
 $CreateLoginSql = "CREATE LOGIN $NewUsername WITH PASSWORD = '$newPassword';"
+$CreateLoginSql = @"
+CREATE LOGIN $NewUsername WITH PASSWORD = '$NewPassword';
+CREATE USER $NewUsername  FOR LOGIN $NewUsername WITH DEFAULT_SCHEMA=[$Database];
+CREATE LOGIN $BacpacUserName WITH PASSWORD = '$BacpacPassword';
+"@
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $CreateLoginSql
 $SqlCommand.ExecuteNonQuery()
@@ -63,6 +68,8 @@ GRANT ALTER, SELECT, INSERT, UPDATE, DELETE ON DATABASE::$Database TO $NewUserna
 GRANT ALTER ANY SCHEMA TO $NewUsername;
 CREATE SCHEMA $Database AUTHORIZATION $NewUsername;
 ALTER USER $NewUsername WITH DEFAULT_SCHEMA = $Database;
+CREATE USER $BacpacUsername FOR LOGIN $BacpacUsername WITH DEFAULT_SCHEMA=[$Database];
+ALTER ROLE db_backupoperator ADD MEMBER $BacpacUsername;
 "@
 
 # Execute the SQL commands in the target database
