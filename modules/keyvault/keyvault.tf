@@ -137,6 +137,13 @@ resource "azurerm_key_vault" "kv_for_app" {
   }
 }
 
+variable "address_space" {
+  type    = string
+}
+
+variable "levi9_public_ip" {
+  type    = string
+}
 # resource "azurerm_key_vault_secret" "app_secrets" {
 #   for_each = data.azurerm_key_vault_secret.app_secrets
 
@@ -186,4 +193,39 @@ resource "azurerm_private_dns_zone_virtual_network_link" "az_kv_virtual_network_
   private_dns_zone_name = azurerm_private_dns_zone.az_kv_dns_zone.name
   virtual_network_id    = module.network.az_vNet.id
   registration_enabled  = false
+}
+
+resource "azurerm_network_security_group" "kv_app_nsg" {
+  name                = "nsg-kv-${lower(var.app_name)}-${var.environment}-${var.location}-01"
+  location            = var.location
+  resource_group_name = var.resource_group
+
+  security_rule {
+    name                       = "allow-app"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 100
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_range     = 443
+    source_address_prefixes    = var.outbound_ip_address_list
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "allow-levi9"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 101
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_range     = 443
+    source_address_prefix      = var.levi9_public_ip
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
+  subnet_id                 = module.network.subnet["subnet_app_key_vault"].id
+  network_security_group_id = azurerm_network_security_group.kv_app_nsg.id
 }
