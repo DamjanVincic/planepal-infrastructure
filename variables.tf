@@ -247,3 +247,56 @@ variable "memory_down_threshold" {
 
   default = 40
 }
+variable "aa_sku_name" {
+  description = "The SKU name for Azure Automation"
+  type        = string
+  default     = "free"
+}
+
+variable "aar_runbook_type" {
+  description = "The type of runbook in Azure Automation"
+  type        = string
+  default     = "PowerShell"
+}
+
+variable "aar_log_verbose" {
+  description = "Enable verbose logging for Azure Automation runbook"
+  type        = string
+  default     = "off"
+}
+
+variable "aar_log_progress" {
+  description = "Enable progress logging for Azure Automation runbook"
+  type        = string
+  default     = "off"
+}
+
+variable "aas_start_time" {
+  description = "The start time for Azure Automation schedule"
+  type        = string
+  default     = "03:00:00"
+}
+
+variable "aas_timezone" {
+  description = "The timezone for Azure Automation schedule"
+  type        = string
+  default     = "UTC"
+}
+
+variable "stdb_account_tier" {
+  description = "The storage account tier for Standard Storage"
+  type        = string
+  default     = "standard"
+}
+
+variable "stdb_replication_type" {
+  description = "The replication type for Standard Storage"
+  type        = string
+  default     = "LRS"
+}
+
+variable "scdb_container_access_type" {
+  description = "The access type for the storage container"
+  type        = string
+  default     = "private"
+}

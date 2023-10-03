@@ -25,6 +25,9 @@ variable "aar_log_verbose" {
 variable "aar_log_progress" {
   type = string
 }
+variable "aas_start_time" {
+  type = string
+}
 variable "aas_timezone" {
   type = string
 }
