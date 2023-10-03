@@ -38,12 +38,16 @@ variable "default_capacity" {
  type = number
  }
 variable "cpu_up_threshold" {
+
 }
 variable "cpu_down_threshold" {
+
 }
 variable "memory_up_threshold" {
+
 }
 variable "memory_down_threshold" {
+  
 }
 
 resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
