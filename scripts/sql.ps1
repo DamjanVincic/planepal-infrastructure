@@ -11,24 +11,18 @@ $UsernameSecretName = "sqllogin"
 $PasswordSecretName = "sqlpassword"
 $NewUsernameSecretName = "kv-email"
 $NewPasswordSecretName = "kv-email-password"
-$BacpacUsernameSecretName = "sqllogin-bacpac"
-$BacpacPasswordSecretName = "sqlpassword-bacpac"
 
 # Get the secrets from Azure Key Vault
 $UsernameSecret = Get-AzKeyVaultSecret -VaultName $KeyVaultNameDevOps -Name $UsernameSecretName -AsPlainText
 $PasswordSecret = Get-AzKeyVaultSecret -VaultName $KeyVaultNameDevOps -Name $PasswordSecretName -AsPlainText
 $NewUsernameSecret = Get-AzKeyVaultSecret -VaultName $KeyVaultNameDev -Name $NewUsernameSecretName -AsPlainText
 $NewPasswordSecret = Get-AzKeyVaultSecret -VaultName $KeyVaultNameDev -Name $NewPasswordSecretName -AsPlainText
-$BacpacUserNameSecret = Get-AzKeyVaultSecret -VaultName $KeyVaultNameDevOps -Name $BacpacUsernameSecretName -AsPlainText
-$BacpacPasswordSecret = Get-AzKeyVaultSecret -VaultName $KeyVaultNameDevOps -Name $BacpacPasswordSecretName -AsPlainText
 
 # Extract the username and password from the secrets
 $Username = $UsernameSecret
 $Password = $PasswordSecret
 $NewUsername = $NewUsernameSecret
 $NewPassword = $NewPasswordSecret
-$BacpacUserName = $BacpacUserNameSecret
-$BacpacPassword = $BacpacPasswordSecret
 
 # Define database connection parameters
 $SqlServer = "sqlplanepaldevneu00.database.windows.net"
@@ -43,8 +37,10 @@ $SqlConnection = New-Object System.Data.SqlClient.SqlConnection
 $SqlConnection.ConnectionString = $ConnectionString
 $SqlConnection.Open()
 
+$CreateLoginSql = "CREATE LOGIN $NewUsername WITH PASSWORD = '$newPassword';"
 $CreateLoginSql = @"
 CREATE LOGIN $NewUsername WITH PASSWORD = '$NewPassword';
+CREATE USER $NewUsername  FOR LOGIN $NewUsername WITH DEFAULT_SCHEMA=[$Database];
 CREATE LOGIN $BacpacUserName WITH PASSWORD = '$BacpacPassword';
 "@
 $SqlCommand = $SqlConnection.CreateCommand()
@@ -72,8 +68,8 @@ GRANT ALTER, SELECT, INSERT, UPDATE, DELETE ON DATABASE::$Database TO $NewUserna
 GRANT ALTER ANY SCHEMA TO $NewUsername;
 CREATE SCHEMA $Database AUTHORIZATION $NewUsername;
 ALTER USER $NewUsername WITH DEFAULT_SCHEMA = $Database;
-CREATE USER $BacpacUsername FOR LOGIN $BacpacUsername;
-GRANT BACKUP $Database TO $BacpacUsername; --not supported
+CREATE USER $BacpacUsername FOR LOGIN $BacpacUsername WITH DEFAULT_SCHEMA=[$Database];
+ALTER ROLE db_backupoperator ADD MEMBER $BacpacUsername;
 "@
 
 # Execute the SQL commands in the target database
