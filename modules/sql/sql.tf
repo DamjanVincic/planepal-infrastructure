@@ -101,8 +101,8 @@ resource "azurerm_network_security_group" "st_sql_nsg" {
     priority                   = 200
     direction                  = "Inbound"
     source_port_range          = "*"
-    destination_port_ranges    = [443]
-    source_address_prefixes    = "10.0.1.0/24"
+    destination_port_ranges    = [1433]
+    source_address_prefixes    = var.sr_source_adress
     destination_address_prefix = "*"
   }
 
@@ -110,7 +110,7 @@ resource "azurerm_network_security_group" "st_sql_nsg" {
     name                       = "deny-all"
     protocol                   = "Tcp"
     access                     = "Deny"
-    priority                   = 205
+    priority                   = 500
     direction                  = "Inbound"
     source_port_range          = "*"
     destination_port_ranges    = "*"
