@@ -85,7 +85,40 @@ resource "azurerm_mssql_database" "sqldb-planepal-dev-neu-01" {
     environment = "development"
   }
 }
+resource "azurerm_network_security_group" "st_sql_nsg" {
+  name                = "nsg-sql-${lower(var.app_name)}-${var.environment}-${var.location}-01"
+  location            = var.location
+  resource_group_name = var.resource_group
 
+  security_rule {
+    name                       = "allow-app"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 200
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_ranges    = [1433]
+    source_address_prefixes    = var.sr_source_adress
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "deny-all"
+    protocol                   = "Tcp"
+    access                     = "Deny"
+    priority                   = 500
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_ranges    = "*"
+    source_address_prefixes    = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
+  subnet_id                 = var.subnet_id
+  network_security_group_id = azurerm_network_security_group.st_sql_nsg.id
+}
 resource "azurerm_private_endpoint" "private-ep-sql" {
   name                = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-pe"
   resource_group_name = var.resource_group
