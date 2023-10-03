@@ -86,14 +86,14 @@ resource "azurerm_private_endpoint" "private-ep-sql" {
   location            = var.location
   subnet_id           = module.network.subnet["subnet_sql"].id
   private_dns_zone_group {
-    name                 = "default"
+    name                 = "pe-sql-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
     private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zones["privatelink.database.windows.net "].id]
   }
   private_service_connection {
     is_manual_connection           = false
     private_connection_resource_id = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
     name                           = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-psc"
-    subresource_names              = ["vault"]
+    subresource_names              = ["sql"]
   }
   depends_on = [azurerm_mssql_database.sqldb-planepal-dev-neu-01]
 }
