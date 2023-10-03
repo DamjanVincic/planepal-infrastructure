@@ -108,6 +108,11 @@ variable "app_secrets_keys" {
   default = ["api-key", "kv-email", "kv-email-password"]
 }
 
+variable "sr_source_address" {
+  type = string
+  default = "10.0.1.0/24"
+}
+
 variable "email_receiver" {
   type = map(object({
     name  = string
@@ -196,6 +201,11 @@ variable "subnets" {
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.3.0/24"
     }
+    "subnet_gateway" = {
+      name                = "snet-PlanePal-dev-neu-05"
+      resource_group_name = "DevOps"
+      address_prefixes    = "10.0.4.0/24"
+    }
   }
 }
 
@@ -214,11 +224,11 @@ variable "app_service_default_capacity" {
   default = 1
 }
 variable "app_service_minimum" {
-type    = number
+  type    = number
   default = 1
 }
 variable "app_service_maximum" {
-type    = number
+  type    = number
   default = 2
 }
 variable "cpu_up_threshold" {

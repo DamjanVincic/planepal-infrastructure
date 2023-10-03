@@ -32,6 +32,15 @@ variable "sqldb_sku_name" {
 variable "sqldb_sku_max_gb_size" {
   type = number
 }
+
+variable "subnet_id" {
+  type = string
+}
+
+variable "sr_source_adress" {
+  type = string
+}
+
 data "http" "myip" {
   url = "https://ipv4.icanhazip.com"
 }
@@ -78,4 +87,39 @@ resource "azurerm_mssql_database" "sqldb-planepal-dev-neu-01" {
   tags = {
     environment = "development"
   }
+}
+
+resource "azurerm_network_security_group" "st_sql_nsg" {
+  name                = "nsg-sql-${lower(var.app_name)}-${var.environment}-${var.location}-01"
+  location            = var.location
+  resource_group_name = var.resource_group
+
+  security_rule {
+    name                       = "allow-app"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 200
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_ranges    = [443]
+    source_address_prefixes    = "10.0.1.0/24"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "deny-all"
+    protocol                   = "Tcp"
+    access                     = "Deny"
+    priority                   = 205
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_ranges    = "*"
+    source_address_prefixes    = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
+  subnet_id                 = var.subnet_id
+  network_security_group_id = azurerm_network_security_group.st_sql_nsg.id
 }
