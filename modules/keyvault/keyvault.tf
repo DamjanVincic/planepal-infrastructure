@@ -1,0 +1,155 @@
+variable "location" {
+  type        = string
+  description = "location where zour resource needs provision in azure"
+}
+
+variable "resource_group" {
+  type        = string
+  description = "resource_group name"
+}
+
+variable "app_name" {
+  type        = string
+  description = "Name of Application"
+}
+
+variable "outbound_ip_address_list" {
+  description = "List of ips used by app service"
+}
+
+variable "environment" {
+  type        = string
+  description = "Name of Environment"
+}
+
+variable "kv_app_sku_name" {
+  type        = string
+  description = "sku name for app key vault"
+}
+
+variable "tenant_id" {
+  type = string
+}
+
+variable "principal_id" {
+  type = string
+}
+
+variable "devops_kv_name" {
+  type = string
+}
+
+variable "key_sql_username" {
+  type        = string
+  description = "Key for SQL username in DevOps database"
+}
+
+variable "key_sql_password" {
+  type        = string
+  description = "Key for SQL password in DevOps database"
+}
+
+variable "kv_base_URL_name" {
+  type = string
+}
+
+variable "kv_base_URL" {
+  type = string
+}
+
+variable "app_secrets_keys" {
+  type = list(string)
+}
+
+
+data "azurerm_key_vault" "devops_kv" {
+  name                = var.devops_kv_name
+  resource_group_name = var.resource_group
+}
+
+data "azurerm_key_vault_secret" "sql_username" {
+  name         = var.key_sql_username
+  key_vault_id = data.azurerm_key_vault.devops_kv.id
+}
+
+data "azurerm_key_vault_secret" "sql_password" {
+  name         = var.key_sql_password
+  key_vault_id = data.azurerm_key_vault.devops_kv.id
+}
+
+# data "azurerm_key_vault_secret" "app_secrets" {
+#   for_each = toset(var.app_secrets_keys)
+
+#   name = each.key
+#   key_vault_id = data.azurerm_key_vault.devops_kv.id
+# }
+
+data "http" "myip" {
+  url = "https://ipv4.icanhazip.com"
+}
+
+data "azurerm_client_config" "current" {}
+
+resource "azurerm_key_vault" "kv_for_app" {
+  name                       = "kvapp${lower(var.app_name)}${var.environment}02"
+  location                   = var.location
+  resource_group_name        = var.resource_group
+  tenant_id                  = var.tenant_id
+  soft_delete_retention_days = 30
+  purge_protection_enabled   = false
+
+
+  sku_name = var.kv_app_sku_name
+
+  access_policy {
+    tenant_id = var.tenant_id
+    object_id = var.principal_id
+
+    secret_permissions = [
+      "Get", "List", "Set", "Delete",
+    ]
+  }
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
+
+    secret_permissions = [
+      "Get", "List", "Set", "Delete",
+    ]
+  }
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = "f6ac4965-cbb9-40f7-a801-98cc25dd9177"
+
+    secret_permissions = [
+      "Get", "List", "Set", "Delete", "Restore", "Recover", "Purge",
+    ]
+  }
+
+  network_acls {
+    default_action = "Deny"
+
+    bypass = "AzureServices"
+
+    ip_rules = concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)])
+  }
+}
+
+# resource "azurerm_key_vault_secret" "app_secrets" {
+#   for_each = data.azurerm_key_vault_secret.app_secrets
+
+#   name = each.value.name
+#   value = each.value.value
+#   key_vault_id = data.azurerm_key_vault.devops_kv.id
+# }
+
+# resource "azurerm_key_vault_secret" "kv_base_URL" {
+#   name         = var.kv_base_URL_name
+#   value        = var.kv_base_URL
+#   key_vault_id = azurerm_key_vault.kv_for_app.id
+#   depends_on = [
+#     azurerm_key_vault.kv_for_app
+#   ]
+# }
