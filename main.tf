@@ -112,7 +112,7 @@ module "automation" {
   aar_runbook_type         = var.aar_runbook_type
   aar_log_verbose          = var.aar_log_verbose
   aar_log_progress         = var.aar_log_progress
-  aas_start_time           = var.aas_start_time
+  start_time               = var.aas_start_time
   aas_timezone             = var.aas_timezone
   st_account_tier          = var.stdb_account_tier
   st_replication_type      = var.stdb_replication_type
