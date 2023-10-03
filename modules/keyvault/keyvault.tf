@@ -164,7 +164,7 @@ resource "azurerm_private_endpoint" "kv_app_ep" {
   private_dns_zone_group {
     name                 = "pep-kv-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
     private_dns_zone_ids = [azurerm_private_dns_zone.az_kv_dns_zone.id]
-  //private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zones["privatelink.vaultcore.azure.net"].id]
+  
   }
   private_service_connection {
     is_manual_connection           = false
