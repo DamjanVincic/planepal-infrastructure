@@ -1,4 +1,4 @@
-variable "resource_group_name" {
+variable "resource_group" {
   type = string
 }
 
@@ -32,22 +32,19 @@ variable "sqldb_sku_name" {
 variable "sqldb_sku_max_gb_size" {
   type = number
 }
-
-variable "subnet_id" {
+variable "subneta_id" {
   type = string
 }
-
-variable "sr_source_adress" {
+variable "vnet_id" {
   type = string
 }
-
 data "http" "myip" {
   url = "https://ipv4.icanhazip.com"
 }
 
 resource "azurerm_mssql_server" "sql-planepal-dev-neu-01" {
   name                         = "sql${lower(var.app_name)}${var.environment}${var.location_abbreviation}00"
-  resource_group_name          = var.resource_group_name
+  resource_group_name          = var.resource_group
   location                     = var.location
   version                      = var.sql_version
   administrator_login          = var.sql_login.value
@@ -89,37 +86,32 @@ resource "azurerm_mssql_database" "sqldb-planepal-dev-neu-01" {
   }
 }
 
-resource "azurerm_network_security_group" "st_sql_nsg" {
-  name                = "nsg-sql-${lower(var.app_name)}-${var.environment}-${var.location}-01"
-  location            = var.location
+resource "azurerm_private_endpoint" "private-ep-sql" {
+  name                = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-pe"
   resource_group_name = var.resource_group
-
-  security_rule {
-    name                       = "allow-app"
-    protocol                   = "Tcp"
-    access                     = "Allow"
-    priority                   = 200
-    direction                  = "Inbound"
-    source_port_range          = "*"
-    destination_port_ranges    = [1433]
-    source_address_prefixes    = var.sr_source_adress
-    destination_address_prefix = "*"
+  location            = var.location
+  subnet_id           = var.subneta_id
+  private_dns_zone_group {
+   name                 = "pe-st-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-03"
+    private_dns_zone_ids = [azurerm_private_dns_zone.app_st_dns_zone.id]
   }
-
-  security_rule {
-    name                       = "deny-all"
-    protocol                   = "Tcp"
-    access                     = "Deny"
-    priority                   = 500
-    direction                  = "Inbound"
-    source_port_range          = "*"
-    destination_port_ranges    = "*"
-    source_address_prefixes    = "*"
-    destination_address_prefix = "*"
+  private_service_connection {
+    is_manual_connection           = false
+    private_connection_resource_id = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
+    name                           = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-psc"
+    subresource_names              = ["vault"]
   }
+  depends_on = [azurerm_mssql_database.sqldb-planepal-dev-neu-01]
 }
 
-resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
-  subnet_id                 = var.subnet_id
-  network_security_group_id = azurerm_network_security_group.st_sql_nsg.id
+resource "azurerm_private_dns_zone" "app_st_dns_zone" {
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = var.resource_group
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "app_st_dns_zone_vnet_link" {
+  name                  = "nl-${lower(var.app_name)}-${var.environment}-${var.location}-03"
+  resource_group_name   = var.resource_group
+  private_dns_zone_name = azurerm_private_dns_zone.app_st_dns_zone.name
+  virtual_network_id    = var.vnet_id
 }
