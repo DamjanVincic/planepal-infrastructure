@@ -25,29 +25,6 @@ variable "dot_net_version" {
 variable "app_sku" {
   type = string
 }
-
-variable "default_capacity" {
- type = number
-}
-variable "minimum" {
-
-  type = number
-}
-variable "maximum" {
- type = number
-}
-variable "cpu_up_threshold" {
-
-}
-variable "cpu_down_threshold" {
-
-}
-variable "memory_up_threshold" {
-
-}
-variable "memory_down_threshold" {
-
-}
 resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
   name                = "asp-${var.app_name}-${var.environment}-${var.location}-00"
   resource_group_name = var.resource_group_name
