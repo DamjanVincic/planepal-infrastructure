@@ -38,6 +38,7 @@ terraform {
     cpu_down_threshold    = var.cpu_down_threshold
     memory_up_threshold   = var.memory_up_threshold
     memory_down_threshold = var.memory_down_threshold
+    subnet_id             = module.network.subnet["subnet_app"].id
   }
 
   module "storage" {
