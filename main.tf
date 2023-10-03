@@ -107,9 +107,11 @@ module "sql" {
   sqldb_sku_max_gb_size = var.sqldb_sku_max_gb_size
   sql_login             = module.key_vault.sql_username
   sql_password          = module.key_vault.sql_password
+
   sr_source_adress      = var.sr_source_address
   subneta_id             = module.network.subnet["subnet_sql"].id
    vnet_id                  = module.network.vnet.id
+
 }
 
 module "network" {
