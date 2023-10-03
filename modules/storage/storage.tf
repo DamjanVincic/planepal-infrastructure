@@ -70,6 +70,11 @@ resource "azurerm_private_endpoint" "storage_account_endpoint" {
     private_connection_resource_id = azurerm_storage_account.storage_account.id
     is_manual_connection           = false
   }
+
+  private_dns_zone_group {
+    name                 = "pe-st-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
+    private_dns_zone_ids = [azurerm_private_dns_zone.app_st_dns_zone.id]
+  }
 }
 
 resource "azurerm_network_security_group" "st_app_nsg" {
