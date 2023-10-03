@@ -41,6 +41,11 @@ variable "levi9_public_ip" {
   type = string
 }
 
+variable "vnet_id" {
+  description = "Virtual network ID"
+  type        = string
+}
+
 resource "azurerm_storage_account" "storage_account" {
   name                     = "st${lower(var.app_name)}${var.environment}01"
   resource_group_name      = var.resource_group
@@ -64,6 +69,12 @@ resource "azurerm_private_endpoint" "storage_account_endpoint" {
     name                           = "storage-account-connection-01"
     private_connection_resource_id = azurerm_storage_account.storage_account.id
     is_manual_connection           = false
+    subresource_names = ["blob"]
+  }
+
+  private_dns_zone_group {
+    name                 = "pe-st-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
+    private_dns_zone_ids = [azurerm_private_dns_zone.app_st_dns_zone.id]
   }
 }
 
@@ -79,7 +90,7 @@ resource "azurerm_network_security_group" "st_app_nsg" {
     priority                   = 100
     direction                  = "Inbound"
     source_port_range          = "*"
-    destination_port_ranges    = [80, 443]
+    destination_port_range     = 443
     source_address_prefixes    = var.outbound_ip_address_list
     destination_address_prefix = "*"
   }
@@ -91,7 +102,7 @@ resource "azurerm_network_security_group" "st_app_nsg" {
     priority                   = 101
     direction                  = "Inbound"
     source_port_range          = "*"
-    destination_port_ranges    = [80, 443]
+    destination_port_range     = 443
     source_address_prefix      = var.levi9_public_ip
     destination_address_prefix = "*"
   }
@@ -100,4 +111,16 @@ resource "azurerm_network_security_group" "st_app_nsg" {
 resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
   subnet_id                 = var.subnet_id
   network_security_group_id = azurerm_network_security_group.st_app_nsg.id
+}
+
+resource "azurerm_private_dns_zone" "app_st_dns_zone" {
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = var.resource_group
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "app_st_dns_zone_vnet_link" {
+  name                  = "nl-${lower(var.app_name)}-${var.environment}-${var.location}-01"
+  resource_group_name   = var.resource_group
+  private_dns_zone_name = azurerm_private_dns_zone.app_st_dns_zone.name
+  virtual_network_id    = var.vnet_id
 }

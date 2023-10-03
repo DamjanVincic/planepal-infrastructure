@@ -153,3 +153,37 @@ resource "azurerm_key_vault" "kv_for_app" {
 #     azurerm_key_vault.kv_for_app
 #   ]
 # }
+
+
+
+resource "azurerm_private_endpoint" "kv_app_ep" {
+  name                = "pep-${lower(var.app_name)}-${var.environment}-02"
+  resource_group_name = var.resource_group
+  location            = var.location
+  subnet_id           = module.network.subnet["subnet_app_key_vault"].id
+  private_dns_zone_group {
+    name                 = "pep-kv-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
+    private_dns_zone_ids = [azurerm_private_dns_zone.az_kv_dns_zone.id]
+  
+  }
+  private_service_connection {
+    is_manual_connection           = false
+    private_connection_resource_id = azurerm_key_vault.kv_for_app.id
+    name                           = "${azurerm_key_vault.kv_for_app.name}-psc"
+    subresource_names              = ["vault"]
+  }
+  depends_on = [azurerm_key_vault.kv_for_app]
+}
+
+resource "azurerm_private_dns_zone" "az_kv_dns_zone" {
+  name                = "privatelink.vaultcore.azure.net"
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "az_kv_virtual_network_link" {
+  name                  = "${azurerm_private_dns_zone.az_kv_dns_zone}-link"
+  resource_group_name   = var.resource_group_name
+  private_dns_zone_name = azurerm_private_dns_zone.az_kv_dns_zone.name
+  virtual_network_id    = module.network.az_vNet.id
+  registration_enabled  = false
+}
