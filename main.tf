@@ -53,6 +53,7 @@ module "storage" {
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
   subnet_id                = module.network.subnet["subnet_app_storage"].id
   levi9_public_ip          = var.levi9_public_ip
+  vnet_id                  = module.network.vnet.id
 }
 
 module "key_vault" {
