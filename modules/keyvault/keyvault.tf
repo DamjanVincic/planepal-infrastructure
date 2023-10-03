@@ -157,7 +157,7 @@ resource "azurerm_key_vault" "kv_for_app" {
 
 
 resource "azurerm_private_endpoint" "kv_app_ep" {
-  name                = "${azurerm_key_vault.kv_for_app}-pe"
+  name                = "pep-${lower(var.app_name)}-${var.environment}-02"
   resource_group_name = var.resource_group
   location            = var.location
   subnet_id           = module.network.subnet["subnet_app_key_vault"].id
