@@ -32,7 +32,7 @@ $Database = "sqldbplanepaldevneu00"
 # Define the connection string
 $ConnectionString = "Server=$SqlServer;Database=$MasterDatabase;User Id=$Username;Password=$Password;"
 
-# Create a SQL connection
+# Create a SQL connectionW
 $SqlConnection = New-Object System.Data.SqlClient.SqlConnection
 $SqlConnection.ConnectionString = $ConnectionString
 $SqlConnection.Open()
@@ -42,6 +42,7 @@ $CreateLoginSql = @"
 CREATE LOGIN $NewUsername WITH PASSWORD = '$NewPassword';
 CREATE USER $NewUsername  FOR LOGIN $NewUsername WITH DEFAULT_SCHEMA=[$Database];
 CREATE LOGIN $BacpacUserName WITH PASSWORD = '$BacpacPassword';
+CREATE USER $BacpacUserName FOR LOGIN $BacpacUserName WITH DEFAULT_SCHEMA=[$Database];
 "@
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $CreateLoginSql
@@ -69,7 +70,8 @@ GRANT ALTER ANY SCHEMA TO $NewUsername;
 CREATE SCHEMA $Database AUTHORIZATION $NewUsername;
 ALTER USER $NewUsername WITH DEFAULT_SCHEMA = $Database;
 CREATE USER $BacpacUsername FOR LOGIN $BacpacUsername WITH DEFAULT_SCHEMA=[$Database];
-ALTER ROLE db_backupoperator ADD MEMBER $BacpacUsername;
+ALTER USER $BacpacUsername WITH DEFAULT_SCHEMA = $Database;
+GRANT VIEW DEFINITION TO $BacpacUsername;
 "@
 
 # Execute the SQL commands in the target database
