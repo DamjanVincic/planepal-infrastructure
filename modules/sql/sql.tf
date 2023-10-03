@@ -95,14 +95,14 @@ resource "azurerm_private_dns_zone_group" "az-dns-gr" {
 resource "azurerm_virtual_network_link" "az-net-link" {
   name                      = "${azurerm_private_dns_zone.sql_dns_zone}-link"
   resource_group_name       = var.resource_group
-  virtual_network_id        = module.network.subnet["subnet_sql"].id
+  virtual_network_id        = var.subneta_id
   # private_dns_zone_group_ids = [azurerm_private_dns_zone_group.az-dns-gr.id]
 }
 resource "azurerm_private_endpoint" "private-ep-sql" {
   name                = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-pe"
   resource_group_name = var.resource_group
   location            = var.location
-  subnet_id           = module.network.subnet["subnet_sql"].id
+  subnet_id           = var.subneta_id
   private_dns_zone_group {
     name                 = "pep-sql-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
     private_dns_zone_ids = [azurerm_private_dns_zone.sql_dns_zone.id]
