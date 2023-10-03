@@ -87,26 +87,13 @@ resource "azurerm_private_endpoint" "private-ep-sql" {
   subnet_id           = module.network.subnet["subnet_sql"].id
   private_dns_zone_group {
     name                 = "default"
-    private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zones["privatelink.database.windows.net"].id]
+    private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zones["privatelink.database.windows.net "].id]
   }
   private_service_connection {
     is_manual_connection           = false
     private_connection_resource_id = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
     name                           = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-psc"
-    subresource_names              = ["sql"]
+    subresource_names              = ["vault"]
   }
   depends_on = [azurerm_mssql_database.sqldb-planepal-dev-neu-01]
-}
-
-resource "azurerm_private_dns_zone" "az_sql_dns_zone" {
-  name                = "privatelink.database.windows.net"
-  resource_group_name = var.resource_group_name
-}
-
-resource "azurerm_private_dns_zone_virtual_network_link" "az_sql_virtual_network_link" {
-  name                  = "${azurerm_private_dns_zone.az_sql_dns_zone}-link"
-  resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.az_sql_dns_zone.name
-  virtual_network_id    = module.network.az_vNet.id
-  registration_enabled  = false
 }
