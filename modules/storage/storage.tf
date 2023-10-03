@@ -69,7 +69,7 @@ resource "azurerm_private_endpoint" "storage_account_endpoint" {
     name                           = "storage-account-connection-01"
     private_connection_resource_id = azurerm_storage_account.storage_account.id
     is_manual_connection           = false
-    subresource_names = ["Microsoft.Storage/storageAccounts"]
+    subresource_names = ["blob"]
   }
 
   private_dns_zone_group {
