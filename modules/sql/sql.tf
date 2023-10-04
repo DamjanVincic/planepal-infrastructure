@@ -151,7 +151,7 @@ resource "azurerm_private_endpoint" "private-ep-sql2" {
     is_manual_connection           = false
     private_connection_resource_id = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
     name                           = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-psc"
-    subresource_names              = ["sqlServer"]
+    # subresource_names              = ["sqlServer"]
   }
   depends_on = [azurerm_mssql_database.sqldb-planepal-dev-neu-01]
 }
