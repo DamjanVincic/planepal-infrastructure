@@ -136,6 +136,15 @@ resource "azurerm_key_vault" "kv_for_app" {
     ]
   }
 
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = "d4098138-9b79-4120-b056-9a6e50406362"
+
+    secret_permissions = [
+      "Get", "List", "Set", "Delete", "Restore", "Recover", "Purge",
+    ]
+  }
+
   network_acls {
     default_action = "Deny"
 
