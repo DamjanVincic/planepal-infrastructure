@@ -60,7 +60,7 @@ $SqlConnection.ConnectionString = $ConnectionString
 $SqlConnection.Open()
 
 $SQLCreateSchema = "CREATE SCHEMA [$Database] AUTHORIZATION [$NewUsername]"
-$SqlCommand = $SQLCreateSchema.CreateCommand()
+$SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $SQLCreateSchema
 $SqlCommand.ExecuteNonQuery()
 
