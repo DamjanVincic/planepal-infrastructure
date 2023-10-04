@@ -60,15 +60,15 @@ $SqlConnection.ConnectionString = $ConnectionString
 $SqlConnection.Open()
 
 $SqlGrantPermissions = @"
-CREATE SCHEMA $Database AUTHORIZATION $NewUsername;
-CREATE USER $NewUsername FOR LOGIN $NewUsername WITH DEFAULT_SCHEMA=[$Database];
-ALTER ROLE db_datareader ADD MEMBER $NewUsername;
-ALTER ROLE db_datawriter ADD MEMBER $NewUsername;
-GRANT CREATE TABLE TO $NewUsername;
-DENY ALTER ON DATABASE::$Database TO $NewUsername;
-GRANT ALTER, SELECT, INSERT, UPDATE, DELETE ON DATABASE::$Database TO $NewUsername;
-GRANT ALTER ANY SCHEMA TO $NewUsername;
-ALTER USER $NewUsername WITH DEFAULT_SCHEMA = $Database;
+USE [$Database];  -- Specify the target database
+CREATE SCHEMA [$Database] AUTHORIZATION [$NewUsername];
+CREATE USER [$NewUsername] FOR LOGIN [$NewUsername] WITH DEFAULT_SCHEMA = [$Database];
+ALTER ROLE db_datareader ADD MEMBER [$NewUsername];
+ALTER ROLE db_datawriter ADD MEMBER [$NewUsername];
+GRANT CREATE TABLE TO [$NewUsername];
+DENY ALTER ON DATABASE::[$Database] TO [$NewUsername];
+GRANT ALTER, SELECT, INSERT, UPDATE, DELETE ON DATABASE::[$Database] TO [$NewUsername];
+GRANT ALTER ANY SCHEMA TO [$NewUsername];
 "@
 # CREATE USER $BacpacUsername FOR LOGIN $BacpacUsername WITH DEFAULT_SCHEMA=[$Database];
 # ALTER USER $BacpacUsername WITH DEFAULT_SCHEMA = $Database;
