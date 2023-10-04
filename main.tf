@@ -40,8 +40,9 @@ module "app_service" {
   cpu_up_threshold      = var.cpu_up_threshold
   cpu_down_threshold    = var.cpu_down_threshold
   memory_up_threshold   = var.memory_up_threshold
-  memory_down_threshold = var.memory_down_threshold
+  memory_down_threshold = var.memory_down_threshold 
   subneta_id            = module.network.appservice_subnet_id
+  logging               = module.logging.id
   endpoint_subnet_id    = module.network.subnet["subnet_app"].id
 }
 
@@ -58,6 +59,7 @@ module "storage" {
   subnet_id                = module.network.subnet["subnet_app_storage"].id
   levi9_public_ip          = var.levi9_public_ip
   vnet_id                  = module.network.vnet.id
+  logging                  = module.logging.id
 }
 
 module "key_vault" {
@@ -77,9 +79,10 @@ module "key_vault" {
   kv_base_URL_name         = var.kv_base_URL_name
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
-  levi9_public_ip          = var.levi9_public_ip
-  subneta_id               = module.network.subnet["subnet_app_keyvault"].id
-  vnet_id                  = module.network.vnet.id
+  levi9_public_ip = var.levi9_public_ip
+  subneta_id = module.network.subnet["subnet_app_keyvault"].id
+  vnet_id = module.network.vnet.id
+  logging = module.logging.id
 }
 
 module "logging" {
@@ -112,9 +115,11 @@ module "sql" {
   sql_login             = module.key_vault.sql_username
   sql_password          = module.key_vault.sql_password
 
-  sr_source_address = var.sr_source_address
-  subneta_id        = module.network.subnet["subnet_sql"].id
-  vnet_id           = module.network.vnet.id
+
+  sr_source_address      = var.sr_source_address
+  subneta_id             = module.network.subnet["subnet_sql"].id
+  vnet_id                = module.network.vnet.id
+  logging                = module.logging.id
 
 }
 
