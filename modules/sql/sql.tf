@@ -38,6 +38,11 @@ variable "subneta_id" {
 variable "vnet_id" {
   type = string
 }
+
+variable "sr_source_address" {
+  type = string
+}
+
 data "http" "myip" {
   url = "https://ipv4.icanhazip.com"
 }
@@ -98,7 +103,7 @@ resource "azurerm_network_security_group" "st_sql_nsg" {
     direction                  = "Inbound"
     source_port_range          = "*"
     destination_port_ranges    = [1433]
-    source_address_prefixes    = var.sr_source_adress
+    source_address_prefix    = var.sr_source_address
     destination_address_prefix = "*"
   }
 
@@ -109,14 +114,14 @@ resource "azurerm_network_security_group" "st_sql_nsg" {
     priority                   = 500
     direction                  = "Inbound"
     source_port_range          = "*"
-    destination_port_ranges    = "*"
-    source_address_prefixes    = "*"
+    destination_port_range    = "*"
+    source_address_prefix    = "*"
     destination_address_prefix = "*"
   }
 }
 
 resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
-  subnet_id                 = var.subnet_id
+  subnet_id                 = var.subneta_id
   network_security_group_id = azurerm_network_security_group.st_sql_nsg.id
 }
 resource "azurerm_private_endpoint" "private-ep-sql" {
@@ -152,21 +157,9 @@ resource "azurerm_private_dns_zone_virtual_network_link" "app_st_dns_zone_vnet_l
 
 resource "azurerm_private_dns_zone" "sql_dns_zone" {
   name                = "privatelink.mysql.database.azure.com"
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.resource_group
 }
 
-resource "azurerm_private_dns_zone_group" "az-dns-gr" {
-  name                  = "pep-sql-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
-  resource_group_name   = var.resource_group_name
-  private_dns_zone_ids  = [azurerm_private_dns_zone.az_dns_zone.id]
-}
-
-resource "azurerm_virtual_network_link" "az-net-link" {
-  name                      = "${azurerm_private_dns_zone.sql_dns_zone}-link"
-  resource_group_name       = var.resource_group
-  virtual_network_id        = var.subneta_id
-  # private_dns_zone_group_ids = [azurerm_private_dns_zone_group.az-dns-gr.id]
-}
 resource "azurerm_private_endpoint" "private-ep-sql2" {
   name                = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-pe2"
   resource_group_name = var.resource_group
