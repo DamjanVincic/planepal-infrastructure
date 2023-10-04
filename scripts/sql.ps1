@@ -26,8 +26,11 @@ $NewPassword = $NewPasswordSecret
 
 # Define database connection parameters
 $SqlServer = "sqlplanepaldevneu00.database.windows.net"
+$SqlServer = $SqlServer.Trim('"')
 $MasterDatabase = "master"
+$MasterDatabase = $MasterDatabase.Trim('"')
 $Database = "sqldbplanepaldevneu00"
+$Database = $Database.Trim('"')
 
 # Define the connection string
 $ConnectionString = "Server=$SqlServer;Database=$MasterDatabase;User Id=$Username;Password=$Password;"
