@@ -1,4 +1,3 @@
-
 variable "resource_group_name" {
   type        = string
   description = "DevOps"
@@ -63,6 +62,7 @@ variable "email_receiver" {
   }))
 }
 
+
 data "azurerm_resource_group" "devops_rg" {
   name = var.resource_group_name
 }
@@ -78,7 +78,6 @@ resource "azurerm_log_analytics_workspace" "log-a-w" {
 }
 
 resource "azurerm_monitor_action_group" "action_group" {
-
   name                = "ag-${var.app_name}-${var.environment}-${var.location}-01"
   resource_group_name = var.resource_group_name
   short_name          = "devops_ag"
