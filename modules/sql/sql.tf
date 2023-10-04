@@ -131,7 +131,7 @@ resource "azurerm_private_endpoint" "private-ep-sql" {
   subnet_id           = var.subneta_id
   private_dns_zone_group {
     name                 = "pe-st-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-03"
-    private_dns_zone_ids = [azurerm_private_dns_zone.app_st_dns_zone.id]
+    private_dns_zone_ids = [azurerm_private_dns_zone.sql_dns_zone.id]
   }
   private_service_connection {
     is_manual_connection           = false
@@ -145,7 +145,7 @@ resource "azurerm_private_endpoint" "private-ep-sql" {
 resource "azurerm_private_dns_zone_virtual_network_link" "app_st_dns_zone_vnet_link" {
   name                  = "nl-${lower(var.app_name)}-${var.environment}-${var.location}-03"
   resource_group_name   = var.resource_group
-  private_dns_zone_name = azurerm_private_dns_zone.app_st_dns_zone.name
+  private_dns_zone_name = azurerm_private_dns_zone.sql_dns_zone.name
   virtual_network_id    = var.vnet_id
 }
 
