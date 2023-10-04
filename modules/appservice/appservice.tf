@@ -87,7 +87,7 @@ resource "azurerm_private_endpoint" "private-ep-app-service" {
   private_service_connection {
     name                           = "azurerm_app_service_virtual_network_swift_connection"
     private_connection_resource_id = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.id
-    subresource_names              = ["appservice"]
+    subresource_names              = ["sites"]
     is_manual_connection           = false
   }
 }

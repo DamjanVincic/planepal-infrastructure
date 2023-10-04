@@ -134,7 +134,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "app_st_dns_zone_vnet_l
 
 
 resource "azurerm_private_dns_zone" "sql_dns_zone" {
-  name                = "privatelink.database.windows.net"
+  name                = "privatelink.database.usgovcloudapi.net"
   resource_group_name = var.resource_group
 }
 
