@@ -124,23 +124,6 @@ resource "azurerm_subnet_network_security_group_association" "subnet_nsg_associa
   subnet_id                 = var.subneta_id
   network_security_group_id = azurerm_network_security_group.st_sql_nsg.id
 }
-resource "azurerm_private_endpoint" "private-ep-sql" {
-  name                = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-pe"
-  resource_group_name = var.resource_group
-  location            = var.location
-  subnet_id           = var.subneta_id
-  private_dns_zone_group {
-    name                 = "pe-st-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-03"
-    private_dns_zone_ids = [azurerm_private_dns_zone.sql_dns_zone.id]
-  }
-  private_service_connection {
-    is_manual_connection           = false
-    private_connection_resource_id = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
-    name                           = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-psc"
-    subresource_names              = ["vault"]
-  }
-  depends_on = [azurerm_mssql_database.sqldb-planepal-dev-neu-01]
-}
 
 resource "azurerm_private_dns_zone_virtual_network_link" "app_st_dns_zone_vnet_link" {
   name                  = "nl-${lower(var.app_name)}-${var.environment}-${var.location}-03"
