@@ -59,9 +59,12 @@ $SqlConnection.ConnectionString = $ConnectionString
 # Open the SQL connection
 $SqlConnection.Open()
 
+$SQLCreateSchema = "CREATE SCHEMA [$Databae] AUTHORIZATION [$NewUsername]"
+$SqlCommand = $SQLCreateSchema.CreateCommand()
+$SqlCommand.CommandText = $SQLCreateSchema
+$SqlCommand.ExecuteNonQuery()
+
 $SqlGrantPermissions = @"
-USE [$Database];  -- Specify the target database
-CREATE SCHEMA [$Database] AUTHORIZATION [$NewUsername];
 CREATE USER [$NewUsername] FOR LOGIN [$NewUsername] WITH DEFAULT_SCHEMA = [$Database];
 ALTER ROLE db_datareader ADD MEMBER [$NewUsername];
 ALTER ROLE db_datawriter ADD MEMBER [$NewUsername];
