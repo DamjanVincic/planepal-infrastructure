@@ -127,7 +127,7 @@ module "network" {
   resource_group_location = var.location
   address_space           = var.address_space
   subnets                 = var.subnets
-
+  location_abbreviation = var.location_abbreviation
   }
 #   module "automation" {
 #   source = "./modules/automation"

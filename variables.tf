@@ -181,11 +181,11 @@ variable "subnets" {
     address_prefixes    = string
   }))
   default = {
-    "subnet_app" = {
-      name                = "snet-PlanePal-dev-neu-01"
-      resource_group_name = "DevOps"
-      address_prefixes    = "10.0.0.0/24"
-    }
+    # "subnet_app" = {
+    #   name                = "snet-PlanePal-dev-neu-01"
+    #   resource_group_name = "DevOps"
+    #   address_prefixes    = "10.0.0.0/24"
+    # }
     "subnet_sql" = {
       name                = "snet-PlanePal-dev-neu-02"
       resource_group_name = "DevOps"

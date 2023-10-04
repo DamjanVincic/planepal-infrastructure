@@ -142,11 +142,6 @@ resource "azurerm_private_endpoint" "private-ep-sql" {
   depends_on = [azurerm_mssql_database.sqldb-planepal-dev-neu-01]
 }
 
-resource "azurerm_private_dns_zone" "app_st_dns_zone" {
-  name                = "privatelink.blob.core.windows.net"
-  resource_group_name = var.resource_group
-}
-
 resource "azurerm_private_dns_zone_virtual_network_link" "app_st_dns_zone_vnet_link" {
   name                  = "nl-${lower(var.app_name)}-${var.environment}-${var.location}-03"
   resource_group_name   = var.resource_group
@@ -156,7 +151,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "app_st_dns_zone_vnet_l
 
 
 resource "azurerm_private_dns_zone" "sql_dns_zone" {
-  name                = "privatelink.mysql.database.azure.com"
+  name                = "privatelink.database.windows.net"
   resource_group_name = var.resource_group
 }
 
@@ -173,7 +168,7 @@ resource "azurerm_private_endpoint" "private-ep-sql2" {
     is_manual_connection           = false
     private_connection_resource_id = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
     name                           = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-psc"
-    subresource_names              = ["sql"]
+    subresource_names              = ["sqlServer"]
   }
   depends_on = [azurerm_mssql_database.sqldb-planepal-dev-neu-01]
 }
