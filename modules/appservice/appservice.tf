@@ -105,6 +105,7 @@ resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
 
   dynamic "log" {
     for_each = data.azurerm_monitor_diagnostic_categories.asp_cat.logs
+    
     content {
       category = log.value
       enabled  = true
@@ -117,9 +118,10 @@ resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
 
   dynamic "metric" {
     for_each = data.azurerm_monitor_diagnostic_categories.asp_cat.metrics
+
     content {
       category = metric.value
-      
+
       retention_policy {
         enabled = false
       }

@@ -257,6 +257,7 @@ resource "azurerm_monitor_diagnostic_setting" "key_vault_diag" {
 
   dynamic "log" {
     for_each = data.azurerm_monitor_diagnostic_categories.kv_cat.logs
+
     content {
       category = log.value
       enabled  = true
@@ -269,6 +270,7 @@ resource "azurerm_monitor_diagnostic_setting" "key_vault_diag" {
 
   dynamic "metric" {
     for_each = data.azurerm_monitor_diagnostic_categories.kv_cat.metrics
+    
     content {
       category = metric.value
 
