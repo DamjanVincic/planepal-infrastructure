@@ -76,6 +76,9 @@ module "key_vault" {
   kv_base_URL_name         = var.kv_base_URL_name
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
+  levi9_public_ip = var.levi9_public_ip
+  subneta_id = module.network.subnet["subnet_app_key_vault"].id
+  vnet_id = module.network.vnet.id
 }
 
 module "logging" {
@@ -108,7 +111,7 @@ module "sql" {
   sql_login             = module.key_vault.sql_username
   sql_password          = module.key_vault.sql_password
 
-  sr_source_adress      = var.sr_source_address
+  sr_source_address      = var.sr_source_address
   subneta_id             = module.network.subnet["subnet_sql"].id
    vnet_id                  = module.network.vnet.id
 
@@ -126,22 +129,23 @@ module "network" {
   subnets                 = var.subnets
 
   }
-  module "automation" {
-  source = "./modules/automation"
+#   module "automation" {
+#   source = "./modules/automation"
 
-  resource_group_name      = var.resource_group
-  app_name                 = var.app_name
-  environment              = var.environment
-  location                 = var.location
-  location_abbreviation    = var.location_abbreviation
-  aa_sku_name              = var.aa_sku_name
-  aar_runbook_type         = var.aar_runbook_type
-  aar_log_verbose          = var.aar_log_verbose
-  aar_log_progress         = var.aar_log_progress
-  aas_start_time           = var.aas_start_time
-  aas_timezone             = var.aas_timezone
-  st_account_tier          = var.stdb_account_tier
-  st_replication_type      = var.stdb_replication_type
-  sc_container_access_type = var.scdb_container_access_type
-}
+#   resource_group_name      = var.resource_group
+#   app_name                 = var.app_name
+#   environment              = var.environment
+#   location                 = var.location
+#   location_abbreviation    = var.location_abbreviation
+#   aa_sku_name              = var.aa_sku_name
+#   aar_runbook_type         = var.aar_runbook_type
+#   aar_log_verbose          = var.aar_log_verbose
+#   aar_log_progress         = var.aar_log_progress
+#   aas_start_time           = var.aas_start_time
+#   aas_timezone             = var.aas_timezone
+#   st_account_tier          = var.stdb_account_tier
+#   st_replication_type      = var.stdb_replication_type
+#   sc_container_access_type = var.scdb_container_access_type
+#   storage_account_name = module.storage.name
+# }
 

@@ -61,6 +61,14 @@ variable "app_secrets_keys" {
   type = list(string)
 }
 
+variable "subneta_id" {
+  type = string
+}
+
+variable "vnet_id" {
+  type = string
+}
+
 
 data "azurerm_key_vault" "devops_kv" {
   name                = var.devops_kv_name
@@ -137,10 +145,6 @@ resource "azurerm_key_vault" "kv_for_app" {
   }
 }
 
-variable "address_space" {
-  type    = string
-}
-
 variable "levi9_public_ip" {
   type    = string
 }
@@ -167,7 +171,7 @@ resource "azurerm_private_endpoint" "kv_app_ep" {
   name                = "pep-${lower(var.app_name)}-${var.environment}-02"
   resource_group_name = var.resource_group
   location            = var.location
-  subnet_id           = module.network.subnet["subnet_app_key_vault"].id
+  subnet_id           = var.subneta_id
   private_dns_zone_group {
     name                 = "pep-kv-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
     private_dns_zone_ids = [azurerm_private_dns_zone.az_kv_dns_zone.id]
@@ -184,14 +188,14 @@ resource "azurerm_private_endpoint" "kv_app_ep" {
 
 resource "azurerm_private_dns_zone" "az_kv_dns_zone" {
   name                = "privatelink.vaultcore.azure.net"
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.resource_group
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "az_kv_virtual_network_link" {
   name                  = "${azurerm_private_dns_zone.az_kv_dns_zone}-link"
-  resource_group_name   = var.resource_group_name
+  resource_group_name   = var.resource_group
   private_dns_zone_name = azurerm_private_dns_zone.az_kv_dns_zone.name
-  virtual_network_id    = module.network.az_vNet.id
+  virtual_network_id    = var.vnet_id
   registration_enabled  = false
 }
 
@@ -226,6 +230,6 @@ resource "azurerm_network_security_group" "kv_app_nsg" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
-  subnet_id                 = module.network.subnet["subnet_app_key_vault"].id
+  subnet_id                 = var.subneta_id
   network_security_group_id = azurerm_network_security_group.kv_app_nsg.id
 }
