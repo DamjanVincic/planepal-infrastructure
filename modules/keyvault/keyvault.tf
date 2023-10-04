@@ -192,7 +192,7 @@ resource "azurerm_private_dns_zone" "az_kv_dns_zone" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "az_kv_virtual_network_link" {
-  name                  = "${azurerm_private_dns_zone.az_kv_dns_zone}-link"
+  name                  = "${azurerm_private_dns_zone.az_kv_dns_zone.name}-link"
   resource_group_name   = var.resource_group
   private_dns_zone_name = azurerm_private_dns_zone.az_kv_dns_zone.name
   virtual_network_id    = var.vnet_id

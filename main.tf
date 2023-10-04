@@ -77,7 +77,7 @@ module "key_vault" {
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
   levi9_public_ip = var.levi9_public_ip
-  subneta_id = module.network.subnet["subnet_app_key_vault"].id
+  subneta_id = module.network.subnet["subnet_app_keyvault"].id
   vnet_id = module.network.vnet.id
 }
 
