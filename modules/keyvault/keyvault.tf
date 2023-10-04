@@ -139,17 +139,26 @@ resource "azurerm_key_vault" "kv_for_app" {
     ]
   }
 
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = "d4098138-9b79-4120-b056-9a6e50406362"
+
+    secret_permissions = [
+      "Get", "List", "Set", "Delete", "Restore", "Recover", "Purge",
+    ]
+  }
+
   network_acls {
     default_action = "Deny"
 
     bypass = "AzureServices"
 
-    ip_rules = concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)])
+    ip_rules = concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)], [var.levi9_public_ip])
   }
 }
 
 variable "levi9_public_ip" {
-  type    = string
+  type = string
 }
 # resource "azurerm_key_vault_secret" "app_secrets" {
 #   for_each = data.azurerm_key_vault_secret.app_secrets
@@ -178,7 +187,7 @@ resource "azurerm_private_endpoint" "kv_app_ep" {
   private_dns_zone_group {
     name                 = "pep-kv-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
     private_dns_zone_ids = [azurerm_private_dns_zone.az_kv_dns_zone.id]
-  
+
   }
   private_service_connection {
     is_manual_connection           = false

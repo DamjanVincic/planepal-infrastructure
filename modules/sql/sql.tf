@@ -106,7 +106,7 @@ resource "azurerm_network_security_group" "st_sql_nsg" {
     direction                  = "Inbound"
     source_port_range          = "*"
     destination_port_ranges    = [1433]
-    source_address_prefix    = var.sr_source_address
+    source_address_prefix      = var.sr_source_address
     destination_address_prefix = "*"
   }
 
@@ -117,8 +117,8 @@ resource "azurerm_network_security_group" "st_sql_nsg" {
     priority                   = 500
     direction                  = "Inbound"
     source_port_range          = "*"
-    destination_port_range    = "*"
-    source_address_prefix    = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
 }
@@ -127,56 +127,36 @@ resource "azurerm_subnet_network_security_group_association" "subnet_nsg_associa
   subnet_id                 = var.subneta_id
   network_security_group_id = azurerm_network_security_group.st_sql_nsg.id
 }
-resource "azurerm_private_endpoint" "private-ep-sql" {
-  name                = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-pe"
-  resource_group_name = var.resource_group
-  location            = var.location
-  subnet_id           = var.subneta_id
-  private_dns_zone_group {
-   name                 = "pe-st-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-03"
-    private_dns_zone_ids = [azurerm_private_dns_zone.app_st_dns_zone.id]
-  }
-  private_service_connection {
-    is_manual_connection           = false
-    private_connection_resource_id = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
-    name                           = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-psc"
-    subresource_names              = ["vault"]
-  }
-  depends_on = [azurerm_mssql_database.sqldb-planepal-dev-neu-01]
-}
-
-resource "azurerm_private_dns_zone" "app_st_dns_zone" {
-  name                = "privatelink.blob.core.windows.net"
-  resource_group_name = var.resource_group
-}
 
 resource "azurerm_private_dns_zone_virtual_network_link" "app_st_dns_zone_vnet_link" {
   name                  = "nl-${lower(var.app_name)}-${var.environment}-${var.location}-03"
   resource_group_name   = var.resource_group
-  private_dns_zone_name = azurerm_private_dns_zone.app_st_dns_zone.name
+  private_dns_zone_name = azurerm_private_dns_zone.sql_dns_zone.name
   virtual_network_id    = var.vnet_id
 }
 
 
 resource "azurerm_private_dns_zone" "sql_dns_zone" {
-  name                = "privatelink.mysql.database.azure.com"
+  name                = "privatelink.database.windows.net"
   resource_group_name = var.resource_group
 }
 
-resource "azurerm_private_endpoint" "private-ep-sql2" {
-  name                = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-pe2"
+resource "azurerm_private_endpoint" "sql_endpoint" {
+  name = "pep-sql-${lower(var.app_name)}-${var.environment}-${var.location}-01"
+  location = var.location
   resource_group_name = var.resource_group
-  location            = var.location
-  subnet_id           = var.subneta_id
+  subnet_id = var.subneta_id
+
   private_dns_zone_group {
-    name                 = "pep-sql-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
+    name = "sql-${var.environment}-dns-zone-group-01"
     private_dns_zone_ids = [azurerm_private_dns_zone.sql_dns_zone.id]
   }
+
   private_service_connection {
-    is_manual_connection           = false
-    private_connection_resource_id = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
-    name                           = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-psc"
-    subresource_names              = ["sql"]
+    name = "sql-${var.environment}-privateserviceconnection-01"
+    private_connection_resource_id = azurerm_mssql_server.sql-planepal-dev-neu-01.id
+    is_manual_connection = false
+    subresource_names = ["sqlServer"]
   }
   depends_on = [azurerm_mssql_database.sqldb-planepal-dev-neu-01]
 }

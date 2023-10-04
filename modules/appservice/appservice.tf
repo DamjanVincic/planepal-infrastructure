@@ -28,15 +28,20 @@ variable "app_sku" {
 variable "subneta_id" {
   type = string
 }
+
+variable "endpoint_subnet_id" {
+  type = string
+}
+
 variable "minimum" {
   type = number
 }
 variable "maximum" {
- type = number
+  type = number
 }
 variable "default_capacity" {
- type = number
- }
+  type = number
+}
 variable "cpu_up_threshold" {
 
 }
@@ -47,7 +52,7 @@ variable "memory_up_threshold" {
 
 }
 variable "memory_down_threshold" {
-  
+
 }
 
 variable "logging" {
@@ -63,10 +68,10 @@ resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
 }
 
 resource "azurerm_windows_web_app" "app-PlanePal-dev-northeurope-00" {
-  name                = "app-${var.app_name}-${var.environment}-${var.location}-00"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  service_plan_id     = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
+  name                      = "app-${var.app_name}-${var.environment}-${var.location}-00"
+  resource_group_name       = var.resource_group_name
+  location                  = var.location
+  service_plan_id           = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
   virtual_network_subnet_id = var.subneta_id
 
   site_config {
@@ -81,21 +86,18 @@ resource "azurerm_windows_web_app" "app-PlanePal-dev-northeurope-00" {
   }
 }
 
-
-
-resource "azurerm_private_endpoint" "private-ep-app-service" {
-  name                = "private-ep-app-service"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  subnet_id           = var.subneta_id
-  private_service_connection {
-    name                    = "azurerm_app_service_virtual_network_swift_connection"
-    private_connection_resource_id = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.id
-    subresource_names       = ["appservice"]
-    is_manual_connection    = false
-  }
-}
-
+# resource "azurerm_private_endpoint" "private-ep-app-service" {
+#   name                = "private-ep-app-service"
+#   location            = var.location
+#   resource_group_name = var.resource_group_name
+#   subnet_id           = var.endpoint_subnet_id
+#   private_service_connection {
+#     name                           = "azurerm_app_service_virtual_network_swift_connection"
+#     private_connection_resource_id = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.id
+#     subresource_names              = ["sites"]
+#     is_manual_connection           = false
+#   }
+# }
 
 data "azurerm_monitor_diagnostic_categories" "asp_cat" {
   resource_id = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
@@ -134,8 +136,7 @@ resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
 
 # resource "azurerm_app_service_virtual_network_swift_connection" "az_vNet" {
 #   app_service_id              = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.id
-#   virtual_network_subnet_ids  = module.network.subnet["subnet_app"].id
-#   swift_enabled               = true
+#   subnet_id =    var.endpoint_subnet_id
 # }
 
 # resource "azurerm_monitor_autoscale_setting" "scale_action_setting" {
