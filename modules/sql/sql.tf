@@ -167,8 +167,8 @@ resource "azurerm_virtual_network_link" "az-net-link" {
   virtual_network_id        = var.subneta_id
   # private_dns_zone_group_ids = [azurerm_private_dns_zone_group.az-dns-gr.id]
 }
-resource "azurerm_private_endpoint" "private-ep-sql" {
-  name                = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-pe"
+resource "azurerm_private_endpoint" "private-ep-sql2" {
+  name                = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-pe2"
   resource_group_name = var.resource_group
   location            = var.location
   subnet_id           = var.subneta_id
