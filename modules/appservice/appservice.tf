@@ -28,6 +28,11 @@ variable "app_sku" {
 variable "subneta_id" {
   type = string
 }
+
+variable "endpoint_subnet_id" {
+  type = string
+}
+
 variable "minimum" {
   type = number
 }
@@ -77,13 +82,11 @@ resource "azurerm_windows_web_app" "app-PlanePal-dev-northeurope-00" {
   }
 }
 
-
-
 resource "azurerm_private_endpoint" "private-ep-app-service" {
   name                = "private-ep-app-service"
   location            = var.location
   resource_group_name = var.resource_group_name
-  subnet_id           = var.subneta_id
+  subnet_id           = var.endpoint_subnet_id
   private_service_connection {
     name                           = "azurerm_app_service_virtual_network_swift_connection"
     private_connection_resource_id = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.id
@@ -91,11 +94,11 @@ resource "azurerm_private_endpoint" "private-ep-app-service" {
     is_manual_connection           = false
   }
 }
-# resource "azurerm_app_service_virtual_network_swift_connection" "az_vNet" {
-#   app_service_id              = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.id
-#   virtual_network_subnet_ids  = module.network.subnet["subnet_app"].id
-#   swift_enabled               = true
-# }
+
+resource "azurerm_app_service_virtual_network_swift_connection" "az_vNet" {
+  app_service_id              = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.id
+  subnet_id =    var.endpoint_subnet_id
+}
 
 # resource "azurerm_monitor_autoscale_setting" "scale_action_setting" {
 #   name                = "app-scale-${var.app_name}-${var.environment}-${var.location}-00"

@@ -42,6 +42,7 @@ module "app_service" {
   memory_up_threshold   = var.memory_up_threshold
   memory_down_threshold = var.memory_down_threshold
   subneta_id            = module.network.appservice_subnet_id
+  endpoint_subnet_id    = module.network.subnet["subnet_app"].id
 }
 
 module "storage" {
