@@ -69,8 +69,8 @@ resource "azurerm_private_endpoint" "storage_account_endpoint" {
     name                           = "storage-account-connection-01"
     private_connection_resource_id = azurerm_storage_account.storage_account.id
     is_manual_connection           = false
-    subresource_names = ["blob"]
-   }
+    subresource_names              = ["blob"]
+  }
   private_dns_zone_group {
     name                 = "pe-st-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
     private_dns_zone_ids = [azurerm_private_dns_zone.app_st_dns_zone.id]

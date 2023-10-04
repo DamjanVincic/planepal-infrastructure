@@ -5,3 +5,7 @@ output "subnet" {
 output "vnet" {
   value = azurerm_virtual_network.az_vNet
 }
+
+output "appservice_subnet_id" {
+  value = azurerm_subnet.appservice_subnet.id
+}
