@@ -37,7 +37,6 @@ $SqlConnection = New-Object System.Data.SqlClient.SqlConnection
 $SqlConnection.ConnectionString = $ConnectionString
 $SqlConnection.Open()
 
-$CreateLoginSql = "CREATE LOGIN $NewUsername WITH PASSWORD = '$newPassword';"
 $CreateLoginSql = @"
 CREATE LOGIN $NewUsername WITH PASSWORD = '$NewPassword';
 CREATE USER $NewUsername  FOR LOGIN $NewUsername WITH DEFAULT_SCHEMA=[$Database];
@@ -59,7 +58,7 @@ $SqlConnection.ConnectionString = $ConnectionString
 # Open the SQL connection
 $SqlConnection.Open()
 
-$SQLCreateSchema = "CREATE SCHEMA [$Database] AUTHORIZATION [$NewUsername]"
+$SQLCreateSchema = "CREATE SCHEMA [$Database] AUTHORIZATION [$Username]"
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $SQLCreateSchema
 $SqlCommand.ExecuteNonQuery()
