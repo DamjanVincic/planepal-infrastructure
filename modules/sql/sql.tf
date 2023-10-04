@@ -138,20 +138,21 @@ resource "azurerm_private_dns_zone" "sql_dns_zone" {
   resource_group_name = var.resource_group
 }
 
-resource "azurerm_private_endpoint" "private-ep-sql2" {
-  name                = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-pe2"
+resource "azurerm_private_endpoint" "sql_endpoint" {
+  name = "pep-sql-${lower(var.app_name)}-${var.environment}-${var.location}-01"
+  location = var.location
   resource_group_name = var.resource_group
-  location            = var.location
-  subnet_id           = var.subneta_id
+  subnet_id = var.subneta_id
+
   private_dns_zone_group {
-    name                 = "pep-sql-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
+    name = "sql-${var.environment}-dns-zone-group-01"
     private_dns_zone_ids = [azurerm_private_dns_zone.sql_dns_zone.id]
   }
+
   private_service_connection {
-    is_manual_connection           = false
+    name = "sql-${var.environment}-privateserviceconnection-01"
     private_connection_resource_id = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
-    name                           = "${azurerm_mssql_database.sqldb-planepal-dev-neu-01.name}-psc"
-    # subresource_names              = ["sqlServer"]
+    is_manual_connection = false
+    subresource_names = ["sqlServer"]
   }
-  depends_on = [azurerm_mssql_database.sqldb-planepal-dev-neu-01]
 }
