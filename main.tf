@@ -6,10 +6,7 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name  = "DevOps"
-    storage_account_name = "stdevopsneu01"
-    container_name       = "tfstate"
-    key                  = "terraform-dev.tfstate"
+    
   }
 }
 
@@ -114,8 +111,6 @@ module "sql" {
   sqldb_sku_max_gb_size = var.sqldb_sku_max_gb_size
   sql_login             = module.key_vault.sql_username
   sql_password          = module.key_vault.sql_password
-
-
   sr_source_address      = var.sr_source_address
   subneta_id             = module.network.subnet["subnet_sql"].id
   vnet_id                = module.network.vnet.id
@@ -135,7 +130,8 @@ module "network" {
   subnets                 = var.subnets
   location_abbreviation   = var.location_abbreviation
 }
-#   module "automation" {
+
+# module "automation" {
 #   source = "./modules/automation"
 
 #   resource_group_name      = var.resource_group

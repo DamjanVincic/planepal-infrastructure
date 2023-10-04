@@ -302,11 +302,11 @@ variable "scdb_container_access_type" {
 }
 
 variable "devops_group_name" {
-  type = string
+  type    = string
   default = "DevopsInternship2023"
 }
 
 variable "dotnet_group_name" {
-  type = string
+  type    = string
   default = "DevNetInternship2023"
 }

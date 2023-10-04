@@ -73,6 +73,11 @@ variable "logging" {
   type = string
 }
 
+variable "levi9_public_ip" {
+  type = string
+}
+
+
 data "azurerm_key_vault" "devops_kv" {
   name                = var.devops_kv_name
   resource_group_name = var.resource_group
@@ -157,9 +162,6 @@ resource "azurerm_key_vault" "kv_for_app" {
   }
 }
 
-variable "levi9_public_ip" {
-  type = string
-}
 # resource "azurerm_key_vault_secret" "app_secrets" {
 #   for_each = data.azurerm_key_vault_secret.app_secrets
 
@@ -176,8 +178,6 @@ variable "levi9_public_ip" {
 #     azurerm_key_vault.kv_for_app
 #   ]
 # }
-
-
 
 resource "azurerm_private_endpoint" "kv_app_ep" {
   name                = "pep-${lower(var.app_name)}-${var.environment}-02"
@@ -251,17 +251,17 @@ data "azurerm_monitor_diagnostic_categories" "kv_cat" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "key_vault_diag" {
- 
+
   name                       = "kv-diag"
   target_resource_id         = azurerm_key_vault.kv_for_app.id
   log_analytics_workspace_id = var.logging
 
- dynamic "log" {
+  dynamic "log" {
     for_each = data.azurerm_monitor_diagnostic_categories.kv_cat.logs
     content {
-    category = log.value
-    enabled  = true
-    
+      category = log.value
+      enabled  = true
+
       retention_policy {
         days    = 30
         enabled = true
