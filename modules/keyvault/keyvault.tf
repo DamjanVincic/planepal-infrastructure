@@ -251,7 +251,6 @@ data "azurerm_monitor_diagnostic_categories" "kv_cat" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "key_vault_diag" {
-
   name                       = "kv-diag"
   target_resource_id         = azurerm_key_vault.kv_for_app.id
   log_analytics_workspace_id = var.logging
@@ -263,18 +262,18 @@ resource "azurerm_monitor_diagnostic_setting" "key_vault_diag" {
       enabled  = true
 
       retention_policy {
-        days    = 30
-        enabled = true
+        enabled = false
       }
     }
   }
+
   dynamic "metric" {
     for_each = data.azurerm_monitor_diagnostic_categories.kv_cat.metrics
     content {
       category = metric.value
+
       retention_policy {
-        days    = 30
-        enabled = true
+        enabled = false
       }
     }
   }

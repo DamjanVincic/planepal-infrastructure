@@ -99,7 +99,6 @@ data "azurerm_monitor_diagnostic_categories" "asp_cat" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
-
   name                       = "app_service_plan-diag"
   target_resource_id         = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
   log_analytics_workspace_id = var.logging
@@ -111,18 +110,18 @@ resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
       enabled  = true
 
       retention_policy {
-        days    = 30
-        enabled = true
+        enabled = false
       }
     }
   }
+
   dynamic "metric" {
     for_each = data.azurerm_monitor_diagnostic_categories.asp_cat.metrics
     content {
       category = metric.value
+      
       retention_policy {
-        days    = 30
-        enabled = true
+        enabled = false
       }
     }
   }

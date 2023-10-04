@@ -186,24 +186,25 @@ resource "azurerm_monitor_diagnostic_setting" "sql_diag" {
 
   dynamic "log" {
     for_each = data.azurerm_monitor_diagnostic_categories.sql_cat.logs
+
     content {
       category = log.value
       enabled  = true
 
       retention_policy {
-        days    = 30
-        enabled = true
+        enabled = false
       }
     }
   }
 
   dynamic "metric" {
     for_each = data.azurerm_monitor_diagnostic_categories.sql_cat.metrics
+
     content {
       category = metric.value
+
       retention_policy {
-        days    = 30
-        enabled = true
+        enabled = false
       }
     }
   }
