@@ -150,7 +150,7 @@ resource "azurerm_key_vault" "kv_for_app" {
 
     bypass = "AzureServices"
 
-    ip_rules = concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)])
+    ip_rules = concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)], [var.levi9_public_ip])
   }
 }
 
