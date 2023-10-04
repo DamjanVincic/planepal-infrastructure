@@ -146,7 +146,7 @@ resource "azurerm_key_vault" "kv_for_app" {
 }
 
 variable "levi9_public_ip" {
-  type    = string
+  type = string
 }
 # resource "azurerm_key_vault_secret" "app_secrets" {
 #   for_each = data.azurerm_key_vault_secret.app_secrets
@@ -175,7 +175,7 @@ resource "azurerm_private_endpoint" "kv_app_ep" {
   private_dns_zone_group {
     name                 = "pep-kv-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
     private_dns_zone_ids = [azurerm_private_dns_zone.az_kv_dns_zone.id]
-  
+
   }
   private_service_connection {
     is_manual_connection           = false

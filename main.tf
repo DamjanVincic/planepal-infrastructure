@@ -27,21 +27,21 @@ provider "azurerm" {
 module "app_service" {
   source = "./modules/appservice"
 
-  resource_group_name = var.resource_group
-  instrumentation_key = module.logging.instrumentation_key
-  location            = var.location
-  app_name            = var.app_name
-  environment         = var.environment
-  dot_net_version     = var.dot_net_version
-  app_sku             = var.app_sku
+  resource_group_name   = var.resource_group
+  instrumentation_key   = module.logging.instrumentation_key
+  location              = var.location
+  app_name              = var.app_name
+  environment           = var.environment
+  dot_net_version       = var.dot_net_version
+  app_sku               = var.app_sku
   default_capacity      = var.app_service_default_capacity
   minimum               = var.app_service_minimum
   maximum               = var.app_service_maximum
   cpu_up_threshold      = var.cpu_up_threshold
   cpu_down_threshold    = var.cpu_down_threshold
   memory_up_threshold   = var.memory_up_threshold
-  memory_down_threshold = var.memory_down_threshold 
-  subneta_id       = module.network.subnet["subnet_app"].id
+  memory_down_threshold = var.memory_down_threshold
+  subneta_id            = module.network.subnet["subnet_app"].id
 }
 
 module "storage" {
@@ -76,9 +76,9 @@ module "key_vault" {
   kv_base_URL_name         = var.kv_base_URL_name
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
-  levi9_public_ip = var.levi9_public_ip
-  subneta_id = module.network.subnet["subnet_app_keyvault"].id
-  vnet_id = module.network.vnet.id
+  levi9_public_ip          = var.levi9_public_ip
+  subneta_id               = module.network.subnet["subnet_app_keyvault"].id
+  vnet_id                  = module.network.vnet.id
 }
 
 module "logging" {
@@ -100,7 +100,7 @@ module "logging" {
 module "sql" {
   source = "./modules/sql"
 
-  resource_group   = var.resource_group
+  resource_group        = var.resource_group
   app_name              = var.app_name
   environment           = var.environment
   location              = var.location
@@ -111,9 +111,9 @@ module "sql" {
   sql_login             = module.key_vault.sql_username
   sql_password          = module.key_vault.sql_password
 
-  sr_source_address      = var.sr_source_address
-  subneta_id             = module.network.subnet["subnet_sql"].id
-   vnet_id                  = module.network.vnet.id
+  sr_source_address = var.sr_source_address
+  subneta_id        = module.network.subnet["subnet_sql"].id
+  vnet_id           = module.network.vnet.id
 
 }
 
@@ -127,8 +127,8 @@ module "network" {
   resource_group_location = var.location
   address_space           = var.address_space
   subnets                 = var.subnets
-  location_abbreviation = var.location_abbreviation
-  }
+  location_abbreviation   = var.location_abbreviation
+}
 #   module "automation" {
 #   source = "./modules/automation"
 

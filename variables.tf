@@ -109,7 +109,7 @@ variable "app_secrets_keys" {
 }
 
 variable "sr_source_address" {
-  type = string
+  type    = string
   default = "10.0.1.0/24"
 }
 

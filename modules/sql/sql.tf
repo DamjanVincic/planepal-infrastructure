@@ -103,7 +103,7 @@ resource "azurerm_network_security_group" "st_sql_nsg" {
     direction                  = "Inbound"
     source_port_range          = "*"
     destination_port_ranges    = [1433]
-    source_address_prefix    = var.sr_source_address
+    source_address_prefix      = var.sr_source_address
     destination_address_prefix = "*"
   }
 
@@ -114,8 +114,8 @@ resource "azurerm_network_security_group" "st_sql_nsg" {
     priority                   = 500
     direction                  = "Inbound"
     source_port_range          = "*"
-    destination_port_range    = "*"
-    source_address_prefix    = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
 }
@@ -130,7 +130,7 @@ resource "azurerm_private_endpoint" "private-ep-sql" {
   location            = var.location
   subnet_id           = var.subneta_id
   private_dns_zone_group {
-   name                 = "pe-st-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-03"
+    name                 = "pe-st-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-03"
     private_dns_zone_ids = [azurerm_private_dns_zone.app_st_dns_zone.id]
   }
   private_service_connection {
