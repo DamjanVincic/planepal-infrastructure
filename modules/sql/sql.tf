@@ -151,7 +151,7 @@ resource "azurerm_private_endpoint" "sql_endpoint" {
 
   private_service_connection {
     name = "sql-${var.environment}-privateserviceconnection-01"
-    private_connection_resource_id = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
+    private_connection_resource_id = azurerm_mssql_server.sql-planepal-dev-neu-01.id
     is_manual_connection = false
     subresource_names = ["sqlServer"]
   }
