@@ -45,9 +45,9 @@ $SqlConnection.Open()
 $CreateLoginSql = @"
 CREATE LOGIN $NewUsername WITH PASSWORD = '$NewPassword';
 CREATE LOGIN $BacpacUserName WITH PASSWORD = '$BacpacPassword';
-CREATE USER $NewUsername FOR LOGIN $NewUsername WITH DEFAULT_SCHEMA=[$Database];
-CREATE USER $BacpacUserName FOR LOGIN $BacpacUserName WITH DEFAULT_SCHEMA=[$Database];
 "@
+# CREATE USER $NewUsername FOR LOGIN $NewUsername WITH DEFAULT_SCHEMA=[$Database];
+# CREATE USER $BacpacUserName FOR LOGIN $BacpacUserName WITH DEFAULT_SCHEMA=[$Database];
 
 echo $CreateLoginSql
 
