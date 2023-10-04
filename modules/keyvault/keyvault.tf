@@ -61,6 +61,14 @@ variable "app_secrets_keys" {
   type = list(string)
 }
 
+variable "subneta_id" {
+  type = string
+}
+
+variable "vnet_id" {
+  type = string
+}
+
 
 data "azurerm_key_vault" "devops_kv" {
   name                = var.devops_kv_name
@@ -128,15 +136,27 @@ resource "azurerm_key_vault" "kv_for_app" {
     ]
   }
 
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = "d4098138-9b79-4120-b056-9a6e50406362"
+
+    secret_permissions = [
+      "Get", "List", "Set", "Delete", "Restore", "Recover", "Purge",
+    ]
+  }
+
   network_acls {
     default_action = "Deny"
 
     bypass = "AzureServices"
 
-    ip_rules = concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)])
+    ip_rules = concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)], [var.levi9_public_ip])
   }
 }
 
+variable "levi9_public_ip" {
+  type = string
+}
 # resource "azurerm_key_vault_secret" "app_secrets" {
 #   for_each = data.azurerm_key_vault_secret.app_secrets
 
@@ -153,3 +173,72 @@ resource "azurerm_key_vault" "kv_for_app" {
 #     azurerm_key_vault.kv_for_app
 #   ]
 # }
+
+
+
+resource "azurerm_private_endpoint" "kv_app_ep" {
+  name                = "pep-${lower(var.app_name)}-${var.environment}-02"
+  resource_group_name = var.resource_group
+  location            = var.location
+  subnet_id           = var.subneta_id
+  private_dns_zone_group {
+    name                 = "pep-kv-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
+    private_dns_zone_ids = [azurerm_private_dns_zone.az_kv_dns_zone.id]
+
+  }
+  private_service_connection {
+    is_manual_connection           = false
+    private_connection_resource_id = azurerm_key_vault.kv_for_app.id
+    name                           = "${azurerm_key_vault.kv_for_app.name}-psc"
+    subresource_names              = ["vault"]
+  }
+  depends_on = [azurerm_key_vault.kv_for_app]
+}
+
+resource "azurerm_private_dns_zone" "az_kv_dns_zone" {
+  name                = "privatelink.vaultcore.azure.net"
+  resource_group_name = var.resource_group
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "az_kv_virtual_network_link" {
+  name                  = "${azurerm_private_dns_zone.az_kv_dns_zone.name}-link"
+  resource_group_name   = var.resource_group
+  private_dns_zone_name = azurerm_private_dns_zone.az_kv_dns_zone.name
+  virtual_network_id    = var.vnet_id
+  registration_enabled  = false
+}
+
+resource "azurerm_network_security_group" "kv_app_nsg" {
+  name                = "nsg-kv-${lower(var.app_name)}-${var.environment}-${var.location}-01"
+  location            = var.location
+  resource_group_name = var.resource_group
+
+  security_rule {
+    name                       = "allow-app"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 100
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_range     = 443
+    source_address_prefixes    = var.outbound_ip_address_list
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "allow-levi9"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 101
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_range     = 443
+    source_address_prefix      = var.levi9_public_ip
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
+  subnet_id                 = var.subneta_id
+  network_security_group_id = azurerm_network_security_group.kv_app_nsg.id
+}

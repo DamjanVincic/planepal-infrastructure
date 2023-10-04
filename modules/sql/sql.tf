@@ -1,4 +1,4 @@
-variable "resource_group_name" {
+variable "resource_group" {
   type = string
 }
 
@@ -32,13 +32,24 @@ variable "sqldb_sku_name" {
 variable "sqldb_sku_max_gb_size" {
   type = number
 }
+variable "subneta_id" {
+  type = string
+}
+variable "vnet_id" {
+  type = string
+}
+
+variable "sr_source_address" {
+  type = string
+}
+
 data "http" "myip" {
   url = "https://ipv4.icanhazip.com"
 }
 
 resource "azurerm_mssql_server" "sql-planepal-dev-neu-01" {
   name                         = "sql${lower(var.app_name)}${var.environment}${var.location_abbreviation}00"
-  resource_group_name          = var.resource_group_name
+  resource_group_name          = var.resource_group
   location                     = var.location
   version                      = var.sql_version
   administrator_login          = var.sql_login.value
@@ -77,5 +88,71 @@ resource "azurerm_mssql_database" "sqldb-planepal-dev-neu-01" {
   }
   tags = {
     environment = "development"
+  }
+}
+resource "azurerm_network_security_group" "st_sql_nsg" {
+  name                = "nsg-sql-${lower(var.app_name)}-${var.environment}-${var.location}-01"
+  location            = var.location
+  resource_group_name = var.resource_group
+
+  security_rule {
+    name                       = "allow-app"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 200
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_ranges    = [1433]
+    source_address_prefix      = var.sr_source_address
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "deny-all"
+    protocol                   = "Tcp"
+    access                     = "Deny"
+    priority                   = 500
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
+  subnet_id                 = var.subneta_id
+  network_security_group_id = azurerm_network_security_group.st_sql_nsg.id
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "app_st_dns_zone_vnet_link" {
+  name                  = "nl-${lower(var.app_name)}-${var.environment}-${var.location}-03"
+  resource_group_name   = var.resource_group
+  private_dns_zone_name = azurerm_private_dns_zone.sql_dns_zone.name
+  virtual_network_id    = var.vnet_id
+}
+
+
+resource "azurerm_private_dns_zone" "sql_dns_zone" {
+  name                = "privatelink.database.windows.net"
+  resource_group_name = var.resource_group
+}
+
+resource "azurerm_private_endpoint" "sql_endpoint" {
+  name = "pep-sql-${lower(var.app_name)}-${var.environment}-${var.location}-01"
+  location = var.location
+  resource_group_name = var.resource_group
+  subnet_id = var.subneta_id
+
+  private_dns_zone_group {
+    name = "sql-${var.environment}-dns-zone-group-01"
+    private_dns_zone_ids = [azurerm_private_dns_zone.sql_dns_zone.id]
+  }
+
+  private_service_connection {
+    name = "sql-${var.environment}-privateserviceconnection-01"
+    private_connection_resource_id = azurerm_mssql_server.sql-planepal-dev-neu-01.id
+    is_manual_connection = false
+    subresource_names = ["sqlServer"]
   }
 }
