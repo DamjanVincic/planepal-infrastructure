@@ -41,7 +41,7 @@ module "app_service" {
   cpu_down_threshold    = var.cpu_down_threshold
   memory_up_threshold   = var.memory_up_threshold
   memory_down_threshold = var.memory_down_threshold
-  subneta_id            = module.network.subnet["subnet_app"].id
+  subneta_id            = module.network.appservice_subnet_id
 }
 
 module "storage" {
