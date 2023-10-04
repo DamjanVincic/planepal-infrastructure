@@ -59,7 +59,7 @@ $SqlConnection.ConnectionString = $ConnectionString
 # Open the SQL connection
 $SqlConnection.Open()
 
-$SQLCreateSchema = "CREATE SCHEMA [$Databae] AUTHORIZATION [$NewUsername]"
+$SQLCreateSchema = "CREATE SCHEMA [$Database] AUTHORIZATION [$NewUsername]"
 $SqlCommand = $SQLCreateSchema.CreateCommand()
 $SqlCommand.CommandText = $SQLCreateSchema
 $SqlCommand.ExecuteNonQuery()
@@ -73,6 +73,7 @@ DENY ALTER ON DATABASE::[$Database] TO [$NewUsername];
 GRANT ALTER, SELECT, INSERT, UPDATE, DELETE ON DATABASE::[$Database] TO [$NewUsername];
 GRANT ALTER ANY SCHEMA TO [$NewUsername];
 "@
+
 # CREATE USER $BacpacUsername FOR LOGIN $BacpacUsername WITH DEFAULT_SCHEMA=[$Database];
 # ALTER USER $BacpacUsername WITH DEFAULT_SCHEMA = $Database;
 # GRANT VIEW DEFINITION TO $BacpacUsername;
