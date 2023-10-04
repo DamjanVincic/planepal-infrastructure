@@ -41,9 +41,9 @@ $CreateLoginSql = "CREATE LOGIN $NewUsername WITH PASSWORD = '$newPassword';"
 $CreateLoginSql = @"
 CREATE LOGIN $NewUsername WITH PASSWORD = '$NewPassword';
 CREATE USER $NewUsername  FOR LOGIN $NewUsername WITH DEFAULT_SCHEMA=[$Database];
-CREATE LOGIN $BacpacUserName WITH PASSWORD = '$BacpacPassword';
-CREATE USER $BacpacUserName FOR LOGIN $BacpacUserName WITH DEFAULT_SCHEMA=[$Database];
 "@
+# CREATE LOGIN $BacpacUserName WITH PASSWORD = '$BacpacPassword';
+# CREATE USER $BacpacUserName FOR LOGIN $BacpacUserName WITH DEFAULT_SCHEMA=[$Database];
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $CreateLoginSql
 $SqlCommand.ExecuteNonQuery()
@@ -69,10 +69,10 @@ GRANT ALTER, SELECT, INSERT, UPDATE, DELETE ON DATABASE::$Database TO $NewUserna
 GRANT ALTER ANY SCHEMA TO $NewUsername;
 CREATE SCHEMA $Database AUTHORIZATION $NewUsername;
 ALTER USER $NewUsername WITH DEFAULT_SCHEMA = $Database;
-CREATE USER $BacpacUsername FOR LOGIN $BacpacUsername WITH DEFAULT_SCHEMA=[$Database];
-ALTER USER $BacpacUsername WITH DEFAULT_SCHEMA = $Database;
-GRANT VIEW DEFINITION TO $BacpacUsername;
 "@
+# CREATE USER $BacpacUsername FOR LOGIN $BacpacUsername WITH DEFAULT_SCHEMA=[$Database];
+# ALTER USER $BacpacUsername WITH DEFAULT_SCHEMA = $Database;
+# GRANT VIEW DEFINITION TO $BacpacUsername;
 
 # Execute the SQL commands in the target database
 $SqlCommand = $SqlConnection.CreateCommand()
