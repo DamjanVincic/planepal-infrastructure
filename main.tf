@@ -41,7 +41,8 @@ module "app_service" {
   cpu_down_threshold    = var.cpu_down_threshold
   memory_up_threshold   = var.memory_up_threshold
   memory_down_threshold = var.memory_down_threshold 
-  subneta_id       = module.network.subnet["subnet_app"].id
+  subneta_id            = module.network.subnet["subnet_app"].id
+  logging               = module.logging.id
 }
 
 module "storage" {
@@ -57,6 +58,7 @@ module "storage" {
   subnet_id                = module.network.subnet["subnet_app_storage"].id
   levi9_public_ip          = var.levi9_public_ip
   vnet_id                  = module.network.vnet.id
+  logging                  = module.logging.id
 }
 
 module "key_vault" {
@@ -79,6 +81,7 @@ module "key_vault" {
   levi9_public_ip = var.levi9_public_ip
   subneta_id = module.network.subnet["subnet_app_keyvault"].id
   vnet_id = module.network.vnet.id
+  logging = module.logging.id
 }
 
 module "logging" {
@@ -113,7 +116,8 @@ module "sql" {
 
   sr_source_address      = var.sr_source_address
   subneta_id             = module.network.subnet["subnet_sql"].id
-   vnet_id                  = module.network.vnet.id
+  vnet_id                = module.network.vnet.id
+  logging                = module.logging.id
 
 }
 

@@ -42,6 +42,9 @@ variable "vnet_id" {
 variable "sr_source_address" {
   type = string
 }
+variable "logging" {
+  type = string
+}
 
 data "http" "myip" {
   url = "https://ipv4.icanhazip.com"
@@ -176,4 +179,38 @@ resource "azurerm_private_endpoint" "private-ep-sql2" {
     subresource_names              = ["sql"]
   }
   depends_on = [azurerm_mssql_database.sqldb-planepal-dev-neu-01]
+}
+
+data "azurerm_monitor_diagnostic_categories" "sql_cat" {
+  resource_id = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
+}
+
+resource "azurerm_monitor_diagnostic_setting" "sql_diag" {
+ 
+  name                       = "sql-diag"
+  target_resource_id         = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
+  log_analytics_workspace_id = var.logging
+
+ dynamic "log" {
+    for_each = data.azurerm_monitor_diagnostic_categories.sql_cat.logs
+    content {
+    category = log.value
+    enabled  = true
+    
+      retention_policy {
+        days    = 30
+        enabled = true
+      }
+    }
+  }
+  dynamic "metric" {
+    for_each = data.azurerm_monitor_diagnostic_categories.sql_cat.metrics
+    content {
+      category = metric.value
+      retention_policy {
+        days    = 30
+        enabled = true
+      }
+    }
+  }
 }

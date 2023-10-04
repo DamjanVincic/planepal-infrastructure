@@ -46,6 +46,9 @@ variable "vnet_id" {
   type        = string
 }
 
+variable "logging" {
+  type = string
+}
 resource "azurerm_storage_account" "storage_account" {
   name                     = "st${lower(var.app_name)}${var.environment}01"
   resource_group_name      = var.resource_group
@@ -123,3 +126,38 @@ resource "azurerm_private_dns_zone_virtual_network_link" "app_st_dns_zone_vnet_l
   private_dns_zone_name = azurerm_private_dns_zone.app_st_dns_zone.name
   virtual_network_id    = var.vnet_id
 }
+
+data "azurerm_monitor_diagnostic_categories" "st_acc_cat" {
+  resource_id = azurerm_storage_account.storage_account.id
+}
+
+resource "azurerm_monitor_diagnostic_setting" "st_acc_diag" {
+ 
+  name                       = "st_acc-diag"
+  target_resource_id         = azurerm_storage_account.storage_account.id
+  log_analytics_workspace_id = var.logging
+
+ dynamic "log" {
+    for_each = data.azurerm_monitor_diagnostic_categories.st_acc_cat.logs
+    content {
+    category = log.value
+    enabled  = true
+    
+      retention_policy {
+        days    = 30
+        enabled = true
+      }
+    }
+  }
+  dynamic "metric" {
+    for_each = data.azurerm_monitor_diagnostic_categories.st_acc_cat.metrics
+    content {
+      category = metric.value
+      retention_policy {
+        days    = 30
+        enabled = true
+      }
+    }
+  }
+}
+

@@ -50,6 +50,10 @@ variable "memory_down_threshold" {
   
 }
 
+variable "logging" {
+  type = string
+}
+
 resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
   name                = "asp-${var.app_name}-${var.environment}-${var.location}-00"
   resource_group_name = var.resource_group_name
@@ -91,6 +95,43 @@ resource "azurerm_private_endpoint" "private-ep-app-service" {
     is_manual_connection    = false
   }
 }
+
+
+data "azurerm_monitor_diagnostic_categories" "asp_cat" {
+  resource_id = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
+}
+
+resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
+ 
+  name                       = "app_service_plan-diag"
+  target_resource_id         = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
+  log_analytics_workspace_id = var.logging
+
+ dynamic "log" {
+    for_each = data.azurerm_monitor_diagnostic_categories.asp_cat.logs
+    content {
+    category = log.value
+    enabled  = true
+    
+      retention_policy {
+        days    = 30
+        enabled = true
+      }
+    }
+  }
+  dynamic "metric" {
+    for_each = data.azurerm_monitor_diagnostic_categories.asp_cat.metrics
+    content {
+      category = metric.value
+      retention_policy {
+        days    = 30
+        enabled = true
+      }
+    }
+  }
+}
+
+
 # resource "azurerm_app_service_virtual_network_swift_connection" "az_vNet" {
 #   app_service_id              = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.id
 #   virtual_network_subnet_ids  = module.network.subnet["subnet_app"].id
