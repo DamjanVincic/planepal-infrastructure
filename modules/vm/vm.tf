@@ -51,7 +51,7 @@ data "azurerm_key_vault_secret" "vm-admin-pass" {
 }
 
 resource "azurerm_windows_virtual_machine" "vm" {
-  name                  = "vm-${lower(var.app_name)}-${var.environment}-00"
+  name                  = "vm-${var.environment}-00"
   location              = var.location
   resource_group_name   = var.resource_group
   network_interface_ids = [azurerm_network_interface.net_int.id]
