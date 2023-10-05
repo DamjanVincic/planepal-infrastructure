@@ -2,9 +2,6 @@ trigger: none
 
 variables:
 - template: vars/vars-global.yaml
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
 
 resources:
   repositories:

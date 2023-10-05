@@ -22,3 +22,12 @@ variables:
 
 - name: connection-type
   value: AzureRM
+
+- name: solution
+  value: '**/*.sln'
+
+- name: buildPlatform
+  value: 'Any CPU'
+
+- name: buildConfiguration
+  value: 'Release'
