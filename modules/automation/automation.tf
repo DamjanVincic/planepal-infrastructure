@@ -52,51 +52,51 @@ resource "azurerm_automation_account" "aaplanepaldevneu01" {
   sku_name            = var.aa_sku_name
 }
 
-resource "azurerm_automation_runbook" "aarplanepaldevneu01" {
-  name                  = "aar${lower(var.app_name)}${var.environment}${var.location_abbreviation}00"
-  automation_account_id = azurerm_automation_account.aaplanepaldevneu01.id
-  runbook_type          = var.aar_runbook_type
-  log_verbose           = var.aar_log_verbose
-  log_progress          = var.aar_log_progress
+# resource "azurerm_automation_runbook" "aarplanepaldevneu01" {
+#   name                  = "aar${lower(var.app_name)}${var.environment}${var.location_abbreviation}00"
+#   automation_account_id = azurerm_automation_account.aaplanepaldevneu01.id
+#   runbook_type          = var.aar_runbook_type
+#   log_verbose           = var.aar_log_verbose
+#   log_progress          = var.aar_log_progress
 
-  publish_content {
-    content = <<-EOT
-      param (
-          [string] $param1
-      )
-      //create sql user
-      //send backup to storage account
-      Write-Output "Hello, World!"
-      Write-Output "Param1 value: $param1"
-    EOT
-  }
-}
+#   publish_content {
+#     content = <<-EOT
+#       param (
+#           [string] $param1
+#       )
+#       //create sql user
+#       //send backup to storage account
+#       Write-Output "Hello, World!"
+#       Write-Output "Param1 value: $param1"
+#     EOT
+#   }
+# }
 
-resource "azurerm_automation_schedule" "aasplanepaldevneu01" {
-  name                    = "aas${lower(var.app_name)}${var.environment}${var.location_abbreviation}00"
-  resource_group_name     = var.resource_group_name
-  automation_account_name = azurerm_automation_account.aaplanepaldevneu01.name
-  # automation_account_id = azurerm_automation_account.aaplanepaldevneu01.id
-  start_time  = formatdate("yyyy-MM-ddT${var.aas_start_time}Z", timestamp())
-  description = "Run daily at ${var.aas_start_time} ${var.aas_timezone}"
-  timezone    = var.aas_timezone
+# resource "azurerm_automation_schedule" "aasplanepaldevneu01" {
+#   name                    = "aas${lower(var.app_name)}${var.environment}${var.location_abbreviation}00"
+#   resource_group_name     = var.resource_group_name
+#   automation_account_name = azurerm_automation_account.aaplanepaldevneu01.name
+#   # automation_account_id = azurerm_automation_account.aaplanepaldevneu01.id
+#   start_time  = formatdate("yyyy-MM-ddT${var.aas_start_time}Z", timestamp())
+#   description = "Run daily at ${var.aas_start_time} ${var.aas_timezone}"
+#   timezone    = var.aas_timezone
 
-  # weekly {
-  #   monday    = true
-  #   tuesday   = true
-  #   wednesday = true
-  #   thursday  = true
-  #   friday    = true
-  # }
+#   # weekly {
+#   #   monday    = true
+#   #   tuesday   = true
+#   #   wednesday = true
+#   #   thursday  = true
+#   #   friday    = true
+#   # }
 
-  # runbook {
-  #   name       = azurerm_automation_runbook.aarplanepaldevneu01.name
-  #   runbook_id = azurerm_automation_runbook.aarplanepaldevneu01.id
-  #   parameters = {
-  #     param1 = "some-value"
-  #   }
-  # }
-}
+#   # runbook {
+#   #   name       = azurerm_automation_runbook.aarplanepaldevneu01.name
+#   #   runbook_id = azurerm_automation_runbook.aarplanepaldevneu01.id
+#   #   parameters = {
+#   #     param1 = "some-value"
+#   #   }
+#   # }
+# }
 
 /*resource "azurerm_storage_account" "stplanepaldevneu02" {
   name                     = "st${lower(var.app_name)}${var.environment}${var.location_abbreviation}02"

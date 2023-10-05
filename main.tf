@@ -6,7 +6,10 @@ terraform {
     }
   }
   backend "azurerm" {
-    
+    resource_group_name  = "DevOps"
+    storage_account_name = "stdevopsneu01"
+    container_name       = "tfstate"
+    key                  = "terraform-dev.tfstate"
   }
 }
 
@@ -80,6 +83,7 @@ module "key_vault" {
   subneta_id = module.network.subnet["subnet_app_keyvault"].id
   vnet_id = module.network.vnet.id
   logging = module.logging.id
+  appservice_subnet_address_prefixes = module.network.appservice_subnet_address_prefixes
 }
 
 module "logging" {
