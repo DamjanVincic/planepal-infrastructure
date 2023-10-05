@@ -49,11 +49,13 @@ CREATE LOGIN $BacpacUserName WITH PASSWORD = '$BacpacPassword';
 # CREATE USER $NewUsername FOR LOGIN $NewUsername WITH DEFAULT_SCHEMA=[$Database];
 # CREATE USER $BacpacUserName FOR LOGIN $BacpacUserName WITH DEFAULT_SCHEMA=[$Database];
 
-echo $CreateLoginSql
-
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $CreateLoginSql
-$SqlCommand.ExecuteNonQuery()
+try {
+    $SqlCommand.ExecuteNonQuery()
+} catch [ParentContainsErrorRecordException] {
+    Write-Host "Login already exists."
+}
 
 # Close the SQL connection
 $SqlConnection.Close()
@@ -79,7 +81,11 @@ GRANT ALTER ANY SCHEMA TO $NewUsername;
 # Execute the SQL commands in the target database
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $SqlGrantPermissions
-$SqlCommand.ExecuteNonQuery()
+try{
+    $SqlCommand.ExecuteNonQuery()
+} catch [ParentContainsErrorRecordException] {
+    Write-Host "User already exists."
+}
 
 $SqlCreateSchema = "CREATE SCHEMA $Database AUTHORIZATION $NewUsername;"
 
