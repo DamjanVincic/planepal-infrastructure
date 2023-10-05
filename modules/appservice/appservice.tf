@@ -1,4 +1,4 @@
-variable "resource_group_name" {
+variable "resource_group" {
   type = string
 }
 
@@ -66,11 +66,10 @@ variable "logging" {
   type = string
 }
 
-variable "location_abbreviation" {
+variable "vm_ip" {
   type = string
 }
-
-variable "vm_source_address" {
+variable "location_abbreviation" {
   type = string
 }
 
@@ -85,7 +84,7 @@ variable "levi9_public_ip" {
 
 resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
   name                = "asp-${var.app_name}-${var.environment}-${var.location}-00"
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.resource_group
   location            = var.location
   sku_name            = var.app_sku
   os_type             = "Windows"
@@ -93,7 +92,7 @@ resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
 
 resource "azurerm_windows_web_app" "app-PlanePal-dev-northeurope-00" {
   name                      = "app-${var.app_name}-${var.environment}-${var.location}-00"
-  resource_group_name       = var.resource_group_name
+  resource_group_name       = var.resource_group
   location                  = var.location
   service_plan_id           = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
   virtual_network_subnet_id = var.subneta_id
@@ -140,7 +139,7 @@ resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
 resource "azurerm_network_security_group" "nsg_app" {
   name                = "nsg-app-${lower(var.app_name)}-${var.environment}-${var.location_abbreviation}-01"
   location            = var.location
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.resource_group
 
   security_rule {
     name                       = "allow-vm"
@@ -150,7 +149,7 @@ resource "azurerm_network_security_group" "nsg_app" {
     direction                  = "Inbound"
     source_port_range          = "*"
     destination_port_ranges    = [443]
-    source_address_prefix      = var.vm_source_address # get from vm
+    source_address_prefix      = var.vm_ip
     destination_address_prefix = "*"
   }
 

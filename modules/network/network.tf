@@ -70,3 +70,5 @@ resource "azurerm_subnet" "appservice_subnet" {
 
 
 
+
+

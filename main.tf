@@ -6,7 +6,7 @@ terraform {
     }
   }
   backend "azurerm" {
-
+    
   }
 }
 
@@ -24,7 +24,7 @@ provider "azurerm" {
 module "app_service" {
   source = "./modules/appservice"
 
-  resource_group_name     = var.resource_group
+  resource_group     = var.resource_group
   instrumentation_key     = module.logging.instrumentation_key
   location                = var.location
   app_name                = var.app_name
@@ -43,8 +43,8 @@ module "app_service" {
   endpoint_subnet_id      = module.network.subnet["subnet_app"].id
   location_abbreviation   = var.location_abbreviation
   app_destination_address = var.app_source_address
-  vm_source_address       = var.vm_source_address
   levi9_public_ip         = var.levi9_public_ip
+  vm_ip                 = module.vm.vm_ip
 }
 
 module "storage" {
@@ -134,6 +134,19 @@ module "network" {
   address_space           = var.address_space
   subnets                 = var.subnets
   location_abbreviation   = var.location_abbreviation
+}
+
+module "vm" {
+  source = "./modules/vm"
+  location                 = var.location
+  resource_group           = var.resource_group  
+  app_name                 = var.app_name
+  environment              = var.environment 
+  subneta_id               = module.network.subnet["subnet_vm"].id
+  location_abbreviation    = var.location_abbreviation
+  levi9_public_ip          = var.levi9_public_ip
+  as_addr_prefixes         = module.network.appservice_subnet_address_prefixes
+  vm_size                  = var.vm_size
 }
 
 # module "automation" {
