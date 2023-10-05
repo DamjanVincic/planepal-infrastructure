@@ -159,6 +159,11 @@ resource "azurerm_network_security_group" "nsg_app" {
   }
 }
 
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association_for_app" {
+  subnet_id                 = var.subneta_id
+  network_security_group_id = azurerm_network_security_group.nsg_app.id
+}
+
 # resource "azurerm_monitor_autoscale_setting" "scale_action_setting" {
 #   name                = "app-scale-${var.app_name}-${var.environment}-${var.location}-00"
 #   resource_group_name = var.resource_group_name
