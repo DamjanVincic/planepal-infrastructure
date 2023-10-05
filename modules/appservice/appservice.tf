@@ -48,6 +48,9 @@ variable "memory_up_threshold" {
 variable "memory_down_threshold" {
 
 }
+variable "subnet_id" {
+  
+}
 resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
   name                = "asp-${var.app_name}-${var.environment}-${var.location}-00"
   resource_group_name = var.resource_group_name
