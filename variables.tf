@@ -300,3 +300,21 @@ variable "scdb_container_access_type" {
   type        = string
   default     = "private"
 }
+
+variable "subscription_id" {
+  description = "Subscription id"
+  type = string
+  default = "secretvalue"
+}
+
+variable "sql_bacpac_login" {
+  description = "SQL login for backup account"
+  type = string
+  default = "bacpac"
+}
+
+variable "sql_bacpac_password" {
+  description = "SQL password for backup account"
+  type = string
+  default = "bacpacpasswordD!"
+}

@@ -143,5 +143,6 @@ module "network" {
   st_account_tier          = var.stdb_account_tier
   st_replication_type      = var.stdb_replication_type
   sc_container_access_type = var.scdb_container_access_type
+  
 }
 
