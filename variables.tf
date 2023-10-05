@@ -318,5 +318,5 @@ variable "dotnet_group_name" {
 
 variable "vm_size" {
     type = string
-    default = "D2s_v3"
+    default = "Standard_D2_v2"
 }
