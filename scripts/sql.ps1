@@ -53,7 +53,7 @@ $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $CreateLoginSql
 try {
     $SqlCommand.ExecuteNonQuery()
-} catch [System.Management.Automation.ParentContainsErrorRecordException] {
+} catch {
     Write-Host "Login already exists."
 }
 
@@ -83,7 +83,7 @@ $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $SqlGrantPermissions
 try{
     $SqlCommand.ExecuteNonQuery()
-} catch [System.Management.Automation.ParentContainsErrorRecordException] {
+} catch {
     Write-Host "User already exists."
 }
 
