@@ -310,3 +310,8 @@ variable "dotnet_group_name" {
   type    = string
   default = "DevNetInternship2023"
 }
+
+variable "vm_size" {
+    type = string
+    default = "D2s_v3"
+}

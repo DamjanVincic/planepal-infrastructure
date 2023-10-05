@@ -27,7 +27,7 @@ provider "azurerm" {
 module "app_service" {
   source = "./modules/appservice"
 
-  resource_group_name   = var.resource_group
+  resource_group   = var.resource_group
   instrumentation_key   = module.logging.instrumentation_key
   location              = var.location
   app_name              = var.app_name
@@ -44,6 +44,7 @@ module "app_service" {
   subneta_id            = module.network.appservice_subnet_id
   logging               = module.logging.id
   endpoint_subnet_id    = module.network.subnet["subnet_app"].id
+  vm_ip                 = module.vm.vm_ip
 }
 
 module "storage" {
@@ -144,6 +145,7 @@ module "vm" {
   location_abbreviation    = var.location_abbreviation
   levi9_public_ip          = var.levi9_public_ip
   as_addr_prefixes         = module.network.app_service_address_prefixes
+  vm_size                  = var.vm_size
 }
 
 # module "automation" {

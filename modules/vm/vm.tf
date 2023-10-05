@@ -31,6 +31,10 @@ variable "as_addr_prefixes" {
     
 }
 
+variable "vm_size" {
+    type = string
+}
+
 data "azurerm_key_vault" "devops-kv" {
   name                = "kv-devops-dev-neu-00"
   resource_group_name = var.resource_group
@@ -51,7 +55,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
   location              = var.location
   resource_group_name   = var.resource_group
   network_interface_ids = [azurerm_network_interface.net_int.id]
-  size               = "D2s_v3"
+  size                  = var.vm_size
 
   admin_username = data.azurerm_key_vault_secret.vm-admin-user.value
   admin_password = data.azurerm_key_vault_secret.vm-admin-pass.value
@@ -61,7 +65,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
     storage_account_type = "Standard_LRS"
   }
 
-     source_image_reference {
+  source_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
     sku       = "2022-datacenter-azure-edition"
@@ -104,7 +108,7 @@ resource "azurerm_network_security_group" "vm_nsg" {
     priority                   = 101
     direction                  = "Outbound"
     access                     = "Allow"
-    protocol                   = "Tcp"
+    protocol                   = "*"
     source_port_range          = "*"
     destination_port_range     = "80"
     source_address_prefix      = "*"
