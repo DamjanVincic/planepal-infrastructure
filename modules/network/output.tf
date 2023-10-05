@@ -11,5 +11,5 @@ output "appservice_subnet_id" {
 }
 
 output "app_service_address_prefixes" {
-  value = ["10.0.5.0/24"]
+  value = azurerm_subnet.appservice_subnet.address_prefixes
 }

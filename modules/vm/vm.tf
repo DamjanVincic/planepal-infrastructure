@@ -31,30 +31,43 @@ variable "as_addr_prefixes" {
     
 }
 
-resource "azurerm_virtual_machine" "main" {
+data "azurerm_key_vault" "devops-kv" {
+  name                = "kv-devops-dev-neu-00"
+  resource_group_name = var.resource_group
+}
+
+data "azurerm_key_vault_secret" "vm-admin-user" {
+    name = "vm-admin-user"
+    key_vault_id = data.azurerm_key_vault.devops-kv.id
+}
+
+data "azurerm_key_vault_secret" "vm-admin-pass" {
+    name = "vm-admin-pass"
+    key_vault_id = data.azurerm_key_vault.devops-kv.id
+}
+
+resource "azurerm_windows_virtual_machine" "vm" {
   name                  = "vm-${lower(var.app_name)}-${var.environment}-00"
   location              = var.location
   resource_group_name   = var.resource_group
   network_interface_ids = [azurerm_network_interface.net_int.id]
-  vm_size               = "D2s_v3"
+  size               = "D2s_v3"
 
-  storage_image_reference {
+  admin_username = data.azurerm_key_vault_secret.vm-admin-user.value
+  admin_password = data.azurerm_key_vault_secret.vm-admin-pass.value
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+     source_image_reference {
     publisher = "MicrosoftWindowsServer"
-    offer     = "WindowServer"
+    offer     = "WindowsServer"
     sku       = "2022-datacenter-azure-edition"
     version   = "latest"
   }
-  storage_os_disk {
-    name              = "myosdisk1"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
-  }
-  os_profile {
-    computer_name  = "hostname"
-    admin_username = "testadmin"
-    admin_password = "Password1234!"
-  }
+ 
 }
 
 resource "azurerm_network_interface" "net_int" {
