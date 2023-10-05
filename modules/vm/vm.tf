@@ -67,9 +67,9 @@ resource "azurerm_windows_virtual_machine" "vm" {
   }
 
   source_image_reference {
-    publisher = "MicrosoftVisualStudio"
-    offer     = "Windows"
-    sku       = "Windows-10-N-x64"
+    publisher = "MicrosoftWindowsDesktop"
+    offer     = "windows-10"
+    sku       = "win10-21h2-ent"
     version   = "latest"
   }
  
