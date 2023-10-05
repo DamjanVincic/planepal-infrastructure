@@ -51,7 +51,11 @@ CREATE USER $BacpacUserName FOR LOGIN $BacpacUserName WITH DEFAULT_SCHEMA=[$Data
 
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $CreateLoginSql
-$SqlCommand.ExecuteNonQuery()
+try {
+      $SqlCommand.ExecuteNonQuery()
+  } catch {
+      Write-Host "Login already exists."
+}
 
 # Close the SQL connection
 $SqlConnection.Close()
@@ -66,25 +70,35 @@ $SqlConnection.Open()
 
 $SqlGrantPermissions = @"
 CREATE USER $NewUsername FOR LOGIN $NewUsername;
+CREATE USER $BacpacUserName FOR LOGIN $BacpacUserName;
 ALTER ROLE db_datareader ADD MEMBER $NewUsername;
 ALTER ROLE db_datawriter ADD MEMBER $NewUsername;
 GRANT CREATE TABLE TO $NewUsername;
 DENY ALTER ON DATABASE::$Database TO $NewUsername;
 GRANT ALTER, SELECT, INSERT, UPDATE, DELETE ON DATABASE::$Database TO $NewUsername;
 GRANT ALTER ANY SCHEMA TO $NewUsername;
+GRANT VIEW DEFINITION TO $BacpacUserName;
 "@
 
 # Execute the SQL commands in the target database
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $SqlGrantPermissions
-$SqlCommand.ExecuteNonQuery()
+try{
+      $SqlCommand.ExecuteNonQuery()
+  } catch {
+      Write-Host "User already exists."
+}  
 
 $SqlCreateSchema = "CREATE SCHEMA $Database AUTHORIZATION $NewUsername;"
 
 # Execute the SQL commands in the target database
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $SqlCreateSchema
-$SqlCommand.ExecuteNonQuery()
+try {
+      $SqlCommand.ExecuteNonQuery()
+  } catch {
+      Write-Host "Schema already exists."
+}
 
 $SqlAlterSchema = @"
 ALTER USER $NewUsername WITH DEFAULT_SCHEMA = $Database;
@@ -95,7 +109,11 @@ ALTER USER $BacpacUsername WITH DEFAULT_SCHEMA = $Database;
 # Execute the SQL commands in the target database
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $SqlAlterSchema
-$SqlCommand.ExecuteNonQuery()
+try {
+      $SqlCommand.ExecuteNonQuery()
+  } catch {
+      Write-Host "Backup user already exsits."
+}
 
 # Close the SQL connection
 $SqlConnection.Close()
