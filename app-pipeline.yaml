@@ -1,0 +1,69 @@
+trigger: none
+
+variables:
+- template: vars/vars-global.yaml
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+resources:
+  repositories:
+    - repository: InternshipApp
+      type: git
+      name: InternshipApp/InternshipApp
+      ref: refs/heads/main
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    displayName: 'Build .NET 6 App'
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - checkout: self
+    - checkout: InternshipApp
+
+    - task: NuGetToolInstaller@1
+
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(solution)'
+
+    - task: VSBuild@1
+      inputs:
+        solution: '$(solution)'
+        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+
+    - task: VSTest@2
+      inputs:
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: drop
+- stage: Deploy
+  dependsOn: Build
+  jobs:
+  - job: Deploy
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: DownloadBuildArtifacts@1
+      displayName: 'Download Build Artifacts'
+      inputs:
+        buildType: specific
+        project: 'Automation'
+        pipeline: 'app ci'
+        artifactName: 'drop'
+        downloadPath: '$(Build.ArtifactsDirectory)'
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: $(connection-type)
+        azureSubscription: $(subscription)
+        appType: $(app-type)
+        WebAppName: $(app-name)
+        package: '$(Build.Repository.LocalPath)\$(Build.ArtifactsDirectory)\drop/WebApp.zip'
