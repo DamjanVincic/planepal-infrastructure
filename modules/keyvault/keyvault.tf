@@ -114,7 +114,6 @@ resource "azurerm_key_vault" "kv_for_app" {
   soft_delete_retention_days = 30
   purge_protection_enabled   = false
 
-
   sku_name = var.kv_app_sku_name
 
   access_policy {
@@ -155,6 +154,8 @@ resource "azurerm_key_vault" "kv_for_app" {
 
   network_acls {
     default_action = "Deny"
+
+    virtual_network_subnet_ids = [var.subneta_id]
 
     bypass = "AzureServices"
 
