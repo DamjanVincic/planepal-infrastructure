@@ -107,7 +107,11 @@ ALTER USER $BacpacUsername WITH DEFAULT_SCHEMA = $Database;
 # Execute the SQL commands in the target database
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $SqlAlterSchema
-$SqlCommand.ExecuteNonQuery()
+try {
+    $SqlCommand.ExecuteNonQuery()
+} catch {
+    Write-Host "Backup user already exsits."
+}
 
 # Close the SQL connection
 $SqlConnection.Close()
