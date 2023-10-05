@@ -69,6 +69,14 @@ variable "vnet_id" {
   type = string
 }
 
+variable "logging" {
+  type = string
+}
+
+variable "levi9_public_ip" {
+  type = string
+}
+
 
 data "azurerm_key_vault" "devops_kv" {
   name                = var.devops_kv_name
@@ -136,18 +144,24 @@ resource "azurerm_key_vault" "kv_for_app" {
     ]
   }
 
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = "d4098138-9b79-4120-b056-9a6e50406362"
+
+    secret_permissions = [
+      "Get", "List", "Set", "Delete", "Restore", "Recover", "Purge",
+    ]
+  }
+
   network_acls {
     default_action = "Deny"
 
     bypass = "AzureServices"
 
-    ip_rules = concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)])
+    ip_rules = concat(var.outbound_ip_address_list, [chomp(data.http.myip.body)], [var.levi9_public_ip])
   }
 }
 
-variable "levi9_public_ip" {
-  type    = string
-}
 # resource "azurerm_key_vault_secret" "app_secrets" {
 #   for_each = data.azurerm_key_vault_secret.app_secrets
 
@@ -165,8 +179,6 @@ variable "levi9_public_ip" {
 #   ]
 # }
 
-
-
 resource "azurerm_private_endpoint" "kv_app_ep" {
   name                = "pep-${lower(var.app_name)}-${var.environment}-02"
   resource_group_name = var.resource_group
@@ -175,7 +187,7 @@ resource "azurerm_private_endpoint" "kv_app_ep" {
   private_dns_zone_group {
     name                 = "pep-kv-${lower(var.app_name)}-${var.environment}-${var.location}-dns-zone-group-01"
     private_dns_zone_ids = [azurerm_private_dns_zone.az_kv_dns_zone.id]
-  
+
   }
   private_service_connection {
     is_manual_connection           = false
@@ -192,7 +204,7 @@ resource "azurerm_private_dns_zone" "az_kv_dns_zone" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "az_kv_virtual_network_link" {
-  name                  = "${azurerm_private_dns_zone.az_kv_dns_zone}-link"
+  name                  = "${azurerm_private_dns_zone.az_kv_dns_zone.name}-link"
   resource_group_name   = var.resource_group
   private_dns_zone_name = azurerm_private_dns_zone.az_kv_dns_zone.name
   virtual_network_id    = var.vnet_id
@@ -232,4 +244,39 @@ resource "azurerm_network_security_group" "kv_app_nsg" {
 resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
   subnet_id                 = var.subneta_id
   network_security_group_id = azurerm_network_security_group.kv_app_nsg.id
+}
+
+data "azurerm_monitor_diagnostic_categories" "kv_cat" {
+  resource_id = azurerm_key_vault.kv_for_app.id
+}
+
+resource "azurerm_monitor_diagnostic_setting" "key_vault_diag" {
+  name                       = "kv-diag"
+  target_resource_id         = azurerm_key_vault.kv_for_app.id
+  log_analytics_workspace_id = var.logging
+
+  dynamic "log" {
+    for_each = data.azurerm_monitor_diagnostic_categories.kv_cat.logs
+
+    content {
+      category = log.value
+      enabled  = true
+
+      retention_policy {
+        enabled = false
+      }
+    }
+  }
+
+  dynamic "metric" {
+    for_each = data.azurerm_monitor_diagnostic_categories.kv_cat.metrics
+    
+    content {
+      category = metric.value
+
+      retention_policy {
+        enabled = false
+      }
+    }
+  }
 }
