@@ -56,10 +56,6 @@ resource "azurerm_storage_account" "storage_account" {
   location                 = var.location
   account_tier             = var.account_tier
   account_replication_type = var.replication_type
-  network_rules {
-    default_action = "Deny"
-    virtual_network_subnet_ids = [var.subnet_id]
-  }
 }
 
 resource "azurerm_storage_container" "storage_container" {

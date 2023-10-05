@@ -155,7 +155,7 @@ resource "azurerm_key_vault" "kv_for_app" {
   network_acls {
     default_action = "Deny"
 
-    virtual_network_subnet_ids = [var.subneta_id]
+    # virtual_network_subnet_ids = [var.subneta_id]
 
     bypass = "AzureServices"
 
