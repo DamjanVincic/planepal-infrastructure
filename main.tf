@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "= 3.74"
+      version = "= 3.75"
     }
   }
   backend "azurerm" {
@@ -34,6 +34,14 @@ module "app_service" {
   environment         = var.environment
   dot_net_version     = var.dot_net_version
   app_sku             = var.app_sku
+  default_capacity      = var.app_service_default_capacity
+  minimum               = var.app_service_minimum
+  maximum               = var.app_service_maximum
+  cpu_up_threshold      = var.cpu_up_threshold
+  cpu_down_threshold    = var.cpu_down_threshold
+  memory_up_threshold   = var.memory_up_threshold
+  memory_down_threshold = var.memory_down_threshold 
+  subneta_id       = module.network.subnet["subnet_app"].id
 }
 
 module "storage" {
@@ -46,6 +54,9 @@ module "storage" {
   location                 = var.location
   environment              = var.environment
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
+  subnet_id                = module.network.subnet["subnet_app_storage"].id
+  levi9_public_ip          = var.levi9_public_ip
+  vnet_id                  = module.network.vnet.id
 }
 
 module "key_vault" {
@@ -61,14 +72,10 @@ module "key_vault" {
   devops_kv_name           = var.devops_kv_name
   key_sql_username         = var.key_sql_username
   key_sql_password         = var.key_sql_password
-  kv_API_key               = var.kv_API_key
-  kv_email_key             = var.kv_email_key
-  kv_email_pass_key        = var.kv_email_pass_key
+  app_secrets_keys         = var.app_secrets_keys
   kv_base_URL_name         = var.kv_base_URL_name
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
-  ip_range_azure           = var.ip_range_azure
-
 }
 
 module "logging" {
@@ -83,12 +90,14 @@ module "logging" {
   storage_account_id   = module.storage.account_id
   database_id          = module.sql.sqldb_id
   app_service_plan_id  = module.app_service.app_service_plan_id
+  alerts_map           = var.alerts_map
+  email_receiver       = var.email_receiver
 }
 
 module "sql" {
   source = "./modules/sql"
 
-  resource_group_name   = var.resource_group
+  resource_group   = var.resource_group
   app_name              = var.app_name
   environment           = var.environment
   location              = var.location
@@ -98,9 +107,26 @@ module "sql" {
   sqldb_sku_max_gb_size = var.sqldb_sku_max_gb_size
   sql_login             = module.key_vault.sql_username
   sql_password          = module.key_vault.sql_password
+
+  sr_source_adress      = var.sr_source_address
+  subneta_id             = module.network.subnet["subnet_sql"].id
+   vnet_id                  = module.network.vnet.id
+
 }
 
-module "automation" {
+module "network" {
+  source = "./modules/network"
+
+  app_name                = var.app_name
+  environment             = var.environment
+  location                = var.location_abbreviation
+  resource_group_name     = var.resource_group
+  resource_group_location = var.location
+  address_space           = var.address_space
+  subnets                 = var.subnets
+
+  }
+  module "automation" {
   source = "./modules/automation"
 
   resource_group_name      = var.resource_group
@@ -112,9 +138,10 @@ module "automation" {
   aar_runbook_type         = var.aar_runbook_type
   aar_log_verbose          = var.aar_log_verbose
   aar_log_progress         = var.aar_log_progress
-  start_time               = var.aas_start_time
+  aas_start_time           = var.aas_start_time
   aas_timezone             = var.aas_timezone
   st_account_tier          = var.stdb_account_tier
   st_replication_type      = var.stdb_replication_type
   sc_container_access_type = var.scdb_container_access_type
 }
+
