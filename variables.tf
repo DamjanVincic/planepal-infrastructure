@@ -31,7 +31,7 @@ variable "dot_net_version" {
 variable "app_sku" {
   type        = string
   description = "Plan for application"
-  default     = "B1"
+  default     = "S1"
 }
 
 variable "location_abbreviation" {
