@@ -107,7 +107,7 @@ resource "azurerm_mssql_database" "sqldb-planepal-dev-neu-01" {
   }
 }
 
-resource "azurerm_sql_virtual_network_rule" "sqlvnetrule" {
+resource "azurerm_mssql_virtual_network_rule" "sqlvnetrule" {
   name                = "sql-vnet-rule${lower(var.app_name)}${var.environment}${var.location_abbreviation}00"
   resource_group_name = var.resource_group
   server_name         = azurerm_mssql_server.sql-planepal-dev-neu-01.name
