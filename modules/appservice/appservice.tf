@@ -69,6 +69,23 @@ variable "logging" {
 variable "vm_ip" {
   type = string
 }
+variable "location_abbreviation" {
+  type = string
+}
+
+variable "vm_source_address" {
+  type = string
+}
+
+variable "app_destination_address" {
+  type = string
+}
+
+variable "levi9_public_ip" {
+  type = string
+}
+
+
 resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
   name                = "asp-${var.app_name}-${var.environment}-${var.location}-00"
   resource_group_name = var.resource_group
@@ -101,73 +118,63 @@ data "azurerm_monitor_diagnostic_categories" "asp_cat" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
-
   name                       = "app_service_plan-diag"
   target_resource_id         = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
   log_analytics_workspace_id = var.logging
 
   dynamic "log" {
     for_each = data.azurerm_monitor_diagnostic_categories.asp_cat.logs
+
     content {
       category = log.value
       enabled  = true
-
-      retention_policy {
-        days    = 30
-        enabled = true
-      }
     }
   }
+
   dynamic "metric" {
     for_each = data.azurerm_monitor_diagnostic_categories.asp_cat.metrics
+
     content {
       category = metric.value
-      retention_policy {
-        days    = 30
-        enabled = true
-      }
     }
   }
 }
 
-resource "azurerm_network_security_group" "app_nsg" {
-  name                = "nsg-app-${lower(var.app_name)}-${var.environment}-${var.location}-01"
+resource "azurerm_network_security_group" "nsg_app" {
+  name                = "nsg-app-${lower(var.app_name)}-${var.environment}-${var.location_abbreviation}-01"
   location            = var.location
   resource_group_name = var.resource_group
 
   security_rule {
-    name                       = "HTTP"
-    priority                   = 100
-    direction                  = "Inbound"
+    name                       = "allow-vm"
+    protocol                   = "Tcp"
     access                     = "Allow"
-    protocol                   = "*"
+    priority                   = 200
+    direction                  = "Inbound"
     source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = var.vm_ip
+    destination_port_ranges    = [443]
+    source_address_prefix      = var.vm_source_address # get from vm
     destination_address_prefix = "*"
   }
 
   security_rule {
-    name                       = "HTTP"
-    priority                   = 100
-    direction                  = "Outbound"
+    name                       = "allow-levi9"
+    protocol                   = "Tcp"
     access                     = "Allow"
-    protocol                   = "*"
+    priority                   = 100
+    direction                  = "Inbound"
     source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "*"
+    destination_port_range     = 443
+    source_address_prefix      = var.levi9_public_ip
     destination_address_prefix = "*"
   }
-
-  tags = {
-    environment = var.environment
-  }
 }
 
-resource "azurerm_subnet_network_security_group_association" "as_nsg_assoc" {
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association_for_app" {
   subnet_id                 = var.subneta_id
-  network_security_group_id = azurerm_network_security_group.app_nsg.id
+  network_security_group_id = azurerm_network_security_group.nsg_app.id
 }
+
 # resource "azurerm_monitor_autoscale_setting" "scale_action_setting" {
 #   name                = "app-scale-${var.app_name}-${var.environment}-${var.location}-00"
 #   resource_group_name = var.resource_group_name

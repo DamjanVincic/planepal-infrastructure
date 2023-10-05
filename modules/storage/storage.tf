@@ -50,7 +50,6 @@ variable "logging" {
   type = string
 }
 
-
 resource "azurerm_storage_account" "storage_account" {
   name                     = "st${lower(var.app_name)}${var.environment}01"
   resource_group_name      = var.resource_group
@@ -141,25 +140,18 @@ resource "azurerm_monitor_diagnostic_setting" "st_acc_diag" {
 
   dynamic "log" {
     for_each = data.azurerm_monitor_diagnostic_categories.st_acc_cat.logs
+
     content {
       category = log.value
       enabled  = true
-
-      retention_policy {
-        days    = 30
-        enabled = true
-      }
     }
   }
 
   dynamic "metric" {
     for_each = data.azurerm_monitor_diagnostic_categories.st_acc_cat.metrics
+
     content {
       category = metric.value
-      retention_policy {
-        days    = 30
-        enabled = true
-      }
     }
   }
 }

@@ -77,6 +77,10 @@ variable "levi9_public_ip" {
   type = string
 }
 
+variable "appservice_subnet_address_prefixes" {
+
+}
+
 
 data "azurerm_key_vault" "devops_kv" {
   name                = var.devops_kv_name
@@ -113,7 +117,6 @@ resource "azurerm_key_vault" "kv_for_app" {
   tenant_id                  = var.tenant_id
   soft_delete_retention_days = 30
   purge_protection_enabled   = false
-
 
   sku_name = var.kv_app_sku_name
 
@@ -155,6 +158,8 @@ resource "azurerm_key_vault" "kv_for_app" {
 
   network_acls {
     default_action = "Deny"
+
+    # virtual_network_subnet_ids = [var.subneta_id]
 
     bypass = "AzureServices"
 
@@ -239,6 +244,18 @@ resource "azurerm_network_security_group" "kv_app_nsg" {
     source_address_prefix      = var.levi9_public_ip
     destination_address_prefix = "*"
   }
+
+  security_rule {
+    name                       = "allow-app-subnet"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 102
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_range     = 443
+    source_address_prefixes    = var.appservice_subnet_address_prefixes
+    destination_address_prefix = "*"
+  }
 }
 
 resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
@@ -251,31 +268,24 @@ data "azurerm_monitor_diagnostic_categories" "kv_cat" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "key_vault_diag" {
-
   name                       = "kv-diag"
   target_resource_id         = azurerm_key_vault.kv_for_app.id
   log_analytics_workspace_id = var.logging
 
   dynamic "log" {
     for_each = data.azurerm_monitor_diagnostic_categories.kv_cat.logs
+
     content {
       category = log.value
       enabled  = true
-
-      retention_policy {
-        days    = 30
-        enabled = true
-      }
     }
   }
+
   dynamic "metric" {
     for_each = data.azurerm_monitor_diagnostic_categories.kv_cat.metrics
+
     content {
       category = metric.value
-      retention_policy {
-        days    = 30
-        enabled = true
-      }
     }
   }
 }
