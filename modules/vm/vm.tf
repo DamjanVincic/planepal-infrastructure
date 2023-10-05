@@ -98,21 +98,9 @@ resource "azurerm_network_security_group" "vm_nsg" {
     access                     = "Allow"
     protocol                   = "*"
     source_port_range          = "*"
-    destination_port_range     = "3389"
+    destination_port_range     = 3389
     source_address_prefix      = var.levi9_public_ip
     destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "web_app"
-    priority                   = 101
-    direction                  = "Outbound"
-    access                     = "Allow"
-    protocol                   = "*"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "*"
-    destination_address_prefix = var.as_addr_prefixes[0]
   }
 
   tags = {

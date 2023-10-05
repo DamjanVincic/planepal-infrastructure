@@ -43,7 +43,6 @@ module "app_service" {
   endpoint_subnet_id      = module.network.subnet["subnet_app"].id
   location_abbreviation   = var.location_abbreviation
   app_destination_address = var.app_source_address
-  vm_source_address       = var.vm_source_address
   levi9_public_ip         = var.levi9_public_ip
   vm_ip                 = module.vm.vm_ip
 }

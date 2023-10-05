@@ -73,10 +73,6 @@ variable "location_abbreviation" {
   type = string
 }
 
-variable "vm_source_address" {
-  type = string
-}
-
 variable "app_destination_address" {
   type = string
 }
@@ -153,7 +149,7 @@ resource "azurerm_network_security_group" "nsg_app" {
     direction                  = "Inbound"
     source_port_range          = "*"
     destination_port_ranges    = [443]
-    source_address_prefix      = var.vm_source_address # get from vm
+    source_address_prefix      = var.vm_ip
     destination_address_prefix = "*"
   }
 
