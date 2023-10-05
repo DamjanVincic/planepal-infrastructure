@@ -84,7 +84,15 @@ resource "azurerm_network_interface" "net_int" {
     name                          = "internal"
     subnet_id                     =  var.subneta_id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id = azurerm_public_ip.vm_ip.id
   }
+}
+
+resource "azurerm_public_ip" "vm_ip" {
+  name                = "publicip-vm-${var.environment}-01"
+  resource_group_name = var.resource_group
+  location            = var.location
+  allocation_method   = "Static"
 }
 
 resource "azurerm_network_security_group" "vm_nsg" {
