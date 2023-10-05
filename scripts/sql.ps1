@@ -92,7 +92,11 @@ $SqlCreateSchema = "CREATE SCHEMA $Database AUTHORIZATION $NewUsername;"
 # Execute the SQL commands in the target database
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $SqlCreateSchema
-$SqlCommand.ExecuteNonQuery()
+try {
+    $SqlCommand.ExecuteNonQuery()
+} catch {
+    Write-Host "Schema already exists."
+}
 
 $SqlAlterSchema = @"
 ALTER USER $NewUsername WITH DEFAULT_SCHEMA = $Database;
