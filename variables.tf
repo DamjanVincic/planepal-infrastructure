@@ -109,7 +109,7 @@ variable "app_secrets_keys" {
 }
 
 variable "sr_source_address" {
-  type    = string
+  type = string
   default = "10.0.1.0/24"
 }
 
@@ -301,12 +301,20 @@ variable "scdb_container_access_type" {
   default     = "private"
 }
 
-variable "devops_group_name" {
-  type    = string
-  default = "DevopsInternship2023"
+variable "subscription_id" {
+  description = "Subscription id"
+  type = string
+  default = "secretvalue"
 }
 
-variable "dotnet_group_name" {
-  type    = string
-  default = "DevNetInternship2023"
+variable "sql_bacpac_login" {
+  description = "SQL login for backup account"
+  type = string
+  default = "bacpac"
+}
+
+variable "sql_bacpac_password" {
+  description = "SQL password for backup account"
+  type = string
+  default = "bacpacpasswordD!"
 }
