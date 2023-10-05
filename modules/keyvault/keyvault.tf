@@ -252,7 +252,7 @@ resource "azurerm_network_security_group" "kv_app_nsg" {
     direction                  = "Inbound"
     source_port_range          = "*"
     destination_port_range     = 443
-    source_address_prefix      = var.appersive_subnet_address_prefixes
+    source_address_prefixes      = var.appersive_subnet_address_prefixes
     destination_address_prefix = "*"
   }
 }
