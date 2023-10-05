@@ -6,7 +6,10 @@ terraform {
     }
   }
   backend "azurerm" {
-    
+    resource_group_name  = "DevOps"
+    storage_account_name = "stdevopsneu01"
+    container_name       = "tfstate"
+    key                  = "terraform-dev.tfstate"
   }
 }
 
@@ -76,10 +79,10 @@ module "key_vault" {
   kv_base_URL_name         = var.kv_base_URL_name
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
-  levi9_public_ip = var.levi9_public_ip
-  subneta_id = module.network.subnet["subnet_app_keyvault"].id
-  vnet_id = module.network.vnet.id
-  logging = module.logging.id
+  levi9_public_ip          = var.levi9_public_ip
+  subneta_id               = module.network.subnet["subnet_app_keyvault"].id
+  vnet_id                  = module.network.vnet.id
+  logging                  = module.logging.id
 }
 
 module "logging" {
@@ -129,6 +132,18 @@ module "network" {
   address_space           = var.address_space
   subnets                 = var.subnets
   location_abbreviation   = var.location_abbreviation
+}
+
+module "vm" {
+  source = "./modules/vm"
+  location                 = var.location
+  resource_group           = var.resource_group  
+  app_name                 = var.app_name
+  environment              = var.environment 
+  subneta_id               = module.network.subnet["subnet_vm"].id
+  location_abbreviation    = var.location_abbreviation
+  levi9_public_ip          = var.levi9_public_ip
+  as_addr_prefixes         = module.network.app_service_address_prefixes
 }
 
 # module "automation" {

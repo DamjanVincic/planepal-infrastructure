@@ -201,7 +201,7 @@ variable "subnets" {
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.3.0/24"
     }
-    "subnet_apim" = {
+    "subnet_vm" = {
       name                = "snet-PlanePal-dev-neu-05"
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.4.0/24"

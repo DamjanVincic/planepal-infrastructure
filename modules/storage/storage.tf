@@ -92,7 +92,7 @@ resource "azurerm_network_security_group" "st_app_nsg" {
     name                       = "allow-app"
     protocol                   = "Tcp"
     access                     = "Allow"
-    priority                   = 100
+    priority                   = 150
     direction                  = "Inbound"
     source_port_range          = "*"
     destination_port_range     = 443
@@ -104,7 +104,7 @@ resource "azurerm_network_security_group" "st_app_nsg" {
     name                       = "allow-levi9"
     protocol                   = "Tcp"
     access                     = "Allow"
-    priority                   = 101
+    priority                   = 151
     direction                  = "Inbound"
     source_port_range          = "*"
     destination_port_range     = 443
