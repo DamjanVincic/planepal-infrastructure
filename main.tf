@@ -144,7 +144,7 @@ module "vm" {
   subneta_id               = module.network.subnet["subnet_vm"].id
   location_abbreviation    = var.location_abbreviation
   levi9_public_ip          = var.levi9_public_ip
-  as_addr_prefixes         = module.network.app_service_address_prefixes
+  as_addr_prefixes         = module.network.app_service_subnet_address_prefixes
   vm_size                  = var.vm_size
 }
 
