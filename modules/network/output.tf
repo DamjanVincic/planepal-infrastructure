@@ -10,6 +10,6 @@ output "appservice_subnet_id" {
   value = azurerm_subnet.appservice_subnet.id
 }
 
-output "app_service_address_prefixes" {
+output "app_service_subnet_address_prefixes" {
   value = azurerm_subnet.appservice_subnet.address_prefixes
 }
