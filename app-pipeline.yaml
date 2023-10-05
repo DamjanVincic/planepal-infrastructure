@@ -8,7 +8,7 @@ resources:
     - repository: InternshipApp
       type: git
       name: InternshipApp/InternshipApp
-      ref: refs/heads/main
+      ref: refs/heads/develop
 
 stages:
 - stage: Build
