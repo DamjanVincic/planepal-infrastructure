@@ -66,6 +66,18 @@ variable "logging" {
   type = string
 }
 
+variable "location_abbreviation" {
+  type = string
+}
+
+variable "vm_source_address" {
+  type = string
+}
+
+variable "app_destination_address" {
+  type = string
+}
+
 
 resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
   name                = "asp-${var.app_name}-${var.environment}-${var.location}-00"
@@ -126,6 +138,24 @@ resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
         enabled = false
       }
     }
+  }
+}
+
+resource "azurerm_network_security_group" "nsg_app" {
+  name                = "nsg-app-${lower(var.app_name)}-${var.environment}-${var.location_abbreviation}-01"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  security_rule {
+    name                       = "allow-app"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 200
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_ranges    = [433]
+    source_address_prefix      = var.vm_source_address
+    destination_address_prefix = var.app_destination_address
   }
 }
 

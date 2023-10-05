@@ -6,7 +6,7 @@ terraform {
     }
   }
   backend "azurerm" {
-    
+
   }
 }
 
@@ -24,23 +24,26 @@ provider "azurerm" {
 module "app_service" {
   source = "./modules/appservice"
 
-  resource_group_name   = var.resource_group
-  instrumentation_key   = module.logging.instrumentation_key
-  location              = var.location
-  app_name              = var.app_name
-  environment           = var.environment
-  dot_net_version       = var.dot_net_version
-  app_sku               = var.app_sku
-  default_capacity      = var.app_service_default_capacity
-  minimum               = var.app_service_minimum
-  maximum               = var.app_service_maximum
-  cpu_up_threshold      = var.cpu_up_threshold
-  cpu_down_threshold    = var.cpu_down_threshold
-  memory_up_threshold   = var.memory_up_threshold
-  memory_down_threshold = var.memory_down_threshold 
-  subneta_id            = module.network.appservice_subnet_id
-  logging               = module.logging.id
-  endpoint_subnet_id    = module.network.subnet["subnet_app"].id
+  resource_group_name     = var.resource_group
+  instrumentation_key     = module.logging.instrumentation_key
+  location                = var.location
+  app_name                = var.app_name
+  environment             = var.environment
+  dot_net_version         = var.dot_net_version
+  app_sku                 = var.app_sku
+  default_capacity        = var.app_service_default_capacity
+  minimum                 = var.app_service_minimum
+  maximum                 = var.app_service_maximum
+  cpu_up_threshold        = var.cpu_up_threshold
+  cpu_down_threshold      = var.cpu_down_threshold
+  memory_up_threshold     = var.memory_up_threshold
+  memory_down_threshold   = var.memory_down_threshold
+  subneta_id              = module.network.appservice_subnet_id
+  logging                 = module.logging.id
+  endpoint_subnet_id      = module.network.subnet["subnet_app"].id
+  location_abbreviation   = var.location_abbreviation
+  app_destination_address = var.app_source_address
+  vm_source_address       = var.vm_source_address
 }
 
 module "storage" {
@@ -76,10 +79,10 @@ module "key_vault" {
   kv_base_URL_name         = var.kv_base_URL_name
   kv_base_URL              = var.kv_base_URL
   outbound_ip_address_list = module.app_service.outbound_ip_address_list
-  levi9_public_ip = var.levi9_public_ip
-  subneta_id = module.network.subnet["subnet_app_keyvault"].id
-  vnet_id = module.network.vnet.id
-  logging = module.logging.id
+  levi9_public_ip          = var.levi9_public_ip
+  subneta_id               = module.network.subnet["subnet_app_keyvault"].id
+  vnet_id                  = module.network.vnet.id
+  logging                  = module.logging.id
 }
 
 module "logging" {
@@ -111,10 +114,10 @@ module "sql" {
   sqldb_sku_max_gb_size = var.sqldb_sku_max_gb_size
   sql_login             = module.key_vault.sql_username
   sql_password          = module.key_vault.sql_password
-  sr_source_address      = var.sr_source_address
-  subneta_id             = module.network.subnet["subnet_sql"].id
-  vnet_id                = module.network.vnet.id
-  logging                = module.logging.id
+  app_source_address    = var.app_source_address
+  subneta_id            = module.network.subnet["subnet_sql"].id
+  vnet_id               = module.network.vnet.id
+  logging               = module.logging.id
 
 }
 

@@ -46,7 +46,7 @@ variable "vnet_id" {
   type = string
 }
 
-variable "sr_source_address" {
+variable "app_source_address" {
   type = string
 }
 
@@ -120,7 +120,7 @@ resource "azurerm_network_security_group" "st_sql_nsg" {
     direction                  = "Inbound"
     source_port_range          = "*"
     destination_port_ranges    = [1433]
-    source_address_prefix      = var.sr_source_address
+    source_address_prefix      = var.app_source_address
     destination_address_prefix = "*"
   }
 
