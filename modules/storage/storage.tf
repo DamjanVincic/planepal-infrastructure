@@ -149,7 +149,7 @@ resource "azurerm_monitor_diagnostic_setting" "st_acc_diag" {
 
   dynamic "metric" {
     for_each = data.azurerm_monitor_diagnostic_categories.st_acc_cat.metrics
-    
+
     content {
       category = metric.value
     }

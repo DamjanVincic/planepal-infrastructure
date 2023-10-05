@@ -44,6 +44,7 @@ module "app_service" {
   location_abbreviation   = var.location_abbreviation
   app_destination_address = var.app_source_address
   vm_source_address       = var.vm_source_address
+  levi9_public_ip         = var.levi9_public_ip
 }
 
 module "storage" {
@@ -65,24 +66,24 @@ module "storage" {
 module "key_vault" {
   source = "./modules/keyvault"
 
-  location                 = var.location
-  resource_group           = var.resource_group
-  app_name                 = var.app_name
-  environment              = var.environment
-  kv_app_sku_name          = var.kv_app_sku_name
-  tenant_id                = module.app_service.tenant_id
-  principal_id             = module.app_service.object_id
-  devops_kv_name           = var.devops_kv_name
-  key_sql_username         = var.key_sql_username
-  key_sql_password         = var.key_sql_password
-  app_secrets_keys         = var.app_secrets_keys
-  kv_base_URL_name         = var.kv_base_URL_name
-  kv_base_URL              = var.kv_base_URL
-  outbound_ip_address_list = module.app_service.outbound_ip_address_list
-  levi9_public_ip          = var.levi9_public_ip
-  subneta_id               = module.network.subnet["subnet_app_keyvault"].id
-  vnet_id                  = module.network.vnet.id
-  logging                  = module.logging.id
+  location                           = var.location
+  resource_group                     = var.resource_group
+  app_name                           = var.app_name
+  environment                        = var.environment
+  kv_app_sku_name                    = var.kv_app_sku_name
+  tenant_id                          = module.app_service.tenant_id
+  principal_id                       = module.app_service.object_id
+  devops_kv_name                     = var.devops_kv_name
+  key_sql_username                   = var.key_sql_username
+  key_sql_password                   = var.key_sql_password
+  app_secrets_keys                   = var.app_secrets_keys
+  kv_base_URL_name                   = var.kv_base_URL_name
+  kv_base_URL                        = var.kv_base_URL
+  outbound_ip_address_list           = module.app_service.outbound_ip_address_list
+  levi9_public_ip                    = var.levi9_public_ip
+  subneta_id                         = module.network.subnet["subnet_app_keyvault"].id
+  vnet_id                            = module.network.vnet.id
+  logging                            = module.logging.id
   appservice_subnet_address_prefixes = module.network.appservice_subnet_address_prefixes
 }
 

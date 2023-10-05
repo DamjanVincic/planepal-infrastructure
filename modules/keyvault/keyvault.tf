@@ -78,7 +78,7 @@ variable "levi9_public_ip" {
 }
 
 variable "appservice_subnet_address_prefixes" {
-  
+
 }
 
 
@@ -253,7 +253,7 @@ resource "azurerm_network_security_group" "kv_app_nsg" {
     direction                  = "Inbound"
     source_port_range          = "*"
     destination_port_range     = 443
-    source_address_prefixes      = var.appservice_subnet_address_prefixes
+    source_address_prefixes    = var.appservice_subnet_address_prefixes
     destination_address_prefix = "*"
   }
 }
@@ -283,7 +283,7 @@ resource "azurerm_monitor_diagnostic_setting" "key_vault_diag" {
 
   dynamic "metric" {
     for_each = data.azurerm_monitor_diagnostic_categories.kv_cat.metrics
-    
+
     content {
       category = metric.value
     }
