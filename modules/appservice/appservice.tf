@@ -66,6 +66,22 @@ variable "logging" {
   type = string
 }
 
+variable "location_abbreviation" {
+  type = string
+}
+
+variable "vm_source_address" {
+  type = string
+}
+
+variable "app_destination_address" {
+  type = string
+}
+
+variable "levi9_public_ip" {
+  type = string
+}
+
 
 resource "azurerm_service_plan" "service-plan-planepal-dev-neu-00" {
   name                = "asp-${var.app_name}-${var.environment}-${var.location}-00"
@@ -105,7 +121,7 @@ resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
 
   dynamic "log" {
     for_each = data.azurerm_monitor_diagnostic_categories.asp_cat.logs
-    
+
     content {
       category = log.value
       enabled  = true
@@ -119,6 +135,41 @@ resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
       category = metric.value
     }
   }
+}
+
+resource "azurerm_network_security_group" "nsg_app" {
+  name                = "nsg-app-${lower(var.app_name)}-${var.environment}-${var.location_abbreviation}-01"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  security_rule {
+    name                       = "allow-vm"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 200
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_ranges    = [443]
+    source_address_prefix      = var.vm_source_address # get from vm
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "allow-levi9"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 100
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_range     = 443
+    source_address_prefix      = var.levi9_public_ip
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association_for_app" {
+  subnet_id                 = var.subneta_id
+  network_security_group_id = azurerm_network_security_group.nsg_app.id
 }
 
 # resource "azurerm_monitor_autoscale_setting" "scale_action_setting" {
