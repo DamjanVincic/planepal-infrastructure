@@ -173,7 +173,7 @@ resource "azurerm_subnet_network_security_group_association" "subnet_nsg_associa
 
 # resource "azurerm_monitor_autoscale_setting" "scale_action_setting" {
 #   name                = "app-scale-${var.app_name}-${var.environment}-${var.location}-00"
-#   resource_group_name = var.resource_group_name
+#   resource_group_name = var.resource_group
 #   location            = var.location
 #   target_resource_id  = azurerm_windows_web_app.app-PlanePal-dev-northeurope-00.id
 

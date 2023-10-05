@@ -12,7 +12,7 @@ resources:
     - repository: InternshipApp
       type: git
       name: InternshipApp/InternshipApp
-      ref: refs/heads/develop
+      ref: refs/heads/main
 jobs:
 - job: Build
   displayName: 'Build .NET 6 App'

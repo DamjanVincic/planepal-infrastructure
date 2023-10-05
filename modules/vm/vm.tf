@@ -51,7 +51,7 @@ data "azurerm_key_vault_secret" "vm-admin-pass" {
 }
 
 resource "azurerm_windows_virtual_machine" "vm" {
-  name                  = "vm-${lower(var.app_name)}-${var.environment}-00"
+  name                  = "vm-${var.environment}-00"
   location              = var.location
   resource_group_name   = var.resource_group
   network_interface_ids = [azurerm_network_interface.net_int.id]
@@ -61,14 +61,15 @@ resource "azurerm_windows_virtual_machine" "vm" {
   admin_password = data.azurerm_key_vault_secret.vm-admin-pass.value
 
   os_disk {
+    name                 = "OsDisk"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
 
   source_image_reference {
-    publisher = "MicrosoftWindowsServer"
-    offer     = "WindowsServer"
-    sku       = "2022-datacenter-azure-edition"
+    publisher = "MicrosoftWindowsDesktop"
+    offer     = "windows-10"
+    sku       = "win10-21h2-ent"
     version   = "latest"
   }
  
@@ -83,7 +84,15 @@ resource "azurerm_network_interface" "net_int" {
     name                          = "internal"
     subnet_id                     =  var.subneta_id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id = azurerm_public_ip.vm_ip.id
   }
+}
+
+resource "azurerm_public_ip" "vm_ip" {
+  name                = "publicip-vm-${var.environment}-01"
+  resource_group_name = var.resource_group
+  location            = var.location
+  allocation_method   = "Static"
 }
 
 resource "azurerm_network_security_group" "vm_nsg" {

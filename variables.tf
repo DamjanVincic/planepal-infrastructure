@@ -31,7 +31,7 @@ variable "dot_net_version" {
 variable "app_sku" {
   type        = string
   description = "Plan for application"
-  default     = "B1"
+  default     = "S1"
 }
 
 variable "location_abbreviation" {
@@ -318,5 +318,5 @@ variable "dotnet_group_name" {
 
 variable "vm_size" {
     type = string
-    default = "D2s_v3"
+    default = "Standard_D2_v2"
 }
