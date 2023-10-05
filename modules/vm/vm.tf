@@ -61,6 +61,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
   admin_password = data.azurerm_key_vault_secret.vm-admin-pass.value
 
   os_disk {
+    name                 = "OsDisk"
     caching              = "ReadWrite"
     storage_account_type = "Premium_LRS"
   }
