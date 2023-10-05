@@ -49,11 +49,13 @@ CREATE LOGIN $BacpacUserName WITH PASSWORD = '$BacpacPassword';
 # CREATE USER $NewUsername FOR LOGIN $NewUsername WITH DEFAULT_SCHEMA=[$Database];
 # CREATE USER $BacpacUserName FOR LOGIN $BacpacUserName WITH DEFAULT_SCHEMA=[$Database];
 
-echo $CreateLoginSql
-
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $CreateLoginSql
-$SqlCommand.ExecuteNonQuery()
+try {
+    $SqlCommand.ExecuteNonQuery()
+} catch {
+    Write-Host "Login already exists."
+}
 
 # Close the SQL connection
 $SqlConnection.Close()
@@ -79,14 +81,22 @@ GRANT ALTER ANY SCHEMA TO $NewUsername;
 # Execute the SQL commands in the target database
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $SqlGrantPermissions
-$SqlCommand.ExecuteNonQuery()
+try{
+    $SqlCommand.ExecuteNonQuery()
+} catch {
+    Write-Host "User already exists."
+}
 
 $SqlCreateSchema = "CREATE SCHEMA $Database AUTHORIZATION $NewUsername;"
 
 # Execute the SQL commands in the target database
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $SqlCreateSchema
-$SqlCommand.ExecuteNonQuery()
+try {
+    $SqlCommand.ExecuteNonQuery()
+} catch {
+    Write-Host "Schema already exists."
+}
 
 $SqlAlterSchema = @"
 ALTER USER $NewUsername WITH DEFAULT_SCHEMA = $Database;
@@ -97,7 +107,11 @@ ALTER USER $BacpacUsername WITH DEFAULT_SCHEMA = $Database;
 # Execute the SQL commands in the target database
 $SqlCommand = $SqlConnection.CreateCommand()
 $SqlCommand.CommandText = $SqlAlterSchema
-$SqlCommand.ExecuteNonQuery()
+try {
+    $SqlCommand.ExecuteNonQuery()
+} catch {
+    Write-Host "Backup user already exsits."
+}
 
 # Close the SQL connection
 $SqlConnection.Close()

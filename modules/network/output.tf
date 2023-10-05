@@ -9,3 +9,7 @@ output "vnet" {
 output "appservice_subnet_id" {
   value = azurerm_subnet.appservice_subnet.id
 }
+
+output "appservice_subnet_address_prefixes" {
+  value = azurerm_subnet.appservice_subnet.address_prefixes
+}

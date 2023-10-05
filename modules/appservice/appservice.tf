@@ -121,10 +121,6 @@ resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
     content {
       category = log.value
       enabled  = true
-
-      retention_policy {
-        enabled = false
-      }
     }
   }
 
@@ -133,10 +129,6 @@ resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
 
     content {
       category = metric.value
-
-      retention_policy {
-        enabled = false
-      }
     }
   }
 }
