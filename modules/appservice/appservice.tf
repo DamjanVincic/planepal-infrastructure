@@ -153,7 +153,7 @@ resource "azurerm_network_security_group" "nsg_app" {
     priority                   = 200
     direction                  = "Inbound"
     source_port_range          = "*"
-    destination_port_ranges    = [433]
+    destination_port_ranges    = [443]
     source_address_prefix      = var.vm_source_address
     destination_address_prefix = var.app_destination_address
   }
