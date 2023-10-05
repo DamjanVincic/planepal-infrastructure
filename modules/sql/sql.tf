@@ -130,18 +130,6 @@ resource "azurerm_network_security_group" "st_sql_nsg" {
     source_address_prefix      = var.app_source_address
     destination_address_prefix = "*"
   }
-
-  security_rule {
-    name                       = "deny-all"
-    protocol                   = "Tcp"
-    access                     = "Deny"
-    priority                   = 500
-    direction                  = "Inbound"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
 }
 
 resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
