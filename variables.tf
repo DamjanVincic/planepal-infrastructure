@@ -108,9 +108,14 @@ variable "app_secrets_keys" {
   default = ["api-key", "kv-email", "kv-email-password"]
 }
 
-variable "sr_source_address" {
+variable "app_source_address" {
   type    = string
-  default = "10.0.1.0/24"
+  default = "10.0.0.0/24"
+}
+
+variable "vm_source_address" {
+  type    = string
+  default = "10.0.4.0/24"
 }
 
 variable "email_receiver" {
@@ -302,11 +307,11 @@ variable "scdb_container_access_type" {
 }
 
 variable "devops_group_name" {
-  type = string
+  type    = string
   default = "DevopsInternship2023"
 }
 
 variable "dotnet_group_name" {
-  type = string
+  type    = string
   default = "DevNetInternship2023"
 }
