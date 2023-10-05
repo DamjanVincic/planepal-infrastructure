@@ -141,28 +141,28 @@ resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
   }
 }
 
-resource "azurerm_network_security_group" "nsg_app" {
-  name                = "nsg-app-${lower(var.app_name)}-${var.environment}-${var.location_abbreviation}-01"
-  location            = var.location
-  resource_group_name = var.resource_group_name
+# resource "azurerm_network_security_group" "nsg_app" {
+#   name                = "nsg-app-${lower(var.app_name)}-${var.environment}-${var.location_abbreviation}-01"
+#   location            = var.location
+#   resource_group_name = var.resource_group_name
 
-  security_rule {
-    name                       = "allow-app"
-    protocol                   = "Tcp"
-    access                     = "Allow"
-    priority                   = 200
-    direction                  = "Inbound"
-    source_port_range          = "*"
-    destination_port_ranges    = [443]
-    source_address_prefix      = var.vm_source_address
-    destination_address_prefix = var.app_destination_address
-  }
-}
+#   security_rule {
+#     name                       = "allow-app"
+#     protocol                   = "Tcp"
+#     access                     = "Allow"
+#     priority                   = 200
+#     direction                  = "Inbound"
+#     source_port_range          = "*"
+#     destination_port_ranges    = [443]
+#     source_address_prefix      = var.vm_source_address
+#     destination_address_prefix = var.app_destination_address
+#   }
+# }
 
-resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association_for_app" {
-  subnet_id                 = var.subneta_id
-  network_security_group_id = azurerm_network_security_group.nsg_app.id
-}
+# resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association_for_app" {
+#   subnet_id                 = var.subneta_id
+#   network_security_group_id = azurerm_network_security_group.nsg_app.id
+# }
 
 # resource "azurerm_monitor_autoscale_setting" "scale_action_setting" {
 #   name                = "app-scale-${var.app_name}-${var.environment}-${var.location}-00"
