@@ -25,7 +25,7 @@ variable "aar_log_verbose" {
 variable "aar_log_progress" {
   type = string
 }
-variable "aas_start_time" {
+variable "start_time" {
   type = string
 }
 variable "aas_timezone" {
@@ -57,13 +57,32 @@ resource "azurerm_automation_runbook" "aarplanepaldevneu01" {
 
   publish_content {
     content = <<-EOT
-      param (
-          [string] $param1
-      )
-      //create sql user
-      //send backup to storage account
-      Write-Output "Hello, World!"
-      Write-Output "Param1 value: $param1"
+param (
+      [string] $SqlServerName,
+      [string] $DatabaseName,
+      [string] $StorageAccountName,
+      [string] $StorageContainerName,
+      [string] $StorageBlobName
+    )
+
+    # Authenticate to Azure
+    Connect-AzAccount
+
+    # Set the context to the subscription where the storage account exists
+    Set-AzContext -SubscriptionId "<Your-Subscription-ID>"
+
+    # Set the storage context
+    $storageContext = New-AzStorageContext -StorageAccountName $StorageAccountName -UseConnectedAccount
+
+    # Create a BACPAC file
+    $bacpacFile = "C:\$DatabaseName.bacpac"
+    Export-AzSqlDatabase -ResourceGroupName "<Your-Resource-Group-Name>" -ServerName $SqlServerName -DatabaseName $DatabaseName -AdministratorLogin "<Your-Admin-Login>" -AdministratorLoginPassword (ConvertTo-SecureString -String "<Your-Admin-Password>" -AsPlainText -Force) -StorageContext $storageContext -StorageContainerName $StorageContainerName -DacpacFile $bacpacFile -Force
+
+    # Clean up the BACPAC file
+    Remove-Item -Path $bacpacFile
+
+    # Log success
+    Write-Output "Database backup completed successfully."
     EOT
   }
 }
