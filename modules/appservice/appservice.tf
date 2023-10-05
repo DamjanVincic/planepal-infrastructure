@@ -73,10 +73,6 @@ variable "location_abbreviation" {
   type = string
 }
 
-variable "vm_source_address" {
-  type = string
-}
-
 variable "app_destination_address" {
   type = string
 }
