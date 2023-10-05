@@ -80,6 +80,7 @@ module "key_vault" {
   subneta_id = module.network.subnet["subnet_app_keyvault"].id
   vnet_id = module.network.vnet.id
   logging = module.logging.id
+  appersive_subnet_address_prefixes = module.network.appservice_subnet_address_prefixes
 }
 
 module "logging" {
