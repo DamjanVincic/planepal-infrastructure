@@ -31,7 +31,7 @@ variable "dot_net_version" {
 variable "app_sku" {
   type        = string
   description = "Plan for application"
-  default     = "B1"
+  default     = "S1"
 }
 
 variable "location_abbreviation" {
@@ -206,7 +206,7 @@ variable "subnets" {
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.3.0/24"
     }
-    "subnet_apim" = {
+    "subnet_vm" = {
       name                = "snet-PlanePal-dev-neu-05"
       resource_group_name = "DevOps"
       address_prefixes    = "10.0.4.0/24"
@@ -314,4 +314,9 @@ variable "devops_group_name" {
 variable "dotnet_group_name" {
   type    = string
   default = "DevNetInternship2023"
+}
+
+variable "vm_size" {
+    type = string
+    default = "Standard_D2_v2"
 }
