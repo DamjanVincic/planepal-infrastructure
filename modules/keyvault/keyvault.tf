@@ -250,6 +250,18 @@ resource "azurerm_network_security_group" "kv_app_nsg" {
   }
 
   security_rule {
+    name                       = "allow-agent"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    priority                   = 105
+    direction                  = "Inbound"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefixes    = chomp(data.http.myip.body)
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
     name                       = "allow-app-subnet"
     protocol                   = "Tcp"
     access                     = "Allow"
