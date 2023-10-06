@@ -31,3 +31,9 @@ variables:
 
 - name: buildConfiguration
   value: 'Release'
+
+- name: location
+  value: northeurope
+
+- name: app-name
+  value: PlanePal

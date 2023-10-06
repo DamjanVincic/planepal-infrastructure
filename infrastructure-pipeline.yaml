@@ -8,6 +8,7 @@ parameters:
     default: dev
     values:
     - dev
+    - prod
 
 variables:
 - template: vars/vars-global.yaml

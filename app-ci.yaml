@@ -4,9 +4,8 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+- template: vars/vars-global.yaml
+
 resources:
   repositories:
     - repository: InternshipApp

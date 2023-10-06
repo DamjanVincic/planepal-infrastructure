@@ -1,5 +1,14 @@
 trigger: none
 
+parameters:
+  - name: environment
+    displayName: Environment
+    type: string
+    default: dev
+    values:
+    - dev
+    - prod
+
 pool:
   vmImage: windows-latest
 
@@ -14,9 +23,9 @@ steps:
     downloadPath: '$(Build.ArtifactsDirectory)'
 - task: AzureRmWebAppDeployment@4
   inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Levi9Internship2023SP-Automation'
-    appType: 'webApp'
-    WebAppName: 'app-PlanePal-dev-northeurope-00'
+    ConnectionType: $(connection-type)
+    azureSubscription: $(subscription)
+    appType: $(app-type)
+    WebAppName: 'app-$(app-name)-${{ parameters.environment }}-$(location)-00'
     package: '$(Build.Repository.LocalPath)\$(Build.ArtifactsDirectory)\drop/WebApp.zip'
     
