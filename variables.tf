@@ -7,7 +7,7 @@ variable "location" {
 variable "resource_group" {
   type        = string
   description = "Resource group name"
-  default     = "DevOps"
+  default     = "Developers"
 }
 
 variable "app_name" {
