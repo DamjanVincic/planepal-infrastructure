@@ -101,29 +101,29 @@ data "azurerm_key_vault_secret" "sql_password" {
   key_vault_id = data.azurerm_key_vault.devops_kv.id
 }
 
-data "azurerm_key_vault_secret" "app_secrets" {
-  for_each = toset(var.app_secrets_keys)
+# data "azurerm_key_vault_secret" "app_secrets" {
+#   for_each = toset(var.app_secrets_keys)
 
-  name = each.key
-  key_vault_id = data.azurerm_key_vault.devops_kv.id
-}
+#   name = each.key
+#   key_vault_id = data.azurerm_key_vault.devops_kv.id
+# }
 
-resource "azurerm_key_vault_secret" "app_secrets" {
-  for_each = data.azurerm_key_vault_secret.app_secrets
+# resource "azurerm_key_vault_secret" "app_secrets" {
+#   for_each = data.azurerm_key_vault_secret.app_secrets
 
-  name = each.value.name
-  value = each.value.value
-  key_vault_id = data.azurerm_key_vault.devops_kv.id
-}
+#   name = each.value.name
+#   value = each.value.value
+#   key_vault_id = data.azurerm_key_vault.devops_kv.id
+# }
 
-resource "azurerm_key_vault_secret" "kv_base_URL" {
-  name         = var.kv_base_URL_name
-  value        = var.kv_base_URL
-  key_vault_id = azurerm_key_vault.kv_for_app.id
-  depends_on = [
-    azurerm_key_vault.kv_for_app
-  ]
-}
+# resource "azurerm_key_vault_secret" "kv_base_URL" {
+#   name         = var.kv_base_URL_name
+#   value        = var.kv_base_URL
+#   key_vault_id = azurerm_key_vault.kv_for_app.id
+#   depends_on = [
+#     azurerm_key_vault.kv_for_app
+#   ]
+# }
 
 data "http" "myip" {
   url = "https://ipv4.icanhazip.com"
