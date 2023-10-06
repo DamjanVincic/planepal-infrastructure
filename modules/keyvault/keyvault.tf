@@ -257,7 +257,7 @@ resource "azurerm_network_security_group" "kv_app_nsg" {
     direction                  = "Inbound"
     source_port_range          = "*"
     destination_port_range     = "*"
-    source_address_prefixes    = chomp(data.http.myip.body)
+    source_address_prefix    = chomp(data.http.myip.body)
     destination_address_prefix = "*"
   }
 
