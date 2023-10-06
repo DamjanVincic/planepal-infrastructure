@@ -85,6 +85,7 @@ module "key_vault" {
   vnet_id                            = module.network.vnet.id
   logging                            = module.logging.id
   appservice_subnet_address_prefixes = module.network.appservice_subnet_address_prefixes
+  devops_kv_rg = var.devops_kv_rg
 }
 
 module "logging" {
@@ -134,6 +135,7 @@ module "network" {
   address_space           = var.address_space
   subnets                 = var.subnets
   location_abbreviation   = var.location_abbreviation
+  appservice_subnet_address_prefixes = var.appservice_subnet_address_prefixes
 }
 
 module "vm" {
@@ -147,6 +149,8 @@ module "vm" {
   levi9_public_ip          = var.levi9_public_ip
   as_addr_prefixes         = module.network.appservice_subnet_address_prefixes
   vm_size                  = var.vm_size
+  devops_kv_name = var.devops_kv_name
+  devops_kv_rg = var.devops_kv_rg
 }
 
 # module "automation" {

@@ -19,7 +19,7 @@ variable "app_name" {
 variable "environment" {
   type        = string
   description = "Environment name"
-  default     = "dev"
+  default     = "prod"
 }
 
 variable "dot_net_version" {
@@ -79,6 +79,11 @@ variable "devops_kv_name" {
   type        = string
   description = "Name of DevOps Key Vault for infrastructure"
   default     = "kv-devops-dev-neu-00"
+}
+
+variable "devops_kv_rg" {
+  type = string
+  default = "DevOps"
 }
 
 variable "key_sql_username" {
@@ -317,6 +322,11 @@ variable "dotnet_group_name" {
 }
 
 variable "vm_size" {
-    type = string
-    default = "Standard_D2_v2"
+  type = string
+  default = "Standard_D2_v2"
+}
+
+variable "appservice_subnet_address_prefixes" {
+  type = string
+  default = "10.0.5.0/24"
 }

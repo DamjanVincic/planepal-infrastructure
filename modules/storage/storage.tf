@@ -70,7 +70,7 @@ resource "azurerm_private_endpoint" "storage_account_endpoint" {
   subnet_id           = var.subnet_id
 
   private_service_connection {
-    name                           = "storage-account-connection-01"
+    name                           = "storage-account-connection-${var.environment}-01"
     private_connection_resource_id = azurerm_storage_account.storage_account.id
     is_manual_connection           = false
     subresource_names              = ["blob"]
@@ -134,7 +134,7 @@ data "azurerm_monitor_diagnostic_categories" "st_acc_cat" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "st_acc_diag" {
-  name                       = "st_acc-diag"
+  name                       = "st_acc-${var.environment}-diag"
   target_resource_id         = azurerm_storage_account.storage_account.id
   log_analytics_workspace_id = var.logging
 

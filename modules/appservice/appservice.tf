@@ -114,7 +114,7 @@ data "azurerm_monitor_diagnostic_categories" "asp_cat" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "asp_diag" {
-  name                       = "app_service_plan-diag"
+  name                       = "app_service_plan-${var.environment}-01"
   target_resource_id         = azurerm_service_plan.service-plan-planepal-dev-neu-00.id
   log_analytics_workspace_id = var.logging
 

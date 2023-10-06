@@ -76,14 +76,14 @@ resource "azurerm_mssql_server" "sql-planepal-dev-neu-01" {
 }
 
 resource "azurerm_mssql_firewall_rule" "FirewallRule" {
-  name             = "FirewallRule1"
+  name             = "AzureServices-${var.environment}-FirewallRule"
   server_id        = azurerm_mssql_server.sql-planepal-dev-neu-01.id
   start_ip_address = "0.0.0.0"
   end_ip_address   = "0.0.0.0"
 }
 
 resource "azurerm_mssql_firewall_rule" "FirewallRule1" {
-  name             = "FirewallRule1"
+  name             = "Agent-${var.environment}-FirewallRule"
   server_id        = azurerm_mssql_server.sql-planepal-dev-neu-01.id
   start_ip_address = chomp(data.http.myip.body)
   end_ip_address   = chomp(data.http.myip.body)
@@ -175,7 +175,7 @@ data "azurerm_monitor_diagnostic_categories" "sql_cat" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "sql_diag" {
-  name                       = "sql-diag"
+  name                       = "sql-diag-${var.environment}"
   target_resource_id         = azurerm_mssql_database.sqldb-planepal-dev-neu-01.id
   log_analytics_workspace_id = var.logging
 

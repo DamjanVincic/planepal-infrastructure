@@ -32,12 +32,20 @@ variable "as_addr_prefixes" {
 }
 
 variable "vm_size" {
-    type = string
+  type = string
+}
+
+variable "devops_kv_name" {
+  type = string
+}
+
+variable "devops_kv_rg" {
+  type = string
 }
 
 data "azurerm_key_vault" "devops-kv" {
-  name                = "kv-devops-dev-neu-00"
-  resource_group_name = var.resource_group
+  name                = var.devops_kv_name
+  resource_group_name = var.devops_kv_rg
 }
 
 data "azurerm_key_vault_secret" "vm-admin-user" {
